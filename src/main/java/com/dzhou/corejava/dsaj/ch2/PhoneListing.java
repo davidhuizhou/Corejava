@@ -26,7 +26,12 @@ public class PhoneListing implements KeyMode {
     }
 
     public int compareTo(Object targetKey){
-        String tKey = (String) targetKey;
-        return (name.compareTo(tKey));
+        if (targetKey instanceof PhoneListing) {
+            return (name.compareTo(((PhoneListing) targetKey).name));
+        } else {
+            String tKey = (String) targetKey;
+            return (name.compareTo(tKey));
+        }
     }
+
 }

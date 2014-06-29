@@ -10,4 +10,6 @@ public interface KeyMode {
     public abstract int compareTo(Object targetKey);
 
     public abstract String toString();
+
+
 }
