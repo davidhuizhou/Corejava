@@ -34,6 +34,14 @@ public class PhoneListing implements KeyMode {
         }
     }
 
+    public String getNumber(){
+        return this.number;
+    }
+
+    public void setNumber(String number){
+        this.number = number;
+    }
+
     public static void main(String[] args){
 
     }
