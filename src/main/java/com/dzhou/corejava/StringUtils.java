@@ -29,6 +29,25 @@ public class StringUtils {
             wrapper.printChar(input.charAt(i));
     }
 
+    //Check if a String has all unique characters
+    //Assuming ASCII characters only
+    public boolean isUniqueChars(String s){
+        if(s.length() > 128)
+            return false;
+
+        boolean[] char_checker = new boolean[128];
+
+        for(int i = 0; i < s.length(); i++){
+            int c = s.charAt(i);
+            if(char_checker[c])
+                return false;
+            else
+                char_checker[c] = true;
+        }
+        return true;
+
+    }
+
 
     public static void main(String[] args){
         InputOutputWrapper wrapper = new InputOutputWrapper(new Scanner(System.in), System.out);
