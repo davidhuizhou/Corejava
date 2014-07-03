@@ -15,9 +15,8 @@ public class PhoneListing implements KeyMode {
     }
 
     public String toString()
-    {  return("Name is " + name +
-            "\nAddress is " + address +
-            "\nNumber is " + number + "\n");
+    {
+        return "(" + name + "," + address + "," + number + ")";
     }
 
     public KeyMode deepCopy(){
@@ -32,6 +31,13 @@ public class PhoneListing implements KeyMode {
             String tKey = (String) targetKey;
             return (name.compareTo(tKey));
         }
+    }
+
+    public boolean equals(Object o){
+        if(o == null)
+            return false;
+
+        return compareTo(o) == 0;
     }
 
 }
