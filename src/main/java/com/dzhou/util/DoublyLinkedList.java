@@ -1,20 +1,26 @@
-package com.dzhou.corejava.dsaj.ch4;
+package com.dzhou.util;
+
+import com.dzhou.corejava.dsaj.ch4.PhoneListing;
 
 import java.util.NoSuchElementException;
 
 /**
  * Created by davidzhou on 7/1/14.
  */
-public class DoubleLinkedList <E> {
+public class DoublyLinkedList<E> {
 
     int size;
     Node<E> first;
     Node<E> last;
 
-    public DoubleLinkedList(){
+    public DoublyLinkedList(){
 
     }
 
+    /**
+     * Tells if the argument is the index of a valid position for an
+     * iterator or an add operation.
+     */
     private boolean isPositionIndex(int index){
         return (0 <= index && index <= size);
     }
@@ -28,6 +34,9 @@ public class DoubleLinkedList <E> {
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
     }
 
+    /**
+     * Tells if the argument is the index of an existing element.
+     */
     private boolean isElementIndex(int index) {
         return index >= 0 && index < size;
     }
@@ -38,7 +47,9 @@ public class DoubleLinkedList <E> {
     }
 
 
-
+    /**
+     * Returns the (non-null) Node at the specified element index.
+     */
     Node<E> node(int index){
         if(index < (size >> 1)){
             Node<E> n = first;
@@ -54,6 +65,10 @@ public class DoubleLinkedList <E> {
         }
 
     }
+
+    /**
+     * Links e as first element.
+     */
     private void linkFirst(E e) {
         Node<E> f = first;
         Node<E> newNode = new Node<E>(null, e, first);
@@ -68,6 +83,9 @@ public class DoubleLinkedList <E> {
 
     }
 
+    /**
+     * Links e as last element.
+     */
     private void linkLast(E e){
         Node<E> l = last;
         Node newNode = new Node(first, e, null);
@@ -81,6 +99,9 @@ public class DoubleLinkedList <E> {
         size++;
     }
 
+    /**
+     * Inserts element e before non-null Node succ.
+     */
     private void linkBefore(E e, Node<E> succ){
         Node<E> prev = succ.prev;
         Node<E> newNode = new Node(prev, e, succ);
@@ -94,6 +115,9 @@ public class DoubleLinkedList <E> {
     }
 
 
+    /**
+     * Unlinks non-null first node f.
+     */
     private E unlinkFirst(Node<E> f) {
         E element = f.item;
         Node<E> next = f.next;
@@ -114,6 +138,9 @@ public class DoubleLinkedList <E> {
 
     }
 
+    /**
+     * Unlinks non-null last node l.
+     */
     private E unlinkLast(Node<E> l){
         E element = l.item;
         Node<E> prev = l.prev;
@@ -132,6 +159,9 @@ public class DoubleLinkedList <E> {
 
     }
 
+    /**
+     * Unlinks non-null node x.
+     */
     E unlink(Node<E> x) {
         E element = x.item;
         Node<E> prev = x.prev;
@@ -167,7 +197,15 @@ public class DoubleLinkedList <E> {
         linkLast(e);
         return true;
     }
-
+    /**
+    * Inserts the specified element at the specified position in this list.
+    * Shifts the element currently at that position (if any) and any
+    * subsequent elements to the right (adds one to their indices).
+    *
+    * @param index index at which the specified element is to be inserted
+    * @param element element to be inserted
+    * @throws IndexOutOfBoundsException {@inheritDoc}
+    */
     public void add(int index, E element) {
         checkPositionIndex(index);
 
@@ -178,6 +216,12 @@ public class DoubleLinkedList <E> {
     }
 
 
+    /**
+     * Returns the first element in this list.
+     *
+     * @return the first element in this list
+     * @throws NoSuchElementException if this list is empty
+     */
     public E getFirst() {
         Node<E> f = first;
         if(f == null)
@@ -185,6 +229,12 @@ public class DoubleLinkedList <E> {
         return f.item;
     }
 
+    /**
+     * Returns the last element in this list.
+     *
+     * @return the last element in this list
+     * @throws NoSuchElementException if this list is empty
+     */
     public E getLast() {
         Node<E> l = last;
         if(l == null)
@@ -192,37 +242,87 @@ public class DoubleLinkedList <E> {
         return l.item;
     }
 
+
+    /**
+     * Returns the element at the specified position in this list.
+     *
+     * @param index index of the element to return
+     * @return the element at the specified position in this list
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     */
     public E get(int index) {
         checkElementIndex(index);
         return node(index).item;
     }
 
-
+    /**
+     * Removes and returns the first element from this list.
+     *
+     * @return the first element from this list
+     * @throws NoSuchElementException if this list is empty
+     */
     public E removeFirst(){
         if(first == null)
-            return null;
+            throw new NoSuchElementException();
         else
             return unlinkFirst(first);
     }
 
+    /**
+     * Removes and returns the last element from this list.
+     *
+     * @return the last element from this list
+     * @throws NoSuchElementException if this list is empty
+     */
     public E removeLast(){
         if(last == null)
-            return null;
+            throw new NoSuchElementException();
         else
             return unlinkLast(last);
     }
 
+    /**
+     * Removes the element at the specified position in this list.  Shifts any
+     * subsequent elements to the left (subtracts one from their indices).
+     * Returns the element that was removed from the list.
+     *
+     * @param index the index of the element to be removed
+     * @return the element previously at the specified position
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     */
     public E remove(int index){
         checkElementIndex(index);
         return unlink(node(index));
     }
 
-    public E set(E e, int index){
+    /**
+     * Replaces the element at the specified position in this list with the
+     * specified element.
+     *
+     * @param index index of the element to replace
+     * @param e element to be stored at the specified position
+     * @return the element previously at the specified position
+     * @throws IndexOutOfBoundsException {@inheritDoc}
+     */
+    public E set(int index, E e){
         checkElementIndex(index);
         Node<E> n = node(index);
         E oldElement = n.item;
         n.item = e;
         return oldElement;
+    }
+
+
+    public void showAll(){
+        Node n = first;
+
+        System.out.print("size=" + size + " ");
+        while(n != null){
+            System.out.print(n.item.toString());
+            n = n.next;
+        }
+        System.out.println("");
+
     }
 
     private class Node<E>{
@@ -237,5 +337,42 @@ public class DoubleLinkedList <E> {
 
         }
 
+    }
+
+    public static void main(String[] args) {
+
+        DoublyLinkedList<PhoneListing> boston = new DoublyLinkedList<PhoneListing>();
+        PhoneListing l1 = new PhoneListing("Bill", "1st Avenue", "123 4567" );
+        PhoneListing l2 = new PhoneListing("Al", "2nd Avenue", "456 3232");
+        PhoneListing l3 = new PhoneListing("Mike", "3rd Avenue", "333 3333");
+        PhoneListing l4 = new PhoneListing("David", "3rd Avenue", "333 3333");
+        boston.addFirst(l1);  // test insert
+        boston.addLast(l2);
+        boston.add(1, l3);
+        boston.showAll();
+
+
+        boston.set(1, l4);
+        boston.showAll();
+
+        l3 = boston.getFirst(); // test fetch of Mike
+        System.out.println(l3.toString());
+
+        l3 = boston.getLast(); // test fetch of Mike
+        System.out.println(l3.toString());
+
+        l3 = boston.get(1); // test fetch of Mike
+        System.out.println(l3.toString());
+
+        boston.remove(1);  // test delete of Al
+        boston.showAll();
+
+        boston.removeFirst();
+        boston.showAll();
+
+        boston.removeLast();
+        boston.showAll();
+
+        System.exit(0);
     }
 }

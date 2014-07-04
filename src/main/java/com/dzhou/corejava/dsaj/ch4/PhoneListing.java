@@ -15,9 +15,8 @@ public class PhoneListing implements KeyMode {
     }
 
     public String toString()
-    {  return("Name is " + name +
-            "\nAddress is " + address +
-            "\nNumber is " + number + "\n");
+    {
+        return "(" + name + "," + address + "," + number + ")";
     }
 
     public KeyMode deepCopy(){
