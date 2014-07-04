@@ -20,12 +20,12 @@ public class Array<E> {
         elementData = new Object[initialCapacity];
     }
 
-    public void rangeCheckForAdd(int index) {
+    private void rangeCheckForAdd(int index) {
         if (index < 0 || index > size)
-            throw new IndexOutOfBoundsException("Index is out of the boundary 0 to " + size);
+            throw new ArrayIndexOutOfBoundsException("Index is out of the boundary 0 to " + size);
     }
 
-    public boolean hasMoreRoom() {
+    private boolean hasMoreRoom() {
         if (size >= elementData.length)
             return false;
         else
@@ -33,9 +33,9 @@ public class Array<E> {
 
     }
 
-    public void rangeCheck(int index){
+    private void rangeCheck(int index){
         if(index < 0 || index >= size)
-            throw new IndexOutOfBoundsException("Index is out of the boundary 0 to " + (size - 1));
+            throw new ArrayIndexOutOfBoundsException("Index is out of the boundary 0 to " + (size - 1));
     }
 
     E elementData(int index) {
@@ -52,7 +52,7 @@ public class Array<E> {
 
     public void add(int index, E e) {
         if (!hasMoreRoom())
-            throw new OutOfMemoryError("Array is full");
+            throw new ArrayIsFullError("Array is full");
 
         rangeCheckForAdd(index);
 
@@ -115,7 +115,7 @@ public class Array<E> {
     public void showAll() {
 
         for (int i = 0; i < size; i++)
-            System.out.print(elementData[i] == null ? "null at " + i : elementData[i].toString());
+            System.out.print(elementData[i] == null ? "Array[" + i + "] == null ": elementData[i].toString());
 
         System.out.println("");
     }

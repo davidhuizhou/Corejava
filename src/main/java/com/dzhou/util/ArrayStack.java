@@ -1,23 +1,20 @@
 package com.dzhou.util;
 
-import com.dzhou.corejava.dsaj.ch2.Listing;
 import com.dzhou.corejava.dsaj.ch2.PhoneListing;
-
-import java.util.EmptyStackException;
 
 /**
  * Created by davidzhou on 7/3/14.
  */
-public class Stack <E> {
+public class ArrayStack<E> {
     private int size;
     private Object[] elementData;
 
-    public Stack(){
+    public ArrayStack() {
         size = 0;
         elementData = new Object[10];
     }
 
-    public Stack(int initialCapacity){
+    public ArrayStack(int initialCapacity) {
         size = 0;
         elementData = new Object[initialCapacity];
     }
@@ -34,56 +31,61 @@ public class Stack <E> {
         return (E) elementData[index];
     }
 
+    //Last index in the elementData array which equals to 0 starting backwards from index
     private int lastIndexOf(Object o, int index) {
-        if(index >= size)
+        if (index >= size)
             throw new IndexOutOfBoundsException(index + " >= " + size);
 
-        if(o == null){
-            for(int i = index; i >= 0; i--)
-                if(elementData(i) == null)
+        if (o == null) {
+            for (int i = index; i >= 0; i--)
+                if (elementData(i) == null)
                     return i;
 
         } else {
-            for(int i = index; i >= 0; i--)
-                if(o.equals(elementData(i)))
+            for (int i = index; i >= 0; i--)
+                if (o.equals(elementData(i)))
                     return i;
         }
         return -1;
     }
 
+    //last index on the elementData array which equals to object o
     private int lastIndexOf(Object o) {
 
         return lastIndexOf(o, size - 1);
     }
 
-    public int size(){
+    public int size() {
         return size;
     }
 
+
+    public boolean empty() {
+        return size == 0;
+    }
+
     public E push(E e) {
-        if(!hasMoreRoom())
-            throw new OutOfMemoryError("Stack is full");
+        if (!hasMoreRoom())
+            throw new ArrayIsFullError("Stack is full");
 
         elementData[size++] = e;
         return e;
 
     }
 
-    public E peek(){
-        if(empty())
+    public E peek() {
+        if (empty())
             return null;
 
         return elementData(size - 1);
     }
 
-    public E pop(){
+    public E pop() {
         E e = peek();
 
-        if(e == null)
-            return null;
+        if (!empty())
+            elementData[--size] = null;
 
-        elementData[size - 1] = null;
-        size--;
         return e;
 
     }
@@ -92,30 +94,27 @@ public class Stack <E> {
     //Return 1-base position where an object is on the stack
     //topmost item is at 1
     // reture -1 if object is not on the stack
-    public int search(Object o){
+    public int search(Object o) {
         int i = lastIndexOf(o);
 
-        if(i >= 0)
+        if (i >= 0)
             return size() - i;
 
         else
             return -1;
     }
 
-    public boolean empty(){
-        return size == 0;
-    }
 
     public void showAll() {
 
         for (int i = 0; i < size; i++)
-            System.out.print(elementData[i] == null ? "null at " + i : elementData[i].toString());
+            System.out.print(elementData[i] == null ? "ArrayStack[" + i + "] == null " : elementData[i].toString());
 
         System.out.println("");
     }
 
     public static void main(String[] args) {
-        Stack<PhoneListing> s = new Stack<PhoneListing>(3);
+        ArrayStack<PhoneListing> s = new ArrayStack<PhoneListing>(3);
         PhoneListing l;
         PhoneListing l1 = new PhoneListing("Bill", "1st Avenue", "123 4567");
         PhoneListing l2 = new PhoneListing("Al", "2nd Avenue", "456 3232");
@@ -135,7 +134,7 @@ public class Stack <E> {
 
         try {
             s.push(l4);
-        } catch(OutOfMemoryError e){
+        } catch (ArrayIsFullError e) {
             e.printStackTrace();
         }
 
