@@ -8,6 +8,11 @@ import java.util.NoSuchElementException;
  * Created by davidzhou on 7/3/14.
  */
 public class ArrayQueue <E> {
+    /**
+     * Default initial capacity.
+     */
+    private static final int DEFAULT_CAPACITY = 3;
+
     private E[] elementData;
     private int size;
     private int head;
@@ -17,15 +22,9 @@ public class ArrayQueue <E> {
         size = 0;
         head = 0;
         tail = 0;
-        elementData = (E[]) new Object[10];
+        elementData = (E[]) new Object[DEFAULT_CAPACITY];
     }
 
-    public ArrayQueue(int initialCapacity){
-        size = 0;
-        head = 0;
-        tail = 0;
-        elementData = (E[]) new Object[initialCapacity];
-    }
 
     private boolean hasMoreRoom() {
         if (size >= elementData.length)
@@ -44,6 +43,8 @@ public class ArrayQueue <E> {
      * @throws NullPointerException if the specified element is null
      */
     private void addLast(E e) {
+        ensureCapacityInternal(size + 1);
+
         if(e == null)
             throw new NullPointerException();
 
@@ -54,6 +55,33 @@ public class ArrayQueue <E> {
         tail = (tail + 1) % elementData.length;
         size++;
 
+    }
+
+    private void resize(int max){
+        E[] temp = (E[]) new Object[max];
+
+        if(head <= tail) {
+            for (int i = head; i < tail; i++)
+                temp[i - head] = elementData[i];
+        } else {
+            for(int i = head; i < elementData.length; i++)
+                temp[i - head] = elementData[i];
+
+            for(int i = 0; i < tail; i++)
+                temp[i + elementData.length - head] = elementData[i];
+
+        }
+        head = 0;
+        tail = size;
+
+        elementData = temp;
+    }
+
+    private void ensureCapacityInternal(int max){
+        if(max == elementData.length)
+            resize(2 * elementData.length);
+        else if (max > 0 && max == elementData.length/4)
+            resize(elementData.length/2);
     }
 
 
@@ -91,6 +119,9 @@ public class ArrayQueue <E> {
         elementData[head] = null;
         head = (head + 1) % elementData.length;
         size--;
+
+        ensureCapacityInternal(size);
+
         return e;
 
 
@@ -109,6 +140,8 @@ public class ArrayQueue <E> {
         elementData[head] = null;
         head = (head + 1) % elementData.length;
         size--;
+
+        ensureCapacityInternal(size);
         return e;
     }
 
@@ -136,9 +169,9 @@ public class ArrayQueue <E> {
 
     public void showAll() {
 
-        System.out.print("head=" + head + ",tail=" + tail +",size=" + size);
+        System.out.print("head=" + head + ",tail=" + tail +",size=" + size + ",length=" + elementData.length);
 
-        if(head < tail)
+        if(head <= tail)
             for (int i = head; i < tail; i++)
                 System.out.print(elementData[i] == null ? "ArrayQueue[" + i + "] == null " : elementData[i].toString());
         else{
@@ -152,7 +185,7 @@ public class ArrayQueue <E> {
     }
 
     public static void main(String[] args){
-        ArrayQueue<PhoneListing> q = new ArrayQueue<PhoneListing>(4);
+        ArrayQueue<PhoneListing> q = new ArrayQueue<PhoneListing>();
         PhoneListing l;
         PhoneListing l1 = new PhoneListing("Bill",  "1st Avenue", "123 4567" );
         PhoneListing l2 = new PhoneListing("Al",    "2nd Avenue", "456 3232");
@@ -165,12 +198,22 @@ public class ArrayQueue <E> {
         // perform three enqueue to fill the queue and then output the queue
         System.out.println(q.offer(l1));
         System.out.println(q.offer(l2));
+        q.showAll();
+
+        l = q.poll();
+        System.out.println(l.toString( ));
+        q.showAll();
+
         System.out.println(q.offer(l3));
+        q.showAll();
+
         System.out.println(q.offer(l4));
         q.showAll();
         // perform three dequeue operations to empty the queue
         l = q.poll();
         System.out.println(l.toString( ));
+        q.showAll();
+
         l = q.poll();
         System.out.println(l.toString( ));
         q.showAll();
@@ -182,10 +225,18 @@ public class ArrayQueue <E> {
 
         l = q.poll();
         System.out.println(l.toString( ));
-        l = q.poll();
-        System.out.println(l);
-
         q.showAll();
+
+
+        l = q.poll();
+        System.out.println(l.toString( ));
+        q.showAll();
+
+        l = q.poll();
+        System.out.println(l.toString( ));
+        q.showAll();
+
+
         System.exit(0);
     }
 }
