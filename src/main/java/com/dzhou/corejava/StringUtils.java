@@ -6,7 +6,6 @@ package com.dzhou.corejava;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class StringUtils {
 
@@ -67,7 +66,7 @@ public class StringUtils {
         d.add("He");
         d.add("is");
         d.add("such");
-        d.add("a");
+//        d.add("a");
         d.add("good");
         return d;
     }
@@ -84,7 +83,7 @@ public class StringUtils {
         return retVal;
     }
 
-    static List<String> getStartingWords(String s) {
+    static List<String> getStartingGoodWords(String s) {
         List<String> firstWords = new ArrayList<String>();
 
         for (int i = 1; i <= s.length(); i++) {
@@ -94,25 +93,27 @@ public class StringUtils {
 
         }
 
-        log("getFirstWords with " + s + " returns:");
+        log("getStartingGoodWords with " + s + " returns:");
         log(getListString(firstWords));
         return firstWords;
 
     }
 
     static List<String> getFirstWords(String s){
-        List<String> list = getStartingWords(s);
-        if(list.size() == 0) {
-            for(int i = 1; i <= s.length(); i++){
-                List<String> l = getStartingWords(s.substring(i));
+        List<String> firstWords = getStartingGoodWords(s);
+
+        if(firstWords.size() == 0) {
+            for(int i = 1; i <= s.length() - 1; i++){
+                List<String> l = getStartingGoodWords(s.substring(i));
                 if(l.size() > 0){
-                    list.add(s.substring(0, i));
+                    firstWords.add(s.substring(0, i));
                 }
 
 
             }
         }
-        return list;
+        log("get firstWords returns " + getListString(firstWords));
+        return firstWords;
     }
 
     static private String getListString(List<String> list){
@@ -126,42 +127,36 @@ public class StringUtils {
         for (String w : b)
             a.add(w);
 
-
-
     }
 
-    static boolean addSpaces(List<String> words, String s) {
-        boolean retVal = false;
+    static int addSpaces(List<String> words, String s) {
+        int retVal = 0;
+
         List<String> addList = new ArrayList<String>();
         addList.add(s);
 
         if (isWord(s))
-            retVal = true;
+            retVal = 1;
 
         List<String> firstWords = getFirstWords(s);
 
+        if (firstWords.size() > 0) {
 
-        if (firstWords.size() > 1 || (firstWords.size() == 1  && firstWords.get(0).length() < s.length()) ) {
             for (String w : firstWords) {
+                int goodWordCount = 0;
+                if (isWord(w))
+                    goodWordCount++;
+
                 List<String> l = new ArrayList<String>();
                 l.add(w);
-                boolean r = addSpaces(l, s.substring(w.length()));
+                int r = addSpaces(l, s.substring(w.length()));
+                goodWordCount += r;
 
-                if (r == true) {
-                    if (retVal == true) {
-                        if (l.size() > addList.size())
-                            addList = l;
-                    } else {
-                        retVal = true;
-                        addList = l;
-                    }
-                } else {
-                    log("r=false, and l is - " + getListString(l) + "addList.size=" + addList.size() + " l.size=" + l.size() );
-                    if (retVal == false && l.size() > addList.size()) {
-                        addList = l;
-                        log("In r== false and addList is now - " + getListString(addList));
-                    }
+                if (goodWordCount > retVal) {
+                    addList = l;
+                    retVal = goodWordCount;
                 }
+                log("********* w=" + w + ",goodWordCount=" + goodWordCount + ",retVal=" + retVal);
 
             }
 
@@ -181,7 +176,7 @@ public class StringUtils {
 
         StringBuilder sb = new StringBuilder();
         List<String> words = new ArrayList<String>();
-        boolean r = addSpaces(words, s);
+        int r = addSpaces(words, s);
 
         log("r=" + r);
 
@@ -235,13 +230,13 @@ public class StringUtils {
         boolean IN = false;
 
         while(j < length){
-            System.out.println("Enter loop with j=" + j + ", length=" + length);
+            log("Enter loop with j=" + j + ", length=" + length);
             if(aArray[j] == ' ' || aArray[j] == '\t'){
-                System.out.println("aArray[" + j + "] is space and IN = " + IN);
+                log("aArray[" + j + "] is space and IN = " + IN);
                 if(IN == false){
                     IN = true;
                     //Shift to right 2 sport starting from j + 1 to replace the space char with %20
-                    System.out.println("Before shift right by 2, length=" + length +"j=" + j);
+                    log("Before shift right by 2, length=" + length + "j=" + j);
                     for(int l = length -1; l >= j + 1; l--)
                         aArray[l + 2] = aArray[l];
                     aArray[j] = '%';
@@ -261,7 +256,7 @@ public class StringUtils {
                 IN = false;
                 j++;
             }
-            System.out.println("leave loop with j=" + j + ",length=" + length);
+            log("leave loop with j=" + j + ",length=" + length);
         }
 
         //Remove if %20 is the last three characters
@@ -287,6 +282,7 @@ public class StringUtils {
 //
 //        util.printInput(s, wrapper);
 
+
         String s = addSpaces("");
         System.out.println("1 - " + s);
 
@@ -311,21 +307,21 @@ public class StringUtils {
         s = addSpaces("Heissuchagoodperson");
         System.out.println("6 - " + s);
 
-        String s1 = "abcdefghijk";
-        String s2 = "bdaeghjikfc";
-        String s3 = "bdaeghjikf";
-        String s4 = "bdaeghlikfc";
-        String s5 = "adaeghjikfc";
-        String s6 = "abcdefghijb";
-
-        System.out.println("isPermutation(s1, s2)=" + isPermutation(s1, s2));
-        System.out.println("isPermutation(s1, s3)=" + isPermutation(s1, s3));
-        System.out.println("isPermutation(s1, s4)=" + isPermutation(s1, s4));
-        System.out.println("isPermutation(s1, s5)=" + isPermutation(s1, s5));
-        System.out.println("isPermutation(s1, s6)=" + isPermutation(s1, s6));
-
-        String r1 = "Mr John   Smith         ";
-        System.out.println(replaceWithSpaces(r1));
+//        String s1 = "abcdefghijk";
+//        String s2 = "bdaeghjikfc";
+//        String s3 = "bdaeghjikf";
+//        String s4 = "bdaeghlikfc";
+//        String s5 = "adaeghjikfc";
+//        String s6 = "abcdefghijb";
+//
+//        System.out.println("isPermutation(s1, s2)=" + isPermutation(s1, s2));
+//        System.out.println("isPermutation(s1, s3)=" + isPermutation(s1, s3));
+//        System.out.println("isPermutation(s1, s4)=" + isPermutation(s1, s4));
+//        System.out.println("isPermutation(s1, s5)=" + isPermutation(s1, s5));
+//        System.out.println("isPermutation(s1, s6)=" + isPermutation(s1, s6));
+//
+//        String r1 = "Mr John   Smith         ";
+//        System.out.println(replaceWithSpaces(r1));
 
 
     }
