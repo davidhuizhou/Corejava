@@ -6,6 +6,7 @@ package com.dzhou.corejava;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class StringUtils {
 
@@ -274,6 +275,121 @@ public class StringUtils {
         return sb.toString();
     }
 
+    /* compress aabcccaaa to a2b1c3a3 */
+    public static String compress(String s){
+        if(s.length() == 0)
+            return s;
+
+        StringBuilder sb = new StringBuilder();
+        char c = s.charAt(0);
+        int len = 1;
+        for(int i = 1; i < s.length(); i++){
+            if(s.charAt(i) == c){
+                len++;
+            }else{
+                sb.append(c).append(len);
+                c = s.charAt(i);
+                len = 1;
+            }
+        }
+        sb.append(c).append(len);
+        return sb.toString();
+    }
+
+
+    /* zero N * N matrix */
+    /**
+     * Returns a pseudo-random number between min and max, inclusive.
+     * The difference between min and max can be at most
+     * <code>Integer.MAX_VALUE - 1</code>.
+     *
+     * @param min Minimum value
+     * @param max Maximum value.  Must be greater than min.
+     * @return Integer between min and max, inclusive.
+     * @see java.util.Random#nextInt(int)
+     */
+    public static int randInt(int min, int max) {
+
+        // Usually this should be a field rather than a method variable so
+        // that it is not re-seeded every call.
+        Random rand = new Random();
+
+        // nextInt is normally exclusive of the top value,
+        // so add 1 to make it inclusive
+        int randomNum = rand.nextInt((max - min) + 1) + min;
+
+        return randomNum;
+    }
+    private static int[][] generateMatrix(int n){
+        int[][] N = new int[n][n];
+
+        for(int i = 0; i < n; i++)
+            for(int j = 0; j < n; j++)
+                N[i][j] = randInt(0, 9);
+
+        return N;
+
+
+    }
+
+    public static void printN(int[][] N){
+        int n = N[0].length;
+
+        for(int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++)
+                System.out.print(N[i][j] + " ");
+
+            System.out.println("");
+        }
+
+    }
+
+    public static void setZero(int n){
+        int[][] N = generateMatrix(n);
+        System.out.println("The original matrix is - ");
+        printN(N);
+
+        System.out.println("zero rows and cols -");
+        boolean[] row = new boolean[n];
+        boolean[] col = new boolean[n];
+
+        for(int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (N[i][j] == 0) {
+                    row[i] = true;
+                    break;
+                }
+            }
+        }
+
+        for(int j = 0; j < n; j++) {
+            for (int i = 0; i < n; i++) {
+                if (N[i][j] == 0) {
+                    col[j] = true;
+                    break;
+                }
+            }
+        }
+
+        for(int i = 0; i < n; i++){
+            if(row[i]){
+                for(int j = 0; j < n; j++)
+                    N[i][j] = 0;
+            }
+        }
+
+        for(int j = 0; j < n; j++){
+            if(col[j]){
+                for(int i = 0; i < n; i++)
+                    N[i][j] = 0;
+            }
+
+        }
+
+        System.out.println("The after matrix is - ");
+        printN(N);
+
+    }
 
     public static void main(String[] args){
 //        InputOutputWrapper wrapper = new InputOutputWrapper(new Scanner(System.in), System.out);
@@ -307,21 +423,41 @@ public class StringUtils {
         s = addSpaces("Heissuchagoodperson");
         System.out.println("6 - " + s);
 
-//        String s1 = "abcdefghijk";
-//        String s2 = "bdaeghjikfc";
-//        String s3 = "bdaeghjikf";
-//        String s4 = "bdaeghlikfc";
-//        String s5 = "adaeghjikfc";
-//        String s6 = "abcdefghijb";
-//
-//        System.out.println("isPermutation(s1, s2)=" + isPermutation(s1, s2));
-//        System.out.println("isPermutation(s1, s3)=" + isPermutation(s1, s3));
-//        System.out.println("isPermutation(s1, s4)=" + isPermutation(s1, s4));
-//        System.out.println("isPermutation(s1, s5)=" + isPermutation(s1, s5));
-//        System.out.println("isPermutation(s1, s6)=" + isPermutation(s1, s6));
-//
-//        String r1 = "Mr John   Smith         ";
-//        System.out.println(replaceWithSpaces(r1));
+        String s1 = "abcdefghijk";
+        String s2 = "bdaeghjikfc";
+        String s3 = "bdaeghjikf";
+        String s4 = "bdaeghlikfc";
+        String s5 = "adaeghjikfc";
+        String s6 = "abcdefghijb";
+
+        System.out.println("isPermutation(s1, s2)=" + isPermutation(s1, s2));
+        System.out.println("isPermutation(s1, s3)=" + isPermutation(s1, s3));
+        System.out.println("isPermutation(s1, s4)=" + isPermutation(s1, s4));
+        System.out.println("isPermutation(s1, s5)=" + isPermutation(s1, s5));
+        System.out.println("isPermutation(s1, s6)=" + isPermutation(s1, s6));
+
+        String r1 = "Mr John   Smith         ";
+        System.out.println(replaceWithSpaces(r1));
+
+        s = "";
+        System.out.println("compress(\"" + s + "\")=" + compress(s));
+
+        s = "a";
+        System.out.println("compress(\"" + s + "\")=" + compress(s));
+
+        s = "aa";
+        System.out.println("compress(\"" + s + "\")=" + compress(s));
+
+        s = "ab";
+        System.out.println("compress(\"" + s + "\")=" + compress(s));
+
+        s = "abc";
+        System.out.println("compress(\"" + s + "\")=" + compress(s));
+
+        s = "aabcccccaaa";
+        System.out.println("compress(\"" + s + "\")=" + compress(s));
+
+        setZero(10);
 
 
     }
