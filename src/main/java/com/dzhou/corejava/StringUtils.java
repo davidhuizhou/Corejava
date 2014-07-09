@@ -4,8 +4,11 @@ package com.dzhou.corejava;
  * Created by davidzhou on 5/7/14.
  */
 
+import com.dzhou.util.Stack;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Random;
 
 public class StringUtils {
@@ -391,6 +394,42 @@ public class StringUtils {
 
     }
 
+
+    /* Check for Parentheses balance */
+    private static boolean isPair(char c1, char c2){
+        return (c1 == '{' && c2 == '}')
+            || (c1 == '[' && c2 == ']')
+            || (c1 == '(' && c2 == ')');
+    }
+
+    private static boolean isLeftParenthese(char c){
+        return c == '{' || c == '[' || c == '(';
+    }
+
+    private static boolean isRightParenthese(char c) {
+        return c == '}' || c== ']' || c== ')';
+    }
+
+    public static boolean isParenthesesBalanced(String s){
+        Stack<Character> stack = new Stack<Character>();
+
+        for(int i = 0; i < s.length(); i++){
+            char c = s.charAt(i);
+            if(isLeftParenthese(c))
+                stack.push(c);
+            else if (isRightParenthese(c)){
+                try {
+                    char c1 = stack.pop();
+                    if (!isPair(c1, c))
+                        return false;
+                }catch(NoSuchElementException exc){
+                    return false;
+                }
+            }
+        }
+        return stack.isEmpty();
+    }
+
     public static void main(String[] args){
 //        InputOutputWrapper wrapper = new InputOutputWrapper(new Scanner(System.in), System.out);
 //        StringUtils util = new StringUtils();
@@ -459,6 +498,30 @@ public class StringUtils {
 
         setZero(10);
 
+
+        s = "";
+        System.out.println("isParenthesesBalanced(\"" + s + "\") = "  + isParenthesesBalanced(s));
+
+        s = "{";
+        System.out.println("isParenthesesBalanced(\"" + s + "\") = "  + isParenthesesBalanced(s));
+
+        s = ")";
+        System.out.println("isParenthesesBalanced(\"" + s + "\") = "  + isParenthesesBalanced(s));
+
+        s = "[()]{}{[()()]()}";
+        System.out.println("isParenthesesBalanced(\"" + s + "\") = "  + isParenthesesBalanced(s));
+
+        s = "[()]{}{[())]()}";
+        System.out.println("isParenthesesBalanced(\"" + s + "\") = "  + isParenthesesBalanced(s));
+
+        s = "[()]{}{[))]()}";
+        System.out.println("isParenthesesBalanced(\"" + s + "\") = "  + isParenthesesBalanced(s));
+
+        s = "[(])";
+        System.out.println("isParenthesesBalanced(\"" + s + "\") = "  + isParenthesesBalanced(s));
+
+        s = "[}{]";
+        System.out.println("isParenthesesBalanced(\"" + s + "\") = "  + isParenthesesBalanced(s));
 
     }
 
