@@ -430,6 +430,99 @@ public class StringUtils {
         return stack.isEmpty();
     }
 
+    /* equivalent infix expression with the parentheses
+    *
+    * 1 + 2 ) * 3 - 4 ) * 5 - 6 ) ) )
+    * ( ( 1 + 2 ) * ( ( 3 - 4 ) * ( 5 - 6 ) ) )
+     */
+    private static boolean isDigit(char c){
+        return '0' <= c && c <= '9';
+    }
+
+    private static boolean isOperator(char c){
+        return c == '+' || c == '-' || c== '*' || c == '/' || c == '%';
+    }
+
+    private static String getString(Stack<Character> stack){
+        StringBuilder sb = new StringBuilder();
+        while(!stack.isEmpty()){
+            sb.append(stack.pop());
+        }
+        return sb.toString();
+    }
+
+
+    public static String insertLeftParentheses(String s){
+        Stack<Character> stack1 = new Stack<Character>();
+        Stack<Character> stack2 = new Stack<Character>();
+        Stack<Character> stack3 = new Stack<Character>();
+        Stack<Character> stack4 = new Stack<Character>();
+
+        for(int i = 0; i < s.length(); i++){
+            stack1.push(s.charAt(i));
+            if(s.charAt(i) == ')')
+                stack2.push('(');
+        }
+
+        if(stack2.isEmpty()) {
+            return s;
+        } else {
+            while(!stack1.isEmpty()) {
+                char c = stack1.pop();
+
+                if (c == ')') {
+                    stack4.push(c);
+                } else if (isDigit(c)) {
+                    if (stack4.isEmpty())
+                        stack4.push('D');
+                    else {
+                        if (stack4.peek() != 'D')
+                            stack4.push('D');
+                    }
+                } else if (isOperator(c)) {
+                    if (stack4.size() >= 4) {
+                        do {
+                            char c1 = stack4.pop();
+                            char c2 = stack4.pop();
+                            char c3 = stack4.pop();
+                            char c4 = stack4.pop();
+
+                            if(c1 == 'D' && c2 == 'O' && c3 == 'D' && c4 == ')'){
+                                stack3.push(stack2.pop());
+                                stack4.push('D');
+
+                            } else {
+                                stack4.push(c4);
+                                stack4.push(c3);
+                                stack4.push(c2);
+                                stack4.push(c1);
+
+                                break;
+                            }
+
+                        } while(stack4.size() >= 4);
+
+                        stack4.push('O');
+
+                    } else {
+                        stack4.push('O');
+                    }
+                }
+                stack3.push(c);
+
+            }
+
+            while(!stack2.isEmpty())
+                stack3.push(stack2.pop());
+
+        }
+
+
+
+        return getString(stack3);
+
+    }
+
     public static void main(String[] args){
 //        InputOutputWrapper wrapper = new InputOutputWrapper(new Scanner(System.in), System.out);
 //        StringUtils util = new StringUtils();
@@ -522,6 +615,9 @@ public class StringUtils {
 
         s = "[}{]";
         System.out.println("isParenthesesBalanced(\"" + s + "\") = "  + isParenthesesBalanced(s));
+
+        s = "1 + 2 ) * 3 - 4 ) * 5 - 6 ) ) )";
+        System.out.println(insertLeftParentheses(s));
 
     }
 
