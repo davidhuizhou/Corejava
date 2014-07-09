@@ -619,6 +619,9 @@ public class StringUtils {
         s = "1 + 2 ) * 3 - 4 ) * 5 - 6 ) ) )";
         System.out.println(insertLeftParentheses(s));
 
+        s = "5 - 6 )";
+        System.out.println(insertLeftParentheses(s));
+
     }
 
 }
