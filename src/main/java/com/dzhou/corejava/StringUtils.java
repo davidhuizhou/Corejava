@@ -439,8 +439,12 @@ public class StringUtils {
         return '0' <= c && c <= '9';
     }
 
-    private static boolean isOperator(char c){
+    public static boolean isOperator(char c){
         return c == '+' || c == '-' || c== '*' || c == '/' || c == '%';
+    }
+
+    public static boolean isOperator(String s){
+        return s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.equals("%") || s.equals("sqrt");
     }
 
     private static String getString(Stack<Character> stack){
