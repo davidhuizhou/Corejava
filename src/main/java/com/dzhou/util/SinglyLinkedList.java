@@ -77,8 +77,8 @@ public class SinglyLinkedList<E>
     private void linkLast(E e) {
         if(size == 0)
             linkFirst(e);
-
-        linkAfter(e, node(size - 1));
+        else
+            linkAfter(e, node(size - 1));
     }
 
     /**
@@ -258,6 +258,34 @@ public class SinglyLinkedList<E>
         return unlinkNext(node(index), node(index - 1));
     }
 
+    public void removeAll(E e) {
+        if (e == null || first == null)
+            return;
+
+        Node<E> prev = null;
+        Node<E> ip = first;
+
+        while (ip != null) {
+
+            if (ip.item.equals(e)) {
+                if (prev == null) {
+                    removeFirst();
+                    ip = first;
+                } else {
+                    unlinkNext(ip, prev);
+                    ip = prev.next;
+
+                }
+
+            } else {
+                prev = ip;
+                ip = ip.next;
+            }
+
+
+        }
+    }
+
     /**
      * Replaces the element at the specified position in this list with the
      * specified element.
@@ -281,7 +309,7 @@ public class SinglyLinkedList<E>
 
         System.out.print("size=" + size + " ");
         while(n != null){
-            System.out.print(n.item.toString());
+            System.out.print(n.item.toString() + " ");
             n = n.next;
         }
         System.out.println("");
@@ -332,6 +360,44 @@ public class SinglyLinkedList<E>
 
         boston.removeLast();
         boston.showAll();
+
+        System.out.println("test revmoeAll");
+        SinglyLinkedList<Integer> list = new SinglyLinkedList<Integer>();
+        list.showAll();
+
+        list.removeAll(1);
+        list.showAll();
+
+        list.addLast(1);
+        list.showAll();
+
+        list.removeAll(0);
+        list.showAll();
+
+        list.removeAll(1);
+        list.showAll();
+
+
+        list.addLast(1);
+        list.addLast(10);
+        list.addLast(3);
+        list.addLast(1);
+        list.addLast(11);
+        list.addLast(4);
+        list.addLast(2);
+        list.addLast(20);
+        list.addLast(3);
+        list.addLast(1);
+        list.addLast(30);
+        list.addLast(5);
+        list.showAll();
+
+        list.removeAll(1);
+        list.showAll();
+        list.removeAll(3);
+        list.showAll();
+        list.removeAll(10);
+        list.showAll();
 
         System.exit(0);
     }
