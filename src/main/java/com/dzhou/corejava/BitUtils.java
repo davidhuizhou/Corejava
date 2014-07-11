@@ -1,0 +1,195 @@
+package com.dzhou.corejava;
+
+/**
+ * Created by huizhou on 7/10/14.
+ */
+public class BitUtils {
+    private static String patchWithZeros(String s){
+        int len = s.length();
+        if(len == 64)
+            return s;
+
+        for(int i = 0; i < 64 - len; i++){
+            s = "0" + s;
+        }
+
+        return s;
+    }
+
+    private static void printBits(String s){
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < s.length(); i++){
+            sb.append(s.charAt(i));
+            if(i < 63 && (i + 1) % 8 == 0)  {
+                sb.append(" ");
+
+            }
+
+        }
+        System.out.println(sb.toString());
+    }
+
+    private static String invertBinary(String s){
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < s.length(); i++){
+            if(s.charAt(i) == '0')
+                sb.append("1");
+            else
+                sb.append("0");
+        }
+        return sb.toString();
+    }
+
+    private static String addBinary(String s1, String s2){
+        String s = "";
+        s1 = patchWithZeros(s1);
+        s2 = patchWithZeros(s2);
+
+        int carryOver = 0;
+        for(int i = 63; i >= 0; i--){
+            int v1 = Integer.parseInt(s1.charAt(i) + "");
+            int v2 = Integer.parseInt(s2.charAt(i) + "");
+
+            s = (v1 + v2 + carryOver) % 2 + s;
+            carryOver = (v1 + v2 + carryOver) / 2;
+        }
+        return s;
+    }
+
+    public static String longToBinary(long L){
+        String s = "";
+        if(L >= 0){
+            while(L > 0){
+                s = (L % 2) + s;
+                L /= 2;
+            }
+            return patchWithZeros(s);
+        } else {
+            s = longToBinary((-1) * L);
+            s = invertBinary(s);
+            String s1 = longToBinary(1L);
+            return addBinary(s, s1);
+        }
+    }
+
+    public static int getNumberOfOnesInBinary(long L){
+//        int retVal = 0;
+//        while(L > 0){
+//            retVal += L %2;
+//            L /= 2;
+//        }
+//        return retVal;
+        int b = 0;
+        if(L >= 0) {
+            while (L != 0) {
+                ++b;
+                L &= (L - 1);
+            }
+            return b;
+
+        } else {
+//            return (64 - getNumberOfOnesInBinary(~L));
+            if(L == -1)
+                return 64;
+
+            while (L != -1) {
+                ++b;
+                L |= (L + 1);
+            }
+            return 64 - b;
+
+        }
+
+
+
+    }
+
+    private static long getBit(long L, int index){
+        return (L >> index) & 1L;
+    }
+
+    private static long setBit(long L, int index, long bit){
+        bit = bit << index;
+        long mask = L & (~(1L << index));
+        return (L & mask) | bit;
+    }
+
+    //swap i and j bit, i < j
+    public static long swapBits(Long L, int i, int j){
+
+        if(i == j)
+            return L;
+
+        long bitI = getBit(L, i);
+        long bitJ = getBit(L, j);
+
+        L = setBit(L, j, bitI);
+        L = setBit(L, i, bitJ);
+
+        return L;
+
+
+    }
+
+    public static void main(String[] args){
+        printBits(patchWithZeros("101"));
+        printBits(invertBinary(patchWithZeros("101")));
+        printBits(addBinary(patchWithZeros("101"), patchWithZeros("1101")));
+        printBits(longToBinary(0L));
+        printBits(longToBinary(1L));
+        printBits(longToBinary(2L));
+        printBits(longToBinary(3L));
+        printBits(longToBinary(4L));
+        printBits(longToBinary(5L));
+        printBits(longToBinary(6L));
+        printBits(longToBinary(7L));
+        printBits(longToBinary(8L));
+
+
+        System.out.println("100L");
+
+        printBits(patchWithZeros(Long.toBinaryString(100L)));
+        printBits(longToBinary(100L));
+//        printBits(longToBinary(getBit(100L, 0)));
+//        printBits(longToBinary(getBit(100L, 1)));
+//        printBits(longToBinary(getBit(100L, 2)));
+//        printBits(longToBinary(getBit(100L, 3)));
+//        printBits(longToBinary(setBit(100L, 2, 0L)));
+//        printBits(longToBinary(setBit(100L, 2, 1L)));
+        printBits(longToBinary(swapBits(100L, 0, 1)));
+        printBits(longToBinary(swapBits(100L, 0, 2)));
+        printBits(longToBinary(swapBits(100L, 2, 5)));
+
+
+        System.out.println("-100L");
+        printBits(patchWithZeros(Long.toBinaryString(-100L)));
+        printBits(longToBinary(-100L));
+//        printBits(longToBinary(getBit(-100L, 0)));
+//        printBits(longToBinary(getBit(-100L, 1)));
+//        printBits(longToBinary(getBit(-100L, 2)));
+//        printBits(longToBinary(getBit(-100L, 3)));
+//        printBits(longToBinary(setBit(-100L, 2, 0L)));
+//        printBits(longToBinary(setBit(-100L, 2, 1L)));
+        printBits(longToBinary(swapBits(-100L, 0, 1)));
+        printBits(longToBinary(swapBits(-100L, 0, 2)));
+        printBits(longToBinary(swapBits(-100L, 5, 2)));
+//
+//
+//
+//        printBits(patchWithZeros(Long.toBinaryString(-1L)));
+//        printBits(longToBinary(-1L));
+//
+//
+//        System.out.println(getNumberOfOnesInBinary(7L));
+//        System.out.println(getNumberOfOnesInBinary(100L));
+//        System.out.println(getNumberOfOnesInBinary(-100L));
+//
+//        System.out.println(getBit(-100L, 3));
+//        System.out.println(getNumberOfOnesInBinary(-1L));
+
+
+
+
+
+    }
+}
