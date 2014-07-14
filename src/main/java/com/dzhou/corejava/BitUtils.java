@@ -72,6 +72,24 @@ public class BitUtils {
         }
     }
 
+    public static long binaryToLong(String s){
+        s = patchWithZeros(s);
+
+        if(s.charAt(0) == '0'){
+            long l = 0;
+            for(int i = 0; i < s.length(); i++){
+                l = 2 * l + (s.charAt(i) - '0');
+            }
+            return l;
+        }else {
+            String s1 = longToBinary(-1L);
+            s = addBinary(s, s1);
+            s = invertBinary(s);
+            long l = (-1L) *  binaryToLong(s);
+            return l;
+        }
+    }
+
     public static int getNumberOfOnesInBinary(long L){
 //        int retVal = 0;
 //        while(L > 0){
@@ -110,7 +128,7 @@ public class BitUtils {
 
     private static long setBit(long L, int index, long bit){
         bit = bit << index;
-        long mask = L & (~(1L << index));
+        long mask = ~(1L << index);
         return (L & mask) | bit;
     }
 
@@ -129,6 +147,16 @@ public class BitUtils {
         return L;
 
 
+    }
+
+    public static int getMaxInt(){
+        int i = ~(1 << 31);
+        return i;
+    }
+
+    public static int getMinInt(){
+        int i = (1 << 31);
+        return i;
     }
 
     public static void main(String[] args){
@@ -176,7 +204,7 @@ public class BitUtils {
 //
 //
 //
-//        printBits(patchWithZeros(Long.toBinaryString(-1L)));
+        printBits(patchWithZeros(Long.toBinaryString(-1L)));
 //        printBits(longToBinary(-1L));
 //
 //
@@ -187,6 +215,20 @@ public class BitUtils {
 //        System.out.println(getBit(-100L, 3));
 //        System.out.println(getNumberOfOnesInBinary(-1L));
 
+        System.out.println(binaryToLong("000"));
+        System.out.println(binaryToLong("001"));
+        System.out.println(binaryToLong("111"));
+        System.out.println(binaryToLong(longToBinary(100L)));
+        System.out.println(binaryToLong(longToBinary(-100L)));
+        System.out.println(binaryToLong(longToBinary(10101L)));
+        System.out.println(binaryToLong(longToBinary(-12345L)));
+
+
+        System.out.println(Integer.MAX_VALUE);
+        System.out.println(getMaxInt());
+        System.out.println(Integer.MIN_VALUE);
+        System.out.println(Integer.toBinaryString(Integer.MIN_VALUE));
+        System.out.println(getMinInt());
 
 
 
