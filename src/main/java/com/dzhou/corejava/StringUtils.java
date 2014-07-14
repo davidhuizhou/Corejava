@@ -328,7 +328,7 @@ public class StringUtils {
 
         for(int i = 0; i < n; i++)
             for(int j = 0; j < n; j++)
-                N[i][j] = randInt(0, 9);
+                N[i][j] = randInt(0, n - 1);
 
         return N;
 
@@ -394,6 +394,26 @@ public class StringUtils {
 
     }
 
+
+    public static void rotateArray(int[][] A){
+        int N = A.length;
+
+        for(int layer = 0; layer < N/2; layer++){
+            int r1 = layer;
+            int c1 = layer;
+            int r2 = N - 1 - layer;
+            int c2 = N - 1 - layer;
+
+            for(int i = 0; i < c2 - c1; i++){
+                int temp = A[r1][c2 - i];
+                A[r1][c2 - i] = A[r1 + i][c1];
+                A[r1 + i][c1] = A[r2][c1 + i];
+                A[r2][c1 + i] = A[r2 -i][c2];
+                A[r2 - i][c2] = temp;
+
+            }
+        }
+    }
 
     /* Check for Parentheses balance */
     private static boolean isPair(char c1, char c2){
@@ -625,6 +645,16 @@ public class StringUtils {
 
         s = "5 - 6 )";
         System.out.println(insertLeftParentheses(s));
+
+        System.out.println("Before rotate");
+        int[][] A = generateMatrix(10);
+        printN(A);
+
+        System.out.println("After rotate");
+        rotateArray(A);
+        printN(A);
+
+
 
     }
 

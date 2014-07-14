@@ -1,6 +1,9 @@
 package com.dzhou.corejava;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by huizhou on 5/10/14.
@@ -151,46 +154,204 @@ public class MathUtils {
 
     }
 
-    public static void main(String[] args) {
-        System.out.println(sqrt(2.0));
-        System.out.println(sqrt(0.5));
-        System.out.println(isPrime(7));
-        System.out.println(isPrime(23));
-        System.out.println(isPrime(81));
-        System.out.println(harmonicNumber(81));
-        System.out.println("&&&&&&");
-        System.out.println(getBinaryString(7));
-        System.out.println(getBinaryString(16));
+    public static int[] twoSum(int[] a, int sum){
+        int[] retVal = {-1, -1};
+        HashMap<Integer, Integer> map = new HashMap();
 
-        int[] a = new int[10];
-        for (int i = 0; i < 10; i++)
-            a[i] = 9 - i;
-        for (int i = 0; i < 10; i++)
-            System.out.print(a[i] + " ");
-
-        System.out.println("\n");
-
-        for (int i = 0; i < 10; i++)
-            a[i] = a[a[i]];
-
-        for (int i = 0; i < 10; i++)
-            System.out.print(a[i] + " ");
-
-        System.out.println();
-        System.out.println(lg(0));
-        System.out.println(lg(1));
-        System.out.println(lg(2));
-        System.out.println(lg(3));
-        System.out.println(lg(4));
-        System.out.println(lg(7));
-        System.out.println(lg(8));
-        System.out.println(lg(31));
-        System.out.println(lg(64));
-
-        int[] b = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 6, 6, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 9, 9};
-        int[] c = histogram(b, 12);
-        System.out.println(Arrays.toString(c));
-
-        printHistogram(c);
+        for(int i = 0; i < a.length; i++){
+            if(map.containsKey(sum - a[i])){
+                retVal[0] = map.get(sum - a[i]);
+                retVal[1] = i;
+                return retVal;
+            } else {
+                map.put(a[i], i);
+            }
+        }
+        return retVal;
     }
+
+    public static int[] twoSum2(int[] a, int sum){
+        int[] retVal = {-1, -1};
+        Arrays.sort(a);
+
+        int i = 0, j = a.length - 1;
+        while(i < j){
+            if(a[i] + a[j] == sum){
+                retVal[0] = i;
+                retVal[1] = j;
+                return retVal;
+            } else if(a[i] + a[j] < sum){
+                i++;
+            }else{
+                j--;
+            }
+        }
+        return retVal;
+
+    }
+
+    public Set<Result> threeSum(int[] a){
+        Set<Result> results = new HashSet<Result>();
+        Arrays.sort(a);
+
+        for(int i = 0; i <= a.length - 2; i++){
+            int k = i + 1;
+            int l = a.length - 1;
+
+            while(k < l){
+                int sum = a[i] + a[k] + a[l];
+                if(sum == 0){
+                    results.add(new Result(a[i], a[k], a[l]));
+                    k++;
+                    l--;
+                } else if (sum < 0){
+                    k++;
+                } else {
+                    l--;
+                }
+            }
+
+        }
+        return results;
+    }
+
+    private class Result{
+        int a;
+        int b;
+        int c;
+
+        Result(int a, int b, int c){
+            this.a = a;
+            this.b = b;
+            this.c = c;
+        }
+        public boolean equals(Result r){
+            return a == r.a  && b == r.b  && c ==r.c;
+        }
+        public String toString(){
+            return "(" + a + "," + b + "," + c + ")";
+        }
+    }
+
+    private class ListNode{
+        int val;
+        ListNode next;
+
+        ListNode(int val){
+            this.val = val;
+            this.next = null;
+        }
+    }
+
+    public ListNode addTowNumber(ListNode l1, ListNode l2){
+        int carryOver = 0;
+        ListNode sentinel = new ListNode(0);
+
+        ListNode n1 = l1;
+        ListNode n2 = l2;
+        ListNode n3 = sentinel;
+
+        while(n1 != null || n2 != null) {
+            if(n1 != null) {
+                carryOver += n1.val;
+                n1 = n1.next;
+            }
+            if(n2 != null){
+                carryOver += n2.val;
+                n2 = n2.next;
+            }
+            n3.next = new ListNode(carryOver % 10);
+            n3 = n3.next;
+            carryOver = carryOver / 10;
+
+        }
+
+        if(carryOver == 1)
+            n3.next = new ListNode(1);
+
+        return sentinel.next;
+
+
+
+    }
+
+    public static void main(String[] args) {
+//        System.out.println(sqrt(2.0));
+//        System.out.println(sqrt(0.5));
+//        System.out.println(isPrime(7));
+//        System.out.println(isPrime(23));
+//        System.out.println(isPrime(81));
+//        System.out.println(harmonicNumber(81));
+//        System.out.println("&&&&&&");
+//        System.out.println(getBinaryString(7));
+//        System.out.println(getBinaryString(16));
+//
+//        int[] a = new int[10];
+//        for (int i = 0; i < 10; i++)
+//            a[i] = 9 - i;
+//        for (int i = 0; i < 10; i++)
+//            System.out.print(a[i] + " ");
+//
+//        System.out.println("\n");
+//
+//        for (int i = 0; i < 10; i++)
+//            a[i] = a[a[i]];
+//
+//        for (int i = 0; i < 10; i++)
+//            System.out.print(a[i] + " ");
+//
+//        System.out.println();
+//        System.out.println(lg(0));
+//        System.out.println(lg(1));
+//        System.out.println(lg(2));
+//        System.out.println(lg(3));
+//        System.out.println(lg(4));
+//        System.out.println(lg(7));
+//        System.out.println(lg(8));
+//        System.out.println(lg(31));
+//        System.out.println(lg(64));
+//
+//        int[] b = {1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 6, 6, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 9, 9};
+//        int[] c = histogram(b, 12);
+//        System.out.println(Arrays.toString(c));
+//
+//        printHistogram(c);
+
+        System.out.println("\n\n  towSum\n");
+        int[] d = {1, 3, 5, 5, 7, 8, 9, 8, 4, 5, 3, 2, 1, 11};
+        int[] e = twoSum(d, 4);
+        System.out.println(e[0] + " " + e[1]);
+        e = twoSum2(d, 4);
+        System.out.println(e[0] + " " + e[1]);
+
+        e = twoSum(d, 10);
+        System.out.println(e[0] + " " + e[1]);
+        e = twoSum2(d, 10);
+        System.out.println(e[0] + " " + e[1]);
+
+        e = twoSum(d, 16);
+        System.out.println(e[0] + " " + e[1]);
+        e = twoSum2(d, 16);
+        System.out.println(e[0] + " " + e[1]);
+
+        e = twoSum(d, 20);
+        System.out.println(e[0] + " " + e[1]);
+        e = twoSum2(d, 20);
+        System.out.println(e[0] + " " + e[1]);
+
+        e = twoSum(d, 100);
+        System.out.println(e[0] + " " + e[1]);
+        e = twoSum2(d, 100);
+        System.out.println(e[0] + " " + e[1]);
+
+        MathUtils util = new MathUtils();
+        int[] f = { 4, 6, 9, 11, -25, -10, -7, -3, 2, 4, 8, 10, -20};
+        Set<Result> results = util.threeSum(f);
+        for(Result r : results){
+            System.out.println(r);
+        }
+
+    }
+
+
 }
