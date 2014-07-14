@@ -6,106 +6,94 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Created by huizhou on 7/4/14.
+ * Created by huizhou on 7/12/14.
  */
-public class Queue<E> implements Iterable<E> {
+public class QueueWithCircularLinkedList<E> implements Iterable<E> {
     int size;
-    private Node<E> first;
+    //dummy node
     private Node<E> last;
 
-    public Queue() {
-        first = null;
-        last = null;
-        size = 0;
+    public QueueWithCircularLinkedList() {
+        this.size = 0;
+        this.last = new Node(null, null);
+        this.last.next = last;
 
     }
 
     public boolean isEmpty() {
-        return first == null;
+        return size == 0;
     }
 
     public int size() {
         return size;
     }
 
-
-    /**
-     * Returns the item least recently added to this queue.
-     *
-     * @return the item least recently added to this queue
-     * @throws java.util.NoSuchElementException if this queue is empty
-     */
-    public E peek() {
-        if (isEmpty())
+    public E peek(){
+        if(isEmpty())
             throw new NoSuchElementException();
 
-        return first.item;
+        return last.next.item;
 
     }
 
-    /**
-     * Adds the item to this queue.
-     *
-     * @param item the item to add
-     */
-    public void enqueue(E item) {
-        Node<E> newNode = new Node(item, null);
-        if (isEmpty()) {
-            first = newNode;
+    public void enqueue(E item){
+        Node<E> newNode = new Node(item, last);
 
-        } else {
+        if(isEmpty()){
             last.next = newNode;
+        } else {
+            Node<E> next = last.next;
+            while(next.next != last){
+                next = next.next;
+            }
+            next.next = newNode;
         }
-        last = newNode;
         size++;
+
     }
 
-    /**
-     * Removes and returns the item on this queue that was least recently added.
-     *
-     * @return the item on this queue that was least recently added
-     * @throws java.util.NoSuchElementException if this queue is empty
-     */
-    public E dequeue() {
-        if (isEmpty())
+    public E dequeue(){
+        if(isEmpty())
             throw new NoSuchElementException();
 
-        E e = first.item;
-        Node<E> f = first;
-        first = first.next;
-        if (first == null)
-            last = null;
-        f.item = null;
-        f.next = null;
+        Node<E> next = last.next;
+        E e = next.item;
+        last.next = next.next;
+
+        next.item = null;
+        next.next = null;
         size--;
         return e;
-
-
     }
 
-    public void reverse(){
-        Node<E> r = reverseAtNode(first);
-        last = first;
-        first = r;
-
+    private E unlink(Node<E> p) {
+        E e = p.next.item;
+        p.next = p.next.next;
+        size--;
+        return e;
     }
-    private Node<E> reverseAtNode(Node<E> x){
-        Node<E> f= x;
-        Node<E> r = null;
 
-        while(f != null){
-            Node<E> s = f.next;
-            f.next = r;
-            r = f;
-            f = s;
+    public String josephus(int m) {
+        StringBuilder sb = new StringBuilder();
+
+        Node<E> p = last;
+        int i = 1;
+        while (size >= 1) {
+            if (p.next == last) {
+                p = p.next;
+            }
+            if (i % m == 0) {
+                E e = unlink(p);
+                sb.append(e).append(" ");
+
+            } else {
+                p = p.next;
+            }
+            i++;
 
         }
-        return r;
-
-
+        return sb.toString();
     }
-
-
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -116,7 +104,7 @@ public class Queue<E> implements Iterable<E> {
     }
 
     public Iterator<E> iterator() {
-        return new ListIterator<E>(first);
+        return new ListIterator<E>(last.next);
     }
 
     private class ListIterator<E> implements Iterator<E> {
@@ -127,7 +115,7 @@ public class Queue<E> implements Iterable<E> {
         }
 
         public boolean hasNext() {
-            return current != null;
+            return current != last;
         }
 
         public E next() {
@@ -154,10 +142,12 @@ public class Queue<E> implements Iterable<E> {
             this.item = e;
             this.next = next;
         }
+
+
     }
 
     public static void main(String[] args) {
-        Queue<PhoneListing> q = new Queue<PhoneListing>();
+        QueueWithCircularLinkedList<PhoneListing> q = new QueueWithCircularLinkedList<PhoneListing>();
         PhoneListing l;
         PhoneListing l1 = new PhoneListing("Bill", "1st Avenue", "123 4567");
         PhoneListing l2 = new PhoneListing("Al", "2nd Avenue", "456 3232");
@@ -179,10 +169,6 @@ public class Queue<E> implements Iterable<E> {
         q.enqueue(l4);
 
         System.out.println(q.toString());
-        q.reverse();
-        System.out.println(q.toString());
-
-
         // perform three dequeue operations to empty the queue
         l = q.dequeue();
         System.out.println(l.toString());
@@ -202,11 +188,18 @@ public class Queue<E> implements Iterable<E> {
 
         System.out.println(q.toString());
 
-        q.reverse();
-        System.out.println(q.toString());
+        QueueWithCircularLinkedList<Integer> q1 = new QueueWithCircularLinkedList<Integer>();
+        q1.enqueue(0);
+        q1.enqueue(1);
+        q1.enqueue(2);
+        q1.enqueue(3);
+        q1.enqueue(4);
+        q1.enqueue(5);
+        q1.enqueue(6);
+
+        System.out.println(q1.toString());
+        System.out.println(q1.josephus(2));
 
         System.exit(0);
-
-
     }
 }

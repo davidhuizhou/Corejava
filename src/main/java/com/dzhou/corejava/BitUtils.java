@@ -90,6 +90,43 @@ public class BitUtils {
         }
     }
 
+    public static String doubleToBinary(double d, int percision){
+        long l = (long)d;
+        double f = d - l;
+        String s1 = longToBinary(l);
+
+        StringBuilder sb = new StringBuilder();
+        int numOfBits = 0;
+        while(numOfBits < percision){
+            f = f * 2;
+            if(f >= 1){
+                sb.append("1");
+                f -= 1.0;
+            } else {
+                sb.append("0");
+            }
+            numOfBits++;
+        }
+        return s1 + "." + sb.toString();
+
+    }
+
+    public static String toBitString(final double d) {
+        final char[] bit = new char[64];
+        final long dd = Double.doubleToLongBits(d);
+        long mask = 1L;
+        for(int i = 0; i < 64; i++) {
+            final long bitval = dd & mask;
+            if(bitval == 0) {
+                bit[63 - i] = '0';
+            } else {
+                bit[63 - i] = '1';
+            }
+            mask <<= 1;
+        }
+        return String.valueOf(bit);
+    }
+
     public static int getNumberOfOnesInBinary(long L){
 //        int retVal = 0;
 //        while(L > 0){
@@ -128,7 +165,7 @@ public class BitUtils {
 
     private static long setBit(long L, int index, long bit){
         bit = bit << index;
-        long mask = ~(1L << index);
+        long mask = L & (~(1L << index));
         return (L & mask) | bit;
     }
 
@@ -223,12 +260,15 @@ public class BitUtils {
         System.out.println(binaryToLong(longToBinary(10101L)));
         System.out.println(binaryToLong(longToBinary(-12345L)));
 
+        System.out.println(doubleToBinary(3.14159, 10));
+        System.out.println(toBitString(3.14159));
 
         System.out.println(Integer.MAX_VALUE);
         System.out.println(getMaxInt());
         System.out.println(Integer.MIN_VALUE);
         System.out.println(Integer.toBinaryString(Integer.MIN_VALUE));
         System.out.println(getMinInt());
+
 
 
 

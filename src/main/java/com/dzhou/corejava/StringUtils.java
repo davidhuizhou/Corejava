@@ -6,10 +6,7 @@ package com.dzhou.corejava;
 
 import com.dzhou.util.Stack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Random;
+import java.util.*;
 
 public class StringUtils {
 
@@ -328,7 +325,7 @@ public class StringUtils {
 
         for(int i = 0; i < n; i++)
             for(int j = 0; j < n; j++)
-                N[i][j] = randInt(0, 9);
+                N[i][j] = randInt(0, n - 1);
 
         return N;
 
@@ -394,6 +391,26 @@ public class StringUtils {
 
     }
 
+
+    public static void rotateArray(int[][] A){
+        int N = A.length;
+
+        for(int layer = 0; layer < N/2; layer++){
+            int r1 = layer;
+            int c1 = layer;
+            int r2 = N - 1 - layer;
+            int c2 = N - 1 - layer;
+
+            for(int i = 0; i < c2 - c1; i++){
+                int temp = A[r1][c2 - i];
+                A[r1][c2 - i] = A[r1 + i][c1];
+                A[r1 + i][c1] = A[r2][c1 + i];
+                A[r2][c1 + i] = A[r2 -i][c2];
+                A[r2 - i][c2] = temp;
+
+            }
+        }
+    }
 
     /* Check for Parentheses balance */
     private static boolean isPair(char c1, char c2){
@@ -527,6 +544,49 @@ public class StringUtils {
 
     }
 
+    //This one is not working, it should restart from the first index of the repeating character
+    //abcadbc  when it reach abca it restart from bcad and so on
+    public static String longestNoneRepeatingSubString(String s){
+        int len = s.length();
+        if(len <= 1)
+            return s;
+
+        String longest = "";
+        StringBuilder sb = new StringBuilder("");
+        for(int i = 0; i < len; i++){
+            String c = "" + s.charAt(i);
+            if(sb.toString().indexOf(c) < 0){
+                sb.append(c);
+            } else {
+                if(sb.toString().length() > longest.length())
+                    longest = sb.toString();
+                sb = new StringBuilder(c);
+
+            }
+        }
+        return longest;
+    }
+
+    public static int lengthOfLongestSubstring(String s) {
+
+        char[] arr = s.toCharArray();
+        int pre = 0;
+
+        HashMap<Character, Integer> map = new HashMap<Character, Integer>();
+
+        for (int i = 0; i < arr.length; i++) {
+            if (!map.containsKey(arr[i])) {
+                map.put(arr[i], i);
+            } else {
+                pre = pre > map.size() ? pre : map.size();
+                i = map.get(arr[i]);
+                map.clear();
+            }
+        }
+
+        return Math.max(pre, map.size());
+    }
+
     public static void main(String[] args){
 //        InputOutputWrapper wrapper = new InputOutputWrapper(new Scanner(System.in), System.out);
 //        StringUtils util = new StringUtils();
@@ -625,6 +685,29 @@ public class StringUtils {
 
         s = "5 - 6 )";
         System.out.println(insertLeftParentheses(s));
+
+        System.out.println("Before rotate");
+        int[][] A = generateMatrix(10);
+        printN(A);
+
+        System.out.println("After rotate");
+        rotateArray(A);
+        printN(A);
+
+
+        s = "";
+        System.out.println(longestNoneRepeatingSubString(s));
+
+        s = "a";
+        System.out.println(longestNoneRepeatingSubString(s));
+
+        s = "abcabcbb";
+        System.out.println(longestNoneRepeatingSubString(s));
+
+        s = "bbbbbbb";
+        System.out.println(longestNoneRepeatingSubString(s));
+
+
 
     }
 

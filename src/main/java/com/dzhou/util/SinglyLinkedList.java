@@ -1,5 +1,6 @@
 package com.dzhou.util;
 
+import com.dzhou.corejava.algs4.Complex;
 import com.dzhou.corejava.dsaj.ch4.Node;
 import com.dzhou.corejava.dsaj.ch4.PhoneListing;
 
@@ -286,6 +287,25 @@ public class SinglyLinkedList<E>
         }
     }
 
+    private E max(Node n) {
+
+        if(n == null || (!(n.item instanceof Comparable)))
+            return null;
+
+        E max = (E)n.item;
+        E max1 = max(n.next);
+
+        if(max1 != null && ((Comparable<E>)max1).compareTo(max) > 0){
+            max = max1;
+        }
+        return max;
+
+    }
+
+    public E max(){
+        return max(first);
+    }
+
     /**
      * Replaces the element at the specified position in this list with the
      * specified element.
@@ -301,6 +321,51 @@ public class SinglyLinkedList<E>
         E oldValue = x.item;
         x.item = element;
         return oldValue;
+
+    }
+
+    public void reverse(){
+        Node<E> r = reverseAtNode(first);
+        first = r;
+
+    }
+    private Node<E> reverseAtNode(Node<E> x){
+        Node<E> f= x;
+        Node<E> r = null;
+
+        while(f != null){
+            Node<E> s = f.next;
+            f.next = r;
+            r = f;
+            f = s;
+
+        }
+        return r;
+
+
+    }
+
+    public void moveToFront(E e) {
+        if (size == 0) {
+            addFirst(e);
+            return;
+        }
+        Node<E> p = first;
+
+        if (p.item.equals(e))
+            return;
+
+        else {
+            while (p.next != null && !(p.next.item.equals(e))) {
+                p = p.next;
+            }
+            if (p.next != null)
+                unlinkNext(p.next, p);
+            addFirst(e);
+
+
+        }
+
 
     }
 
@@ -337,6 +402,9 @@ public class SinglyLinkedList<E>
         boston.addFirst(l1);  // test insert
         boston.addLast(l2);
         boston.add(1, l3);
+        boston.showAll();
+
+        boston.reverse();
         boston.showAll();
 
 
@@ -392,12 +460,66 @@ public class SinglyLinkedList<E>
         list.addLast(5);
         list.showAll();
 
+        list.reverse();
+        list.showAll();
+
+        Integer max = list.max();
+        System.out.println("max=" + max);
+
         list.removeAll(1);
         list.showAll();
         list.removeAll(3);
         list.showAll();
         list.removeAll(10);
         list.showAll();
+
+        System.out.println("test move to front");
+
+        SinglyLinkedList<Integer> list1 = new SinglyLinkedList<Integer>();
+        list1.showAll();
+
+
+        list1.moveToFront(1);
+        list1.showAll();
+
+        list1.moveToFront(10);
+        list1.showAll();
+
+        list1.moveToFront(3);
+        list1.showAll();
+
+        list1.moveToFront(11);
+        list1.showAll();
+
+        list1.moveToFront(51);
+        list1.showAll();
+
+        list1.moveToFront(20);
+        list1.showAll();
+
+        list1.moveToFront(11);
+        list1.showAll();
+
+        list1.moveToFront(1);
+        list1.showAll();
+
+        list1.moveToFront(6);
+        list1.showAll();
+
+        list1.moveToFront(10);
+        list1.showAll();
+
+        list1.moveToFront(7);
+        list1.showAll();
+
+        list1.moveToFront(8);
+        list1.showAll();
+
+        list1.moveToFront(20);
+        list1.showAll();
+
+        list1.moveToFront(11);
+        list1.showAll();
 
         System.exit(0);
     }
