@@ -275,6 +275,41 @@ public class MathUtils {
 
     }
 
+    public static int[] cloestPair(int[] A){
+        Arrays.sort(A);
+
+        int diff = A[1] - A[0];
+        int[] retVal = {A[0], A[1]};
+        for(int i = 1; i < A.length - 1; i++){
+            if(A[i+1] - A[i] < retVal[1] - retVal[0]){
+                retVal[0] = A[i];
+                retVal[1] = A[i+1];
+            }
+        }
+        return retVal;
+    }
+
+    public static int[] fartestPair(int[] A){
+        int[] retVal = {Math.min(A[0], A[1]), Math.max(A[0], A[1])};
+
+        for(int i = 2; i < A.length; i++){
+            if(A[i] < retVal[0])
+                retVal[0] = A[i];
+            else if(A[i] > retVal[1])
+                retVal[1] = A[i];
+        }
+        return retVal;
+
+    }
+
+    private static String toString(int[] A){
+        StringBuilder sb = new StringBuilder();
+        for(int e : A){
+            sb.append(e).append(" ");
+        }
+        return sb.toString();
+    }
+
     public static void main(String[] args) {
 //        System.out.println(sqrt(2.0));
 //        System.out.println(sqrt(0.5));
@@ -350,6 +385,10 @@ public class MathUtils {
         for(Result r : results){
             System.out.println(r);
         }
+
+
+        int[] cloestPair = cloestPair(f);
+        System.out.println("cloestPair is " + toString(cloestPair));
 
     }
 
