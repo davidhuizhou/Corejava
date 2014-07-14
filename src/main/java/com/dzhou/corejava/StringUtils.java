@@ -6,10 +6,7 @@ package com.dzhou.corejava;
 
 import com.dzhou.util.Stack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Random;
+import java.util.*;
 
 public class StringUtils {
 
@@ -547,6 +544,49 @@ public class StringUtils {
 
     }
 
+    //This one is not working, it should restart from the first index of the repeating character
+    //abcadbc  when it reach abca it restart from bcad and so on
+    public static String longestNoneRepeatingSubString(String s){
+        int len = s.length();
+        if(len <= 1)
+            return s;
+
+        String longest = "";
+        StringBuilder sb = new StringBuilder("");
+        for(int i = 0; i < len; i++){
+            String c = "" + s.charAt(i);
+            if(sb.toString().indexOf(c) < 0){
+                sb.append(c);
+            } else {
+                if(sb.toString().length() > longest.length())
+                    longest = sb.toString();
+                sb = new StringBuilder(c);
+
+            }
+        }
+        return longest;
+    }
+
+    public static int lengthOfLongestSubstring(String s) {
+
+        char[] arr = s.toCharArray();
+        int pre = 0;
+
+        HashMap<Character, Integer> map = new HashMap<Character, Integer>();
+
+        for (int i = 0; i < arr.length; i++) {
+            if (!map.containsKey(arr[i])) {
+                map.put(arr[i], i);
+            } else {
+                pre = pre > map.size() ? pre : map.size();
+                i = map.get(arr[i]);
+                map.clear();
+            }
+        }
+
+        return Math.max(pre, map.size());
+    }
+
     public static void main(String[] args){
 //        InputOutputWrapper wrapper = new InputOutputWrapper(new Scanner(System.in), System.out);
 //        StringUtils util = new StringUtils();
@@ -653,6 +693,19 @@ public class StringUtils {
         System.out.println("After rotate");
         rotateArray(A);
         printN(A);
+
+
+        s = "";
+        System.out.println(longestNoneRepeatingSubString(s));
+
+        s = "a";
+        System.out.println(longestNoneRepeatingSubString(s));
+
+        s = "abcabcbb";
+        System.out.println(longestNoneRepeatingSubString(s));
+
+        s = "bbbbbbb";
+        System.out.println(longestNoneRepeatingSubString(s));
 
 
 
