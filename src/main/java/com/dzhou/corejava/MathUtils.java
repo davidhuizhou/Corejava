@@ -275,6 +275,38 @@ public class MathUtils {
 
     }
 
+    public static int findKth(int[] a, int[] b, int k, int aStart, int aEnd, int bStart, int bEnd){
+        int aLen = aEnd - aStart + 1;
+        int bLen = bEnd - bStart + 1;
+
+        if(aLen == 0)
+            return b[bStart + k];
+        if(bLen == 0)
+            return a[aStart + k];
+        if(k == 0)
+            return a[aStart] < b[bStart]?a[aStart] : b[bStart];
+
+        int aMid = k * aLen/(aLen + bLen);
+        int bMid = k - aMid - 1;
+
+        aMid = aStart + aMid;
+        bMid = bStart + bMid;
+
+        if(a[aMid] > b[bMid]){
+            k = k - (bMid - bStart + 1);
+            bStart = bMid + 1;
+            aEnd = aMid;
+
+        } else {
+            k = k - (aMid - aStart + 1);
+            aStart = aMid + 1;
+            bEnd = bMid;
+
+        }
+        return findKth(a, b, k, aStart, aEnd, bStart, bEnd);
+
+    }
+
     public static void main(String[] args) {
 //        System.out.println(sqrt(2.0));
 //        System.out.println(sqrt(0.5));
@@ -351,6 +383,22 @@ public class MathUtils {
             System.out.println(r);
         }
 
+        System.out.println("findKth");
+        int[] a = {1, 2, 5, 7, 9, 15};
+        int[] b = {3, 4, 6, 8, 10, 11, 13, 16, 18};
+
+        System.out.println(findKth(a, b, 0, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(findKth(a, b, 1, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(findKth(a, b, 2, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(findKth(a, b, 3, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(findKth(a, b, 4, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(findKth(a, b, 5, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(findKth(a, b, 6, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(findKth(a, b, 7, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(findKth(a, b, 8, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(findKth(a, b, 9, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(findKth(a, b, 10, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(findKth(a, b, 11, 0, a.length - 1, 0, b.length - 1));
     }
 
 

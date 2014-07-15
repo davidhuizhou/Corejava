@@ -555,15 +555,19 @@ public class StringUtils {
         StringBuilder sb = new StringBuilder("");
         for(int i = 0; i < len; i++){
             String c = "" + s.charAt(i);
-            if(sb.toString().indexOf(c) < 0){
+            int index = sb.toString().indexOf(c);
+
+            if(index < 0){
                 sb.append(c);
             } else {
                 if(sb.toString().length() > longest.length())
                     longest = sb.toString();
-                sb = new StringBuilder(c);
+                sb = new StringBuilder(sb.toString().substring(index + 1)).append(c);
 
             }
         }
+        if(sb.toString().length() > longest.length())
+            longest = sb.toString();
         return longest;
     }
 
@@ -696,16 +700,22 @@ public class StringUtils {
 
 
         s = "";
-        System.out.println(longestNoneRepeatingSubString(s));
+        System.out.println(longestNoneRepeatingSubString(s) + lengthOfLongestSubstring(s));
 
         s = "a";
-        System.out.println(longestNoneRepeatingSubString(s));
+        System.out.println(longestNoneRepeatingSubString(s) + lengthOfLongestSubstring(s));
 
         s = "abcabcbb";
-        System.out.println(longestNoneRepeatingSubString(s));
+        System.out.println(longestNoneRepeatingSubString(s) + lengthOfLongestSubstring(s));
+
+        s = "abcadefghijk";
+        System.out.println(longestNoneRepeatingSubString(s) + lengthOfLongestSubstring(s));
+
+        s = "abcadebb";
+        System.out.println(longestNoneRepeatingSubString(s) + lengthOfLongestSubstring(s));
 
         s = "bbbbbbb";
-        System.out.println(longestNoneRepeatingSubString(s));
+        System.out.println(longestNoneRepeatingSubString(s) + lengthOfLongestSubstring(s));
 
 
 
