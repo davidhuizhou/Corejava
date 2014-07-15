@@ -591,6 +591,57 @@ public class StringUtils {
         return Math.max(pre, map.size());
     }
 
+    public static Set<String> getPalindromes(String s) {
+        Set<String> palindromes = new HashSet<String>();
+        char[] A = s.toCharArray();
+        int longest = 2;
+
+        for (int i = 0; i < A.length - 1; i++) {
+            int j = s.lastIndexOf(A[i], A.length - 1);
+            while (j - i + 1 >= longest) {
+                if (isPalindrome(A, i, j)) {
+                    palindromes.add(toString(A, i, j));
+                    longest = j - i + 1;
+                    break;
+                }
+
+                j = s.lastIndexOf(A[i], j - 1);
+
+            }
+
+        }
+        return palindromes;
+    }
+
+    public static boolean isPalindrome(char[] A, int i, int j) {
+        if (A.length < 2 || i >= j || i < 0 || j > A.length - 1)
+            return false;
+
+        while (i < j && A[i] == A[j]) {
+            i++;
+            j--;
+        }
+        if (i >= j) {
+            return true;
+        }
+        return false;
+
+    }
+
+    public static String toString(char[] A, int i, int j){
+        StringBuilder sb = new StringBuilder();
+        for(int k = i; k <=j; k++)
+            sb.append(A[k]);
+        return sb.toString();
+    }
+
+    public static void printSet(Set<String> set){
+        System.out.print("\n(");
+        for(String s : set)
+            System.out.print(s + "|");
+        System.out.print(")\n");
+    }
+
     public static void main(String[] args){
 //        InputOutputWrapper wrapper = new InputOutputWrapper(new Scanner(System.in), System.out);
 //        StringUtils util = new StringUtils();
@@ -716,6 +767,46 @@ public class StringUtils {
 
         s = "bbbbbbb";
         System.out.println(longestNoneRepeatingSubString(s) + lengthOfLongestSubstring(s));
+
+        s = "";
+        System.out.println(isPalindrome(s.toCharArray(), 0, s.length() - 1));
+
+        s = "a";
+        System.out.println(isPalindrome(s.toCharArray(), 0, s.length() - 1));
+        printSet(getPalindromes(s));
+
+        s = "bb";
+        System.out.println(isPalindrome(s.toCharArray(), 0, s.length() - 1));
+        printSet(getPalindromes(s));
+
+        s = "ccc";
+        System.out.println(isPalindrome(s.toCharArray(), 0, s.length() - 1));
+        printSet(getPalindromes(s));
+
+        s = "mam";
+        System.out.println(isPalindrome(s.toCharArray(), 0, s.length() - 1));
+        printSet(getPalindromes(s));
+
+        s = "abcba";
+        System.out.println(isPalindrome(s.toCharArray(), 0, s.length() - 1));
+        printSet(getPalindromes(s));
+
+
+        s = "man nam";
+        System.out.println(isPalindrome(s.toCharArray(), 0, s.length() - 1));
+        printSet(getPalindromes(s));
+
+        s = "manaam";
+        System.out.println(isPalindrome(s.toCharArray(), 0, s.length() - 1));
+        printSet(getPalindromes(s));
+
+        s = "maammaam";
+        System.out.println(isPalindrome(s.toCharArray(), 0, s.length() - 1));
+        printSet(getPalindromes(s));
+
+        s = "maammbbm";
+        System.out.println(isPalindrome(s.toCharArray(), 0, s.length() - 1));
+        printSet(getPalindromes(s));
 
 
 

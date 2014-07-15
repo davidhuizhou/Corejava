@@ -275,6 +275,41 @@ public class MathUtils {
 
     }
 
+    public static int[] cloestPair(int[] A){
+        Arrays.sort(A);
+
+        int diff = A[1] - A[0];
+        int[] retVal = {A[0], A[1]};
+        for(int i = 1; i < A.length - 1; i++){
+            if(A[i+1] - A[i] < retVal[1] - retVal[0]){
+                retVal[0] = A[i];
+                retVal[1] = A[i+1];
+            }
+        }
+        return retVal;
+    }
+
+    public static int[] fartestPair(int[] A){
+        int[] retVal = {Math.min(A[0], A[1]), Math.max(A[0], A[1])};
+
+        for(int i = 2; i < A.length; i++){
+            if(A[i] < retVal[0])
+                retVal[0] = A[i];
+            else if(A[i] > retVal[1])
+                retVal[1] = A[i];
+        }
+        return retVal;
+
+    }
+
+    private static String toString(int[] A){
+        StringBuilder sb = new StringBuilder();
+        for(int e : A){
+            sb.append(e).append(" ");
+        }
+        return sb.toString();
+    }
+
     public static int findKth(int[] a, int[] b, int k, int aStart, int aEnd, int bStart, int bEnd){
         int aLen = aEnd - aStart + 1;
         int bLen = bEnd - bStart + 1;
@@ -383,22 +418,10 @@ public class MathUtils {
             System.out.println(r);
         }
 
-        System.out.println("findKth");
-        int[] a = {1, 2, 5, 7, 9, 15};
-        int[] b = {3, 4, 6, 8, 10, 11, 13, 16, 18};
 
-        System.out.println(findKth(a, b, 0, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(findKth(a, b, 1, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(findKth(a, b, 2, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(findKth(a, b, 3, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(findKth(a, b, 4, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(findKth(a, b, 5, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(findKth(a, b, 6, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(findKth(a, b, 7, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(findKth(a, b, 8, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(findKth(a, b, 9, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(findKth(a, b, 10, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(findKth(a, b, 11, 0, a.length - 1, 0, b.length - 1));
+        int[] cloestPair = cloestPair(f);
+        System.out.println("cloestPair is " + toString(cloestPair));
+
     }
 
 
