@@ -128,7 +128,7 @@ public class PolynomialRegression {
 //     * @return a string representation of the polynomial regression model,
 //     *   including the best-fit polynomial and the coefficient of determination <em>R</em><sup>2</sup>
 //     */
-//    public String toString() {
+//    public String arrayToString() {
 //        String s = "";
 //        int j = degree;
 //

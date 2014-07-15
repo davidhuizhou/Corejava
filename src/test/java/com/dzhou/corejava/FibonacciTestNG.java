@@ -3,9 +3,8 @@ package com.dzhou.corejava;
 /**
  * Created by davidzhou on 1/5/14.
  */
-import com.dzhou.corejava.*;
 
-import org.mockito.Mockito;
+import com.dzhou.util.StringUtils;
 import org.testng.annotations.*;
 import org.testng.Assert;
 

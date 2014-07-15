@@ -1,6 +1,6 @@
 package com.dzhou.corejava;
 
-import com.dzhou.corejava.StringUtils;
+import com.dzhou.util.StringUtils;
 import com.dzhou.lib.algorithms.StdIn;
 import com.dzhou.lib.algorithms.StdOut;
 import com.dzhou.util.Stack;

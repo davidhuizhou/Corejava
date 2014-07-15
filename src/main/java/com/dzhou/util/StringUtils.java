@@ -1,9 +1,10 @@
-package com.dzhou.corejava;
+package com.dzhou.util;
 
 /**
  * Created by davidzhou on 5/7/14.
  */
 
+import com.dzhou.corejava.InputOutputWrapper;
 import com.dzhou.util.Stack;
 
 import java.util.*;
@@ -600,7 +601,7 @@ public class StringUtils {
             int j = s.lastIndexOf(A[i], A.length - 1);
             while (j - i + 1 >= longest) {
                 if (isPalindrome(A, i, j)) {
-                    palindromes.add(toString(A, i, j));
+                    palindromes.add(arrayToString(A, i, j));
                     longest = j - i + 1;
                     break;
                 }
@@ -628,10 +629,17 @@ public class StringUtils {
 
     }
 
-    public static String toString(char[] A, int i, int j){
+    public static String arrayToString(char[] A, int i, int j){
         StringBuilder sb = new StringBuilder();
         for(int k = i; k <=j; k++)
             sb.append(A[k]);
+        return sb.toString();
+    }
+
+    public static String arrayToString(int[] A, int i, int j){
+        StringBuilder sb = new StringBuilder();
+        for(int k = i; k <=j; k++)
+            sb.append(A[k]).append(" ");
         return sb.toString();
     }
 

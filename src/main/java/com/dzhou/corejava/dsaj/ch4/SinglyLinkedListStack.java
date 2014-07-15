@@ -37,10 +37,10 @@ public class SinglyLinkedListStack<T> {
         boston.showAll();
         //Three ìpopî operations
         l3 = boston.pop();   // first ìpopî
-        System.out.println(l3); // (Java automatically invokes the toString method)
+        System.out.println(l3); // (Java automatically invokes the arrayToString method)
 
         l3 = boston.pop();   // second ìpopî
-        System.out.println(l3); // (Java automatically invokes the toString method)
+        System.out.println(l3); // (Java automatically invokes the arrayToString method)
 
         l3 = boston.pop();   // second ìpopî
         System.out.println(l3);

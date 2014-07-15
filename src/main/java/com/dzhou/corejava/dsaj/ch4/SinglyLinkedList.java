@@ -184,10 +184,10 @@ public class SinglyLinkedList<T> {
         //Three ìpopî operations
         l3 = boston.fetch("X");   // first ìpopî
         boston.delete("X");
-        System.out.println(l3); // (Java automatically invokes the toString method)
+        System.out.println(l3); // (Java automatically invokes the arrayToString method)
         l3 = boston.fetch("X");   // second ìpopî
         boston.delete("X");
-        System.out.println(l3); // (Java automatically invokes the toString method)
+        System.out.println(l3); // (Java automatically invokes the arrayToString method)
         l3 = boston.fetch("X");   // third ìpopî
         boston.delete("X");
         System.out.println(l3); //
@@ -204,7 +204,7 @@ public class SinglyLinkedList<T> {
         // output all the listings using the iterator, i
 
         while (chicago.i[1].hasNext()) {
-            System.out.println(chicago.i[1].next()); // Java automatically invokes toString
+            System.out.println(chicago.i[1].next()); // Java automatically invokes arrayToString
         }
         // add an area code to all the listings using the iterator, i
         chicago.i[1].reset();
@@ -218,7 +218,7 @@ public class SinglyLinkedList<T> {
         // output the updated listings using the iterator, i
         chicago.i[1].reset();
         while (chicago.i[1].hasNext()) {
-            System.out.println(chicago.i[1].next()); // Java automatically invokes toString
+            System.out.println(chicago.i[1].next()); // Java automatically invokes arrayToString
         }
 
 
@@ -238,7 +238,7 @@ public class SinglyLinkedList<T> {
         // output all the listings using iterator 1
         while(i1.hasNext())
         {
-            System.out.println(i1.next()); // Java automatically uses the toString method;
+            System.out.println(i1.next()); // Java automatically uses the arrayToString method;
         }
         // add an area code to all the listings using iterator 2
 
