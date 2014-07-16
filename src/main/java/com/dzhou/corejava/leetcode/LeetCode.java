@@ -1,4 +1,4 @@
-package com.dzhou.corejava;
+package com.dzhou.corejava.leetcode;
 
 import com.dzhou.util.StringUtils;
 
