@@ -68,6 +68,8 @@ public class LinkedListTest<E> {
 
     }
 
+
+
     /**
      *  2.1 Remove duplicates from unsorted linked list
      */
@@ -229,21 +231,6 @@ public class LinkedListTest<E> {
 
     }
 
-
-//
-//    public void reverse(){
-//        Node<E> rev = null;
-//        Node<E> n = null;
-//
-//        while(first != null) {
-//            n = first;
-//            first = first.next;
-//            n.next = rev;
-//            rev = n;
-//        }
-//        first = rev;
-//
-//    }
 
     public static void test(){
         testRemoveDuplicates();
