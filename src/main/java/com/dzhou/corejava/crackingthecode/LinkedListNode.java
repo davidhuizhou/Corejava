@@ -1,6 +1,10 @@
 package com.dzhou.corejava.crackingthecode;
 
 
+import com.dzhou.corejava.dsaj.ch4.Node;
+
+import java.util.HashSet;
+
 /**
  * Created by davidzhou on 7/16/14.
  */
@@ -10,17 +14,21 @@ public class LinkedListNode <E> {
 
     public LinkedListNode(E e){
         this.e = e;
-        next = null;
     }
 
     public int length(){
-        int length = 1;
-        LinkedListNode<E> n = next;
+        int length = 0;
+        LinkedListNode<E> n = this;
+
         while(n != null){
             length++;
             n = n.next;
         }
         return length;
+    }
+
+    public E value(){
+        return e;
     }
 
     public String toString(){
@@ -47,6 +55,9 @@ public class LinkedListNode <E> {
 
     }
 
+    /**
+     *  2.1 Remove duplicates from unsorted linked list
+     */
     public void removeDuplicates()
     {
         LinkedListNode<E> n = this;
@@ -59,7 +70,7 @@ public class LinkedListNode <E> {
             while(q != null){
                 if(q.e.equals(n.e)){
                     p.next = q.next;
-                    q = q.next;
+                    q = p.next;
                 } else {
                     p = p.next;
                     q = q.next;
@@ -71,6 +82,29 @@ public class LinkedListNode <E> {
 
     }
 
+    /**
+     *  2.1 Remove duplicates from unsorted linked list
+     */
+    public void removeDuplicates1(){
+        HashSet<E> set = new HashSet<E>();
+        set.add(this.e);
+        LinkedListNode<E> n = this;
+
+        while(n.next != null){
+            if(!set.contains(n.next.e)){
+                set.add(n.next.e);
+                n = n.next;
+            } else{
+                n.next = n.next.next;
+            }
+        }
+    }
+
+    /**
+     *
+     * @param k k = 1 will be the last node
+     * @return
+     */
     public LinkedListNode<E> kthToLast(int k){
         if(k <= 0)
             return null;
@@ -87,7 +121,7 @@ public class LinkedListNode <E> {
         if(p2 == null)
             return null;
 
-        while(p2 != null){
+        while(p2.next != null){
             p2 = p2.next;
             p1 = p1.next;
         }
@@ -95,7 +129,18 @@ public class LinkedListNode <E> {
 
     }
 
+    public LinkedListNode<E> reverse(){
+        LinkedListNode<E> r = null;
+        LinkedListNode<E> p1 = this;
 
+        while(p1 != null){
+            LinkedListNode<E> p2 = p1.next;
+            p1.next = r;
+            r = p1;
+            p1 = p2;
+        }
+        return r;
+    }
 
     public static void main(String[] args){
         LinkedListNode<Integer> l = new LinkedListNode<Integer>(1);
