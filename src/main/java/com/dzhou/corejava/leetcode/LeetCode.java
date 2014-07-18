@@ -3,6 +3,8 @@ package com.dzhou.corejava.leetcode;
 import com.dzhou.util.StringUtils;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by huizhou on 7/15/14.
@@ -140,6 +142,13 @@ public class LeetCode {
         return Math.max(pre, map.size());
     }
 
+    /**
+     *
+     * http://www.programcreek.com/2013/02/leetcode-longest-substring-without-repeating-characters-java/
+     * @param s
+     * @return
+     */
+
     public static String longestSubstring(String s) {
         String longest = "";
         HashMap<Character, Integer> map = new HashMap<Character, Integer>();
@@ -158,6 +167,56 @@ public class LeetCode {
             longest = s.substring(s.length() - map.size());
 
         return longest;
+    }
+
+    /**
+     * http://www.programcreek.com/2013/12/leetcode-solution-of-longest-palindromic-substring-java/
+     * @param
+     */
+    private static int expend(boolean[][] b, char[] a, int i, int j){
+        if(j < i || (i < 0 || i >= a.length) || (j < 0 || j >= a.length) || a[i] != a[j])
+            return -1;
+
+        while(i >= 0 && j <= a.length - 1 && a[i] == a[j]){
+            b[i][j] = true;
+            i--;
+            j++;
+        }
+        return j - i - 1;
+    }
+
+    public static Set<String> longestPalindrom(String s){
+        Set<String> results = new HashSet<String>();
+        if(s.length() <= 1){
+            results.add(s);
+            return results;
+        }
+
+        int longest = 1;
+        char[] a = s.toCharArray();
+        int len = a.length;
+        boolean[][] b = new boolean[len][len];
+
+        for(int i = 0; i < len - 1; i++)
+            b[i][i] = true;
+
+        for(int i = 0; i < len - 2; i++){
+            int l = expend(b, a, i, i);
+            if(l > longest)
+                longest = l;
+
+            l = expend(b, a, i, i + 1);
+            if(l > longest)
+                longest = l;
+
+        }
+
+        for(int i = 0; i < len -1; i++){
+            if(i + longest <= len && b[i][i + longest - 1])
+                results.add(s.substring(i, i + longest));
+        }
+        return results;
+
     }
 
     public static void main(String[] args){
@@ -195,6 +254,40 @@ public class LeetCode {
         System.out.println(longestSubstring("abab"));
         System.out.println(longestNoneRepeatingSubString("abcdae"));
         System.out.println(longestSubstring("abcdae"));
+
+        System.out.println("Test expend");
+        String s = "a";
+        boolean[][] b = new boolean[s.length()][s.length()];
+        System.out.println(expend(b, s.toCharArray(), 0, 0));
+
+        b = new boolean[s.length()][s.length()];
+        s = "a";
+        System.out.println(expend(b, s.toCharArray(), 0, 1));
+
+        s = "ab";
+        b = new boolean[s.length()][s.length()];
+        System.out.println(expend(b, s.toCharArray(), 0, 1));
+
+        s = "aa";
+        b = new boolean[s.length()][s.length()];
+        System.out.println(expend(b, s.toCharArray(), 0, 1));
+
+        s = "aba";
+        b = new boolean[s.length()][s.length()];
+        System.out.println(expend(b, s.toCharArray(), 1, 1));
+
+
+        s = "abcbd";
+        b = new boolean[s.length()][s.length()];
+        System.out.println(expend(b, s.toCharArray(), 2, 2));
+
+        s = "abccbdadb";
+        b = new boolean[s.length()][s.length()];
+        System.out.println(expend(b, s.toCharArray(), 2, 3));
+
+        System.out.println("Test longestPalindroms");
+        Set<String> results = longestPalindrom(s);
+        StringUtils.printSet(results);
 
     }
 }
