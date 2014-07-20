@@ -7,12 +7,13 @@ import java.util.HashSet;
  * Created by davidzhou on 7/16/14.
  */
 public class LinkedListNode<E> {
-    E e;
-    LinkedListNode<E> next;
+    public E e;
+    public LinkedListNode<E> next;
 
     public LinkedListNode(E e) {
         this.e = e;
     }
+
 
     public int length() {
         int length = 0;
@@ -25,9 +26,6 @@ public class LinkedListNode<E> {
         return length;
     }
 
-    public E value() {
-        return e;
-    }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();

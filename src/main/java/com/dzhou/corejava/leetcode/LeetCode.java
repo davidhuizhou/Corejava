@@ -1,7 +1,9 @@
 package com.dzhou.corejava.leetcode;
 
+import com.dzhou.corejava.crackingthecode.LinkedListNode;
 import com.dzhou.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -93,35 +95,6 @@ public class LeetCode {
      * http://www.programcreek.com/2013/02/leetcode-longest-substring-without-repeating-characters-java/
      * @param s
      */
-    public static String longestNoneRepeatingSubString(String s) {
-        if (s == null || s.length() <= 1)
-            return s;
-
-        HashMap<Character, Integer> map = new HashMap<Character, Integer>();
-        String longest = "";
-        int i = 0;
-
-        for (int j = i; j < s.length(); j++) {
-            char c = s.charAt(j);
-            if (!map.containsKey(c)) {
-                map.put(c, j);
-            } else {
-                if (j - i > longest.length())
-                    longest = s.substring(i, j);
-
-                i = map.get(c) + 1;
-                j = map.get(c);
-                map.clear();
-
-            }
-        }
-
-        if(i < s.length() && s.substring(i).length() > longest.length())
-            longest = s.substring(i);
-
-        return longest;
-    }
-
     public static int lengthOfLongestSubstring(String s) {
 
         char[] arr = s.toCharArray();
@@ -149,75 +122,326 @@ public class LeetCode {
      * @return
      */
 
-    public static String longestSubstring(String s) {
-        String longest = "";
+    public static Set<String> longestSubstring(String s) {
+        Set<String> set = new HashSet<String>();
+        if(s.isEmpty())
+            return set;
+        if(s.length() == 1){
+            set.add(s);
+            return set;
+        }
+
+        int longest = 0;
         HashMap<Character, Integer> map = new HashMap<Character, Integer>();
+
+        int begin = 0;
 
         for (int i = 0; i < s.length(); i++) {
             if (!map.containsKey(s.charAt(i))) {
                 map.put(s.charAt(i), i);
             } else {
-                longest = longest.length() >= map.size() ? longest : s.substring(i - map.size(), i);
+                if (map.size() == longest) {
+                    set.add(s.substring(begin, i));
+                } else if (map.size() > longest) {
+                    set.clear();
+                    set.add(s.substring(begin, i));
+                    longest = map.size();
+
+                }
                 i = map.get(s.charAt(i));
+                begin = i + 1;
                 map.clear();
+
             }
         }
 
-        if(map.size() > longest.length())
-            longest = s.substring(s.length() - map.size());
+        if (map.size() == longest)
+            set.add(s.substring(begin));
+        else if (map.size() > longest) {
+            set.clear();
+            set.add(s.substring(begin));
+        }
 
-        return longest;
+
+        return set;
     }
 
     /**
      * http://www.programcreek.com/2013/12/leetcode-solution-of-longest-palindromic-substring-java/
      * @param
      */
-    private static int expend(boolean[][] b, char[] a, int i, int j){
-        if(j < i || (i < 0 || i >= a.length) || (j < 0 || j >= a.length) || a[i] != a[j])
-            return -1;
+    private static String expend(String s, int begin, int end){
+        if(end < begin || (begin < 0 || begin >= s.length()) || (end < 0 || end >= s.length()) || s.charAt(begin) != s.charAt(end))
+            return "";
 
-        while(i >= 0 && j <= a.length - 1 && a[i] == a[j]){
-            b[i][j] = true;
-            i--;
-            j++;
+        while(begin >= 0 && end < s.length() && s.charAt(begin) == s.charAt(end)){
+            begin--;
+            end++;
         }
-        return j - i - 1;
+        return s.substring(begin + 1, end);
     }
 
-    public static Set<String> longestPalindrom(String s){
+    public static Set<String> longestPalindromSubStrings(String s){
         Set<String> results = new HashSet<String>();
-        if(s.length() <= 1){
+
+        if(s.isEmpty())
+            return null;
+
+        if(s.length() == 1){
             results.add(s);
             return results;
         }
 
         int longest = 1;
-        char[] a = s.toCharArray();
-        int len = a.length;
-        boolean[][] b = new boolean[len][len];
 
-        for(int i = 0; i < len - 1; i++)
-            b[i][i] = true;
+        for(int i = 0; i < s.length(); i++){
+            String l = expend(s, i, i);
+            if(l.length() == longest){
+                results.add(l);
+            }else if(l.length() > longest){
+                results.clear();
+                results.add(l);
+                longest = l.length();
+            }
 
-        for(int i = 0; i < len - 2; i++){
-            int l = expend(b, a, i, i);
-            if(l > longest)
-                longest = l;
+            l = expend(s, i, i + 1);
+            if(l.length() == longest){
+                results.add(l);
+            }else if(l.length() > longest){
+                results.clear();
+                results.add(l);
+                longest = l.length();
+            }
 
-            l = expend(b, a, i, i + 1);
-            if(l > longest)
-                longest = l;
-
-        }
-
-        for(int i = 0; i < len -1; i++){
-            if(i + longest <= len && b[i][i + longest - 1])
-                results.add(s.substring(i, i + longest));
         }
         return results;
 
     }
+
+    public static double findMedianOfTwoSortedArray(int[] a, int[] b){
+        int aLen = a.length;
+        int bLen = b.length;
+
+        if((aLen + bLen) % 2 == 0){
+            return (kThElement(a, b, (aLen + bLen)/2 -1, 0, aLen - 1, 0, bLen - 1) + kThElement(a, b, (aLen + bLen)/2, 0, aLen -1, 0, bLen - 1)) * 0.5;
+
+        } else{
+            return kThElement(a, b, (aLen + bLen)/2, 0, aLen - 1, 0, bLen -1);
+        }
+
+    }
+
+    public static int kThElement(int[] a, int[] b, int k, int aStart, int aEnd, int bStart, int bEnd){
+        int aLen = aEnd - aStart + 1;
+        int bLen = bEnd - bStart + 1;
+
+        if(aLen <= 0 || a.length <= 0)
+            return b[bStart + k];
+
+        if(bLen <= 0 || b.length <= 0)
+            return a[aStart + k];
+
+        if(k == 0)
+            return Math.min(a[aStart + k], b[bStart + k]);
+
+        int aMid = k * aLen / (aLen + bLen);
+        int bMid = k - aMid - 1;
+        aMid = aStart + aMid;
+        bMid = bStart + bMid;
+
+        if(a[aMid] > b[bMid]){
+            k = k - (bMid - bStart + 1);
+            aEnd = aMid;
+            bStart = bMid + 1;
+        } else if (a[aMid] < b[bMid]){
+            k = k - (aMid - aStart + 1);
+            bEnd = bMid;
+            aStart = aMid + 1;
+        } else {
+            return a[aMid];
+        }
+        return kThElement(a, b, k, aStart, aEnd, bStart, bEnd);
+    }
+
+    /**
+     *
+     * @param x - http://www.programcreek.com/2013/02/leetcode-palindrome-number-java/
+     */
+    public static boolean isPalindrome(int x) {
+        if (x < 0)
+            return false;
+
+        int div = 1;
+        while (x / div >= 10) {
+            div *= 10;
+        }
+
+        while (x != 0) {
+            int right = x % 10;
+            int left = x / div;
+
+            if (right != left)
+                return false;
+
+            x = (x % div) / 10;
+            div /= 100;
+
+        }
+        return true;
+
+    }
+
+
+
+    /**
+     *
+     * http://www.programcreek.com/2012/12/leetcode-regular-expression-matching-in-java/
+     */
+    //Get the starting string with the same characters of the s.charAt(0)
+    public static boolean isMatch(String s, String p) {
+        if (p.length() == 0)
+            return s.length() == 0;
+
+        if (p.length() == 1 || p.charAt(1) != '*') {
+            if (s.length() < 1 || (p.charAt(0) != '.' && p.charAt(0) != s.charAt(0)))
+                return false;
+            return isMatch(s.substring(1), p.substring(1));
+        } else {
+            int i = -1;
+            while (i < s.length() && (i < 0 || p.charAt(0) == '.' || p.charAt(0) == s.charAt(i))) {
+                if (isMatch(s.substring(i + 1), p.substring(2)))
+                    return true;
+                i++;
+            }
+            return false;
+
+        }
+    }
+
+    /**
+     *
+     * https://oj.leetcode.com/problems/longest-common-prefix/
+     */
+
+    /**
+     *
+     * http://www.programcreek.com/2012/12/leetcode-3sum/
+     */
+    private class Result {
+        int a;
+        int b;
+        int c;
+
+        Result(int a, int b, int c) {
+            this.a = a;
+            this.b = b;
+            this.c = c;
+        }
+
+        public boolean equals(Result r) {
+            return a == r.a && b == r.b && c == r.c;
+        }
+
+        public String toString() {
+            return "(" + a + "," + b + "," + c + ")";
+        }
+    }
+
+    public Set<Result> threeSum(int[] a) {
+        Set<Result> results = new HashSet<Result>();
+        Arrays.sort(a);
+
+        for (int i = 0; i <= a.length - 2; i++) {
+            int k = i + 1;
+            int l = a.length - 1;
+
+            while (k < l) {
+                int sum = a[i] + a[k] + a[l];
+                if (sum == 0) {
+                    results.add(new Result(a[i], a[k], a[l]));
+                    k++;
+                    l--;
+                } else if (sum < 0) {
+                    k++;
+                } else {
+                    l--;
+                }
+            }
+
+        }
+        return results;
+    }
+
+    /**
+     * http://www.programcreek.com/2013/02/leetcode-3sum-closest-java/
+     */
+    public int threeSumCloest(int[] a, int target) {
+        Arrays.sort(a);
+        int min = Integer.MAX_VALUE;
+        int result = 0;
+
+        for (int i = 0; i <= a.length - 3; i++) {
+            int j = i + 1;
+            int k = a.length - 1;
+
+            while (j < k) {
+                int sum = a[i] + a[j] + a[k];
+                int diff = Math.abs(sum - target);
+
+                if (diff < min) {
+                    result = sum;
+                }
+
+                if (sum == target) {
+                    return sum;
+                } else if (sum < target) {
+                    j++;
+                } else {
+                    k--;
+                }
+
+
+            }
+
+
+        }
+        return result;
+    }
+
+    /**
+     *
+     * leetcode-merge-two-sorted-lists-java/
+     */
+    public static LinkedListNode<Integer> mergetList(LinkedListNode<Integer> l1, LinkedListNode<Integer> l2) {
+        LinkedListNode<Integer> list = new LinkedListNode<Integer>(0);
+        LinkedListNode<Integer> p = list;
+
+        while (l1 != null && l2 != null) {
+
+            if (l1.e <= l2.e) {
+                p.next = l1;
+                l1 = l1.next;
+
+            } else {
+                p.next = l2;
+                l2 = l2.next;
+
+            }
+            p = p.next;
+            p.next = null;
+        }
+
+        if (l1 == null)
+            p.next = l2;
+
+        if (l2 == null)
+            p.next = l1;
+
+        return list.next;
+    }
+
+
+
 
     public static void main(String[] args){
         System.out.println("Test twoSum");
@@ -238,56 +462,191 @@ public class LeetCode {
         System.out.println("atoi(+12345)=" + atoi("+12345"));
         System.out.println("atoi(-12345)=" + atoi("-12345"));
 
-        System.out.println(longestNoneRepeatingSubString("a"));
-        System.out.println(longestSubstring("a"));
-        System.out.println(longestNoneRepeatingSubString("aa"));
-        System.out.println(longestSubstring("aa"));
-        System.out.println(longestNoneRepeatingSubString("ab"));
-        System.out.println(longestSubstring("ab"));
-        System.out.println(longestNoneRepeatingSubString("abc"));
-        System.out.println(longestSubstring("abc"));
-        System.out.println(longestNoneRepeatingSubString("aba"));
-        System.out.println(longestSubstring("aba"));
-        System.out.println(longestNoneRepeatingSubString("abca"));
-        System.out.println(longestSubstring("abca"));
-        System.out.println(longestNoneRepeatingSubString("abab"));
-        System.out.println(longestSubstring("abab"));
-        System.out.println(longestNoneRepeatingSubString("abcdae"));
-        System.out.println(longestSubstring("abcdae"));
+        System.out.println(lengthOfLongestSubstring("a"));
+        StringUtils.printSet(longestSubstring("a"));
+        System.out.println(lengthOfLongestSubstring("aa"));
+        StringUtils.printSet(longestSubstring("aa"));
+        System.out.println(lengthOfLongestSubstring("ab"));
+        StringUtils.printSet(longestSubstring("ab"));
+        System.out.println(lengthOfLongestSubstring("abc"));
+        StringUtils.printSet(longestSubstring("abc"));
+        System.out.println(lengthOfLongestSubstring("aba"));
+        StringUtils.printSet(longestSubstring("aba"));
+        System.out.println(lengthOfLongestSubstring("abca"));
+        StringUtils.printSet(longestSubstring("abca"));
+        System.out.println(lengthOfLongestSubstring("abab"));
+        StringUtils.printSet(longestSubstring("abab"));
+        System.out.println(lengthOfLongestSubstring("abcdae"));
+        StringUtils.printSet(longestSubstring("abcdae"));
 
         System.out.println("Test expend");
         String s = "a";
-        boolean[][] b = new boolean[s.length()][s.length()];
-        System.out.println(expend(b, s.toCharArray(), 0, 0));
+        System.out.println(expend(s, 0, 0));
 
-        b = new boolean[s.length()][s.length()];
         s = "a";
-        System.out.println(expend(b, s.toCharArray(), 0, 1));
+        System.out.println(expend(s, 0, 1));
 
         s = "ab";
-        b = new boolean[s.length()][s.length()];
-        System.out.println(expend(b, s.toCharArray(), 0, 1));
+        System.out.println(expend(s, 0, 1));
 
         s = "aa";
-        b = new boolean[s.length()][s.length()];
-        System.out.println(expend(b, s.toCharArray(), 0, 1));
+        System.out.println(expend(s, 0, 1));
 
         s = "aba";
-        b = new boolean[s.length()][s.length()];
-        System.out.println(expend(b, s.toCharArray(), 1, 1));
+        System.out.println(expend(s, 1, 1));
 
 
         s = "abcbd";
-        b = new boolean[s.length()][s.length()];
-        System.out.println(expend(b, s.toCharArray(), 2, 2));
+        System.out.println(expend(s, 2, 1));
 
         s = "abccbdadb";
-        b = new boolean[s.length()][s.length()];
-        System.out.println(expend(b, s.toCharArray(), 2, 3));
+        System.out.println(expend(s, 2, 3));
 
         System.out.println("Test longestPalindroms");
-        Set<String> results = longestPalindrom(s);
+        Set<String> results = longestPalindromSubStrings(s);
         StringUtils.printSet(results);
+
+        s = "abccbddbb";
+        System.out.println(expend(s, 2, 3));
+
+        System.out.println("Test longestPalindroms");
+        results = longestPalindromSubStrings(s);
+        StringUtils.printSet(results);
+
+        int[] a = {};
+        int[] b = {1, 2, 3, 4, 5};
+        System.out.println(kThElement(a, b, 0, 0, 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 1, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 2, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 3, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 4, 0, a.length - 1, 0, b.length - 1));
+
+        a = new int[]{1, 2, 4, 7, 9, 10, 13, 17};
+        b = new int[] {1, 2, 3, 8, 8, 11, 12};
+        System.out.println(kThElement(a, b, 0, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 3, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 0, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 1, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 2, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 3, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 4, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 5, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 6, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 7, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 8, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 9, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 10, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 11, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 12, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 13, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 14, 0, a.length - 1, 0, b.length - 1));
+
+        System.out.println("Test findMedianOfTwoSortedArray");
+        System.out.println(findMedianOfTwoSortedArray(a, b));
+
+        a = new int[]{1, 2, 3, 4, 5, 6};
+        b = new int[] {7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+        System.out.println(kThElement(a, b, 0, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 3, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 0, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 1, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 2, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 3, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 4, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 5, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 6, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 7, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 8, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 9, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 10, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 11, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 12, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 13, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kThElement(a, b, 14, 0, a.length - 1, 0, b.length - 1));
+
+        System.out.println("Test findMedianOfTwoSortedArray");
+        System.out.println(findMedianOfTwoSortedArray(a, b));
+
+        System.out.println("Test isParlindrome");
+        System.out.println(isPalindrome(0));
+        System.out.println(isPalindrome(1));
+        System.out.println(isPalindrome(10));
+        System.out.println(isPalindrome(11));
+        System.out.println(isPalindrome(123));
+        System.out.println(isPalindrome(121));
+        System.out.println(isPalindrome(123454321));
+
+        s = "";
+
+        System.out.println("Test isMatch");
+
+
+        System.out.println(isMatch("", "abc"));
+        System.out.println(isMatch("a", ""));
+        System.out.println(isMatch("a", "aac"));
+        System.out.println(isMatch("a", "aba"));
+        System.out.println(isMatch("ab", "abc"));
+        System.out.println(isMatch("abc", "abc"));
+        System.out.println(isMatch("abc", "abd"));
+        System.out.println(isMatch("a", "bac"));
+        System.out.println(isMatch("abc", "defabc"));
+        System.out.println(isMatch("abcdefg", "abcdef"));
+        System.out.println(isMatch("abcdefg", "abcdefg"));
+        System.out.println(isMatch("abcdefg", "abcdefghijk"));
+
+        System.out.println(isMatch("a", "*"));
+        System.out.println(isMatch("a", ".c"));
+        System.out.println(isMatch("ab", "a."));
+        System.out.println(isMatch("ab", ".bc"));
+        System.out.println(isMatch("abc", "ab."));
+        System.out.println(isMatch("aac", ".*ceee"));
+        System.out.println(isMatch("aaaabcd", "a*b.d"));
+        System.out.println(isMatch("abcdefg", "abcdefg"));
+        System.out.println(isMatch("abcdefg", "abcdefghijk"));
+
+
+        System.out.println("Test match expression");
+        System.out.println(isMatch("aa", "a"));
+        System.out.println(isMatch("aa", "aa"));
+        System.out.println(isMatch("aaa", "aa"));
+        System.out.println(isMatch("aa", "a*"));
+        System.out.println(isMatch("aa", ".*"));
+        System.out.println(isMatch("ab", ".*"));
+        System.out.println(isMatch("aab", "c*a*b"));
+
+
+        a = new int[]{1, 3, 5, 6, 9, 13};
+        b = new int[] {1, 2, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+
+        LinkedListNode<Integer> l1 = new LinkedListNode(1);
+        l1.addLast(3);
+        l1.addLast(5);
+        l1.addLast(6);
+        l1.addLast(9);
+        l1.addLast(13);
+        l1.addLast(20);
+
+
+        LinkedListNode<Integer> l2 = new LinkedListNode(1);
+        l2.addLast(2);
+        l2.addLast(3);
+        l2.addLast(5);
+        l2.addLast(7);
+        l2.addLast(8);
+        l2.addLast(9);
+        l2.addLast(10);
+        l2.addLast(11);
+        l2.addLast(12);
+        l2.addLast(13);
+        l2.addLast(14);
+        l2.addLast(15);
+
+        System.out.println("Test mergeLit");
+        System.out.println(l1.toString());
+        System.out.println(l2.toString());
+        LinkedListNode<Integer> l3 = mergetList(l1, l2);
+        System.out.println(l3.toString());
+
 
     }
 }

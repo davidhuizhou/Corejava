@@ -643,9 +643,9 @@ public class StringUtils {
         return sb.toString();
     }
 
-    public static void printSet(Set<String> set){
+    public static void printSet(Set<? extends  Object> set){
         System.out.print("\n(");
-        for(String s : set)
+        for(Object s : set)
             System.out.print(s + "|");
         System.out.print(")\n");
     }
