@@ -121,6 +121,40 @@ public class LinkedListTest<E> {
         return true;
     }
 
+    private static Result isPalindrome(LinkedListNode<Integer> list, int length){
+        if(list == null || length == 0)
+            return new Result(true, null);
+
+        if(length == 1)
+            return new Result(true, list.next);
+
+        if(length == 2)
+            return new Result(list.e.equals(list.next.e), list.next.next);
+
+        Result res = isPalindrome(list.next, length - 2);
+
+        if(res.result == false || res.node == null)
+            return res;
+
+        else{
+            return new Result(list.e.equals(res.node.e), res.node.next);
+        }
+
+    }
+
+    public static boolean isPalindromeRes(LinkedListNode<Integer> list){
+        return isPalindrome(list, list.length()).result;
+    }
+
+    private static class Result{
+        boolean result;
+        LinkedListNode<Integer> node;
+
+        public Result(boolean b, LinkedListNode<Integer> n){
+            this.result = b;
+            this.node = n;
+        }
+    }
 
     /**
      *  2.1 Remove duplicates from unsorted linked list
@@ -283,12 +317,34 @@ public class LinkedListTest<E> {
 
     }
 
+    public static void testIsPalindrome(){
+        System.out.println("testIsPalindrome");
+        LinkedListNode<Integer> l1 = new LinkedListNode<Integer>(6);
+        System.out.println(isPalindrome(l1));
+        System.out.println(isPalindromeRes(l1));
+
+        l1 = l1.addFirst(1);
+        System.out.println(isPalindrome(l1));
+        System.out.println(isPalindromeRes(l1));
+
+        l1 = l1.addFirst(3);
+        l1 = l1.addFirst(5);
+        l1 = l1.addFirst(3);
+        l1 = l1.addFirst(1);
+        l1 = l1.addFirst(6);
+        System.out.println(l1);
+        System.out.println(isPalindrome(l1));
+        System.out.println(isPalindromeRes(l1));
+
+    }
+
 
     public static void test(){
         testRemoveDuplicates();
         testKthToLast();
         testDeleteNode();
         testAddList();
+        testIsPalindrome();
     }
 
 
