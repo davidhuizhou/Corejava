@@ -1,6 +1,8 @@
 package com.dzhou.corejava.crackingthecode;
 
 
+import com.dzhou.util.Stack;
+
 /**
  * Created by huizhou on 7/15/14.
  */
@@ -68,6 +70,56 @@ public class LinkedListTest<E> {
 
     }
 
+
+    public static LinkedListNode<Integer> findFirstNode(LinkedListNode<Integer> list){
+        if(list == null)
+            return null;
+
+        LinkedListNode<Integer> slow =list;
+        LinkedListNode<Integer> fast = list;
+
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if(slow == fast)
+                break;
+        }
+        if(fast == null || slow == null)
+            return null;
+
+        slow = list;
+
+        while(fast != slow){
+            fast = fast.next;
+            slow = slow.next;
+        }
+
+        return fast;
+
+
+    }
+
+    public static boolean isPalindrome(LinkedListNode<Integer> list){
+        LinkedListNode<Integer> slow = list;
+        LinkedListNode<Integer> fast = list;
+        Stack<Integer> stack = new Stack();
+
+        while(fast != null && fast.next != null){
+            stack.push(slow.e);
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        if(fast != null)
+            slow = slow.next;
+
+        while(slow != null){
+            if(!stack.pop().equals(slow.e))
+                return false;
+            slow = slow.next;
+        }
+        return true;
+    }
 
 
     /**
