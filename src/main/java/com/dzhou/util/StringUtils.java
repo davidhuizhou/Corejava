@@ -644,10 +644,10 @@ public class StringUtils {
     }
 
     public static void printSet(Set<? extends  Object> set){
-        System.out.print("\n(");
+        System.out.print("\n");
         for(Object s : set)
             System.out.print(s + "|");
-        System.out.print(")\n");
+        System.out.print("\n");
     }
 
     public static void main(String[] args){

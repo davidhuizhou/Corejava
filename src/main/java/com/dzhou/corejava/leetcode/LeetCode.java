@@ -3,10 +3,7 @@ package com.dzhou.corejava.leetcode;
 import com.dzhou.corejava.crackingthecode.LinkedListNode;
 import com.dzhou.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by huizhou on 7/15/14.
@@ -441,7 +438,71 @@ public class LeetCode {
     }
 
 
+    /**
+     *
+     * http://www.programcreek.com/2014/01/leetcode-generate-parentheses-java/
+     */
+    public static Set<String> generateParentheses(int n) {
+        Set<String> set = new HashSet<String>();
 
+        if (n == 0)
+            return set;
+        if (n == 1) {
+            set.add("()");
+            return set;
+        }
+
+        set = generateParentheses(n - 1);
+        Set<String> set1 = set;
+        set = new HashSet<String>();
+
+        for (String s : set1) {
+            for (int i = 0; i < 2 * (n - 1); i++) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(s.substring(0, i)).append("(").append(s.substring(i));
+                String s1 = sb.toString();
+                for (int j = i + 1; j < 2 * n - 1; j++) {
+                    sb = new StringBuilder();
+                    sb.append(s1.substring(0, j)).append(")").append(s1.substring(j));
+                    set.add(sb.toString());
+                }
+
+            }
+        }
+        return set;
+
+
+    }
+
+    public static ArrayList<String> generateParenthesis(int n) {
+        ArrayList<String> res = new ArrayList<String>();
+        if(n==0) {
+            res.add("");
+            return res;
+        }
+
+        helper(n,0,0,res,"");
+        return res;
+    }
+
+    public static void helper(int n, int left, int right, ArrayList<String> res, String temp){
+        // exit: all ( appeared
+        if(left == n){
+            for (int i=0; i<n-right; i++)
+                temp = temp + ")";
+            res.add(temp);
+            return;
+        }
+
+        // case1: number of ( > number of )
+        if(left>right){
+            helper(n, left+1, right, res, temp + "(");
+            helper(n, left, right+1, res, temp + ")");
+        }
+
+        // case2: number of ( == number of )
+        else helper(n, left+1, right, res, temp + "(");
+    }
 
     public static void main(String[] args){
         System.out.println("Test twoSum");
@@ -646,6 +707,23 @@ public class LeetCode {
         System.out.println(l2.toString());
         LinkedListNode<Integer> l3 = mergetList(l1, l2);
         System.out.println(l3.toString());
+
+        System.out.println("Test generateParentheses");
+        Set<String> set = generateParentheses(1);
+        StringUtils.printSet(set);
+
+        set = generateParentheses(2);
+        StringUtils.printSet(set);
+
+        set = generateParentheses(3);
+        StringUtils.printSet(set);
+
+
+        ArrayList<String> parenthesis = generateParenthesis(3);
+        for(String p : parenthesis){
+            System.out.print(p + "|");
+        }
+
 
 
     }
