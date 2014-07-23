@@ -7,5 +7,6 @@ public class Crack {
 
     public static void main(String[] args){
         LinkedListTest.test();
+        StackTest.test();
     }
 }
