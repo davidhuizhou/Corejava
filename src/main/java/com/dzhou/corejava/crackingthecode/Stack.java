@@ -6,16 +6,20 @@ package com.dzhou.corejava.crackingthecode;
 public class Stack {
 
     int size;
+    int capacity;
     Node first;
     Node min;
 
     public Stack() {
         this.size = 0;
+        this.capacity = 3;
         this.first = null;
         this.min = null;
     }
 
-    public void push(Comparable e) {
+    public void push(Comparable e) throws StackisFullException {
+        if(size == capacity) throw new StackisFullException();
+
         Node node = new Node(e);
         node.next = first;
         first = node;
@@ -44,6 +48,10 @@ public class Stack {
     }
 
     public Comparable pop() {
+
+        if(first == null)
+            return null;
+
         Node node = first;
         Comparable e = node.e;
         first = node.next;
@@ -80,6 +88,7 @@ public class Stack {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        sb.append("(");
 
         Node n = first;
         while (n != null) {
@@ -94,7 +103,7 @@ public class Stack {
             n = n.parent;
         }
         sb.append("|");
-        sb.append(min());
+        sb.append(min()).append(")");
 
         return sb.toString();
     }
