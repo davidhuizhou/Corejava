@@ -77,10 +77,30 @@ public class StackTest {
 
     }
 
+    private static void Hanoi(int size, String from, String to, String temp){
+        if(size == 1) {
+            System.out.println(from + " to " + to);
+            return;
+
+        }
+
+        Hanoi(size - 1, from, temp, to);
+        System.out.println(from + " to " + to);
+        Hanoi(size - 1, temp, to, from);
+
+    }
+
+    public static void testHanoi(int size){
+
+        Hanoi(size, "Tower1", "Tower3", "Tower2");
+    }
+
     public static void test(){
         try {
-            //testMin();
+//            testMin();
             testSetOfStacks();
+            testHanoi(10);
+
         } catch(StackisFullException exc){
             exc.printStackTrace();
         }
