@@ -3,21 +3,28 @@ package com.dzhou.corejava.algorithms;
 import java.util.Comparator;
 
 /**
- * Created by huizhou on 7/22/14.
+ * Created by davidzhou on 7/24/14.
  */
-public class Insertion {
+public class Shell {
 
     public static void sort(Comparable[] a){
         int N = a.length;
 
-        for(int i = 1; i < N; i++){
-            for(int j = i; j > 0 && less(a[j], a[j-1]); j--){
-                exch(a, j-1, j);
-            }
+        int h = 1;
+        while(h < N/3) h = h * 3 + 1;
 
+        while(h > 0){
+            for(int i = h; i < N; i++){
+                for(int j = i; j >= h && less(a[j], a[j-h]); j -= h){
+                    exch(a, j-h, j);
+                }
+            }
+            h /= 3;
         }
 
+
     }
+
     // is v < w ?
     private static boolean less(Comparable v, Comparable w) {
         return (v.compareTo(w) < 0);
