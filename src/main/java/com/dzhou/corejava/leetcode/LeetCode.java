@@ -12,83 +12,248 @@ public class LeetCode {
 
     /**
      *  http://www.programcreek.com/2012/12/leetcode-solution-of-two-sum-in-java/
+     *  https://oj.leetcode.com/submissions/detail/9009004/
      */
-//    public static int[] twoSum(int[] numbers, int sum){
-//        int[] ret = {-1, -1};
-//
-//        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
-//        for(int i = 0; i < numbers.length; i++){
-//            if(map.containsKey(sum - numbers[i])){
-//                ret[0] = map.get(sum - numbers[i]) + 1;
-//                ret[1] = i + 1;
-//                return ret;
-//            } else {
-//                map.put(numbers[i], i);
-//            }
-//        }
-//        return ret;
-//    }
 
     public static int[] twoSum(int[] numbers, int target) {
-        int[] ret = {-1, -1};
-        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        int[] result = {-1, -1};
+        if(numbers == null)
+            return result;
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
         for(int i = 0; i < numbers.length; i++){
             if(map.containsKey(numbers[i])){
-                ret[0] = map.get(numbers[i]) + 1;
-                ret[1] = i + 1;
+                result[0] = map.get(numbers[i]) + 1;
+                result[1] = i + 1;
                 break;
             } else {
-                map.put(target - numbers[i], i);
+                map.put(target-numbers[i], i);
             }
         }
-        return ret;
+        return result;
 
     }
 
     /**
-     *   http://www.programcreek.com/2012/12/leetcode-reverse-integer/
-     **/
-    public static int reverseInt(int x){
+     * https://oj.leetcode.com/problems/median-of-two-sorted-arrays/
+     * https://oj.leetcode.com/submissions/detail/9009719/
+     */
+    public static double findMedianSortedArrays(int A[], int B[]) {
+        int aLen = A.length;
+        int bLen = B.length;
+        int len = aLen+bLen;
+        if(len % 2 == 0)
+            return (kthElement(A, B, len/2-1, 0, aLen-1, 0, bLen-1)
+                    + kthElement(A, B, len/2, 0, aLen-1, 0, bLen-1)) * 0.5;
+        else
+            return kthElement(A, B, len/2, 0, aLen-1, 0, bLen-1);
+    }
+
+    private static int kthElement(int[] A, int[] B, int k, int aStart, int aEnd, int bStart, int bEnd){
+        int aLen = aEnd - aStart + 1;
+        int bLen = bEnd - bStart + 1;
+
+        if(aLen <= 0 || A.length <= 0)
+            return B[bStart+k];
+        if(bLen <= 0 || B.length <= 0)
+            return A[aStart+k];
+        if(k==0)
+            return Math.min(A[aStart+k], B[bStart+k]);
+
+        int aMid = k * aLen/(aLen+bLen);
+        int bMid = k - aMid - 1;
+        aMid = aStart+aMid;
+        bMid = bStart+bMid;
+
+        if(A[aMid]>=B[bMid]){
+            k = k - (bMid-bStart+1);
+            aEnd = aMid;
+            bStart = bMid+1;
+        } else{
+            k = k - (aMid-aStart+1);
+            bEnd = bMid;
+            aStart = aMid+1;
+        }
+        return kthElement(A, B, k, aStart, aEnd, bStart, bEnd);
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/longest-substring-without-repeating-characters/
+     * https://oj.leetcode.com/submissions/detail/9010153/
+     *
+     */
+    public static int lengthOfLongestSubstring(String s) {
+        if(s == null)
+            return 0;
+        if(s.length() <= 1)
+            return s.length();
+        int longest = 1;
+        int i = 0;
+        int j = 1;
+        for(j = 1; j < s.length(); j++){
+            int index = s.substring(i, j).indexOf(s.charAt(j));
+            if(index >= 0){
+                if(j-i > longest)
+                    longest = j - i;
+                i = i + index + 1;
+            }
+        }
+        if(j-i> longest)
+            longest = j - i;
+        return longest;
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/add-two-numbers/
+     * https://oj.leetcode.com/submissions/detail/9011366/
+     *
+     */
+    public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode sentinel = new ListNode(0);
+        ListNode p = sentinel;
+        int carry = 0;
+        while (l1 != null || l2 != null) {
+            if (l1 != null) {
+                carry += l1.val;
+                l1 = l1.next;
+            }
+            if (l2 != null) {
+                carry += l2.val;
+                l2 = l2.next;
+            }
+            ListNode n = new ListNode(carry % 10);
+            p.next = n;
+            p = n;
+            carry /= 10;
+
+
+        }
+        if (carry == 1) {
+            p.next = new ListNode(carry);
+        }
+
+        return sentinel.next;
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/longest-palindromic-substring/
+     * https://oj.leetcode.com/submissions/detail/9012368/
+     *
+     */
+    public static String longestPalindrome(String s) {
+        if(s == null)
+            return null;
+        if(s.length() == 1)
+            return s;
+        String longest = s.substring(0, 1);
+        for(int i = 0; i <= s.length()-2; i++){
+            String pStr = expend(s, i, i);
+            String qStr = expend(s, i, i+1);
+            if(pStr.length() > longest.length())
+                longest = pStr;
+            if(qStr.length() > longest.length())
+                longest = qStr;
+        }
+        return longest;
+
+    }
+
+    private static String expend(String s, int i, int j){
+        if(s == null || i< 0 || i > s.length() -1 || j < 0 || j > s.length() - 1 || i > j || s.charAt(i) != s.charAt(j))
+            return "";
+
+        while(i >= 0 && j < s.length() && s.charAt(i) == s.charAt(j)){
+            i--;
+            j++;
+        }
+        return s.substring(i+1, j);
+    }
+
+    public static Set<String> longestPalindromSubStrings1(String s){
+        Set<String> results = new HashSet<String>();
+
+        if(s.isEmpty())
+            return null;
+
+        if(s.length() == 1){
+            results.add(s);
+            return results;
+        }
+
+        int longest = 1;
+
+        for(int i = 0; i < s.length(); i++){
+            String l = expend(s, i, i);
+            if(l.length() == longest){
+                results.add(l);
+            }else if(l.length() > longest){
+                results.clear();
+                results.add(l);
+                longest = l.length();
+            }
+
+            l = expend(s, i, i + 1);
+            if(l.length() == longest){
+                results.add(l);
+            }else if(l.length() > longest){
+                results.clear();
+                results.add(l);
+                longest = l.length();
+            }
+
+        }
+        return results;
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/reverse-integer/
+     * https://oj.leetcode.com/submissions/detail/9012870/
+     */
+    public static int reverse(int x) {
         int sign = 1;
         if(x < 0){
             sign = -1;
-            x = -x;
+            x = x * (-1);
         }
-
-        int rev = 0;
+        int result = 0;
         while(x > 0){
-            rev = 10 * rev + x % 10;
+            result = 10 * result + x % 10;
             x /= 10;
         }
-        return sign * rev;
+        return sign * result;
 
     }
 
+
     /**
      *   http://www.programcreek.com/2012/12/leetcode-string-to-integer-atoi/
+     *   https://oj.leetcode.com/submissions/detail/9014031/
      **/
-    public static int atoi(String s){
-        if(s == null || s.trim().length() == 0)
+    public static int atoi(String str){
+        if(str == null || str.trim().length() == 0)
             return 0;
 
-        s = s.trim();
+        str = str.trim();
 
         int sign = 1;
         int i = 0;
 
 
-        if(s.charAt(0) == '+'){
+        if(str.charAt(0) == '+'){
             i++;
         }
-        if(s.charAt(0) == '-') {
+        if(str.charAt(0) == '-') {
             sign = -1;
             i++;
         }
 
         double result = 0.0;
 
-        while(i < s.length() && s.charAt(i) >= '0' && s.charAt(i) <= '9'){
-            result = 10.0 * result + (s.charAt(i) - '0');
+        while(i < str.length() && str.charAt(i) >= '0' && str.charAt(i) <= '9'){
+            result = 10.0 * result + (str.charAt(i) - '0');
             i++;
         }
 
@@ -105,28 +270,64 @@ public class LeetCode {
     }
 
     /**
-     * http://www.programcreek.com/2013/02/leetcode-longest-substring-without-repeating-characters-java/
-     * @param s
+     * https://oj.leetcode.com/problems/palindrome-number/
+     * https://oj.leetcode.com/submissions/detail/9014691/
      */
-    public static int lengthOfLongestSubstring(String s) {
+    public static boolean isPalindrome(int x) {
+        if(x < 0)
+            return false;
+        if(x < 10)
+            return true;
+        int div = 10;
+        while(x / div >= 10)
+            div *= 10;
+        while(div >=10){
+            int left = x / div;
+            int right = x % 10;
+            if(left != right)
+                return false;
+            x = (x % div) / 10;
+            div /= 100;
+        }
+        return true;
 
-        char[] arr = s.toCharArray();
-        int pre = 0;
+    }
 
-        HashMap<Character, Integer> map = new HashMap<Character, Integer>();
+    /**
+     * https://oj.leetcode.com/problems/regular-expression-matching/
+     * https://oj.leetcode.com/submissions/detail/9016055/
+     */
+    public static boolean isMatch(String s, String p) {
+        if(s == null)
+            return p == null;
+        if(p == null)
+            return s == null;
 
-        for (int i = 0; i < arr.length; i++) {
-            if (!map.containsKey(arr[i])) {
-                map.put(arr[i], i);
-            } else {
-                pre = pre > map.size() ? pre : map.size();
-                i = map.get(arr[i]);
-                map.clear();
+        if(p.length() == 0)
+            return s.length() == 0;
+
+        if(p.length() == 1 || p.charAt(1) != '*'){
+            if(s.length() < 1 || (p.charAt(0) != '.' && p.charAt(0) != s.charAt(0)))
+                return false;
+            return isMatch(s.substring(1), p.substring(1));
+        } else {
+            int i = -1;
+            while(i < s.length() && (i < 0 || p.charAt(0) == '.' || p.charAt(0) == s.charAt(i))){
+                if(isMatch(s.substring(i+1), p.substring(2)))
+                    return true;
+                i++;
             }
+            return false;
         }
 
-        return Math.max(pre, map.size());
     }
+
+
+
+
+
+    /////////////////////////////////////////////
+
 
     /**
      *
@@ -200,131 +401,19 @@ public class LeetCode {
 
     }
 
-    /**
-     * http://www.programcreek.com/2013/12/leetcode-solution-of-longest-palindromic-substring-java/
-     * @param
-     */
-    private static String expend(String s, int begin, int end){
-        if(end < begin || (begin < 0 || begin >= s.length()) || (end < 0 || end >= s.length()) || s.charAt(begin) != s.charAt(end))
-            return "";
-
-        while(begin >= 0 && end < s.length() && s.charAt(begin) == s.charAt(end)){
-            begin--;
-            end++;
-        }
-        return s.substring(begin + 1, end);
-    }
-
-    public static Set<String> longestPalindromSubStrings(String s){
-        Set<String> results = new HashSet<String>();
-
-        if(s.isEmpty())
-            return null;
-
-        if(s.length() == 1){
-            results.add(s);
-            return results;
-        }
-
-        int longest = 1;
-
-        for(int i = 0; i < s.length(); i++){
-            String l = expend(s, i, i);
-            if(l.length() == longest){
-                results.add(l);
-            }else if(l.length() > longest){
-                results.clear();
-                results.add(l);
-                longest = l.length();
-            }
-
-            l = expend(s, i, i + 1);
-            if(l.length() == longest){
-                results.add(l);
-            }else if(l.length() > longest){
-                results.clear();
-                results.add(l);
-                longest = l.length();
-            }
-
-        }
-        return results;
-
-    }
 
     public static double findMedianOfTwoSortedArray(int[] a, int[] b){
         int aLen = a.length;
         int bLen = b.length;
 
         if((aLen + bLen) % 2 == 0){
-            return (kThElement(a, b, (aLen + bLen)/2 -1, 0, aLen - 1, 0, bLen - 1) + kThElement(a, b, (aLen + bLen)/2, 0, aLen -1, 0, bLen - 1)) * 0.5;
+            return (kthElement(a, b, (aLen + bLen)/2 -1, 0, aLen - 1, 0, bLen - 1) + kthElement(a, b, (aLen + bLen)/2, 0, aLen -1, 0, bLen - 1)) * 0.5;
 
         } else{
-            return kThElement(a, b, (aLen + bLen)/2, 0, aLen - 1, 0, bLen -1);
+            return kthElement(a, b, (aLen + bLen)/2, 0, aLen - 1, 0, bLen -1);
         }
 
     }
-
-    public static int kThElement(int[] a, int[] b, int k, int aStart, int aEnd, int bStart, int bEnd){
-        int aLen = aEnd - aStart + 1;
-        int bLen = bEnd - bStart + 1;
-
-        if(aLen <= 0 || a.length <= 0)
-            return b[bStart + k];
-
-        if(bLen <= 0 || b.length <= 0)
-            return a[aStart + k];
-
-        if(k == 0)
-            return Math.min(a[aStart + k], b[bStart + k]);
-
-        int aMid = k * aLen / (aLen + bLen);
-        int bMid = k - aMid - 1;
-        aMid = aStart + aMid;
-        bMid = bStart + bMid;
-
-        if(a[aMid] > b[bMid]){
-            k = k - (bMid - bStart + 1);
-            aEnd = aMid;
-            bStart = bMid + 1;
-        } else if (a[aMid] < b[bMid]){
-            k = k - (aMid - aStart + 1);
-            bEnd = bMid;
-            aStart = aMid + 1;
-        } else {
-            return a[aMid];
-        }
-        return kThElement(a, b, k, aStart, aEnd, bStart, bEnd);
-    }
-
-    /**
-     *
-     * @param x - http://www.programcreek.com/2013/02/leetcode-palindrome-number-java/
-     */
-    public static boolean isPalindrome(int x) {
-        if (x < 0)
-            return false;
-
-        int div = 1;
-        while (x / div >= 10) {
-            div *= 10;
-        }
-
-        while (x != 0) {
-            int right = x % 10;
-            int left = x / div;
-
-            if (right != left)
-                return false;
-
-            x = (x % div) / 10;
-            div /= 100;
-
-        }
-        return true;
-
-    }
-
 
 
     /**
@@ -332,18 +421,18 @@ public class LeetCode {
      * http://www.programcreek.com/2012/12/leetcode-regular-expression-matching-in-java/
      */
     //Get the starting string with the same characters of the s.charAt(0)
-    public static boolean isMatch(String s, String p) {
+    public static boolean isMatch1(String s, String p) {
         if (p.length() == 0)
             return s.length() == 0;
 
         if (p.length() == 1 || p.charAt(1) != '*') {
             if (s.length() < 1 || (p.charAt(0) != '.' && p.charAt(0) != s.charAt(0)))
                 return false;
-            return isMatch(s.substring(1), p.substring(1));
+            return isMatch1(s.substring(1), p.substring(1));
         } else {
             int i = -1;
             while (i < s.length() && (i < 0 || p.charAt(0) == '.' || p.charAt(0) == s.charAt(i))) {
-                if (isMatch(s.substring(i + 1), p.substring(2)))
+                if (isMatch1(s.substring(i + 1), p.substring(2)))
                     return true;
                 i++;
             }
@@ -766,10 +855,10 @@ public class LeetCode {
         System.out.println(StringUtils.arrayToString(e, 0, e.length - 1));
 
         System.out.println("Test reverseInt");
-        System.out.println("Reverse 0 - " + reverseInt(0));
-        System.out.println("Reverse 1 - " + reverseInt(1));
-        System.out.println("Reverse 123456 - " + reverseInt(123456));
-        System.out.println("Reverse -123456 - " + reverseInt(-123456));
+        System.out.println("Reverse 0 - " + reverse(0));
+        System.out.println("Reverse 1 - " + reverse(1));
+        System.out.println("Reverse 123456 - " + reverse(123456));
+        System.out.println("Reverse -123456 - " + reverse(-123456));
 
         System.out.println("Test atoi");
         System.out.println("atoi()=" + atoi(""));
@@ -826,66 +915,66 @@ public class LeetCode {
         System.out.println(expend(s, 2, 3));
 
         System.out.println("Test longestPalindroms");
-        Set<String> results = longestPalindromSubStrings(s);
+        Set<String> results = longestPalindromSubStrings1(s);
         StringUtils.printSet(results);
 
         s = "abccbddbb";
         System.out.println(expend(s, 2, 3));
 
         System.out.println("Test longestPalindroms");
-        results = longestPalindromSubStrings(s);
+        results = longestPalindromSubStrings1(s);
         StringUtils.printSet(results);
 
         int[] a = {};
         int[] b = {1, 2, 3, 4, 5};
-        System.out.println(kThElement(a, b, 0, 0, 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 1, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 2, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 3, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 4, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 0, 0, 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 1, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 2, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 3, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 4, 0, a.length - 1, 0, b.length - 1));
 
         a = new int[]{1, 2, 4, 7, 9, 10, 13, 17};
         b = new int[] {1, 2, 3, 8, 8, 11, 12};
-        System.out.println(kThElement(a, b, 0, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 3, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 0, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 1, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 2, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 3, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 4, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 5, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 6, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 7, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 8, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 9, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 10, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 11, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 12, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 13, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 14, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 0, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 3, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 0, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 1, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 2, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 3, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 4, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 5, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 6, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 7, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 8, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 9, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 10, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 11, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 12, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 13, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 14, 0, a.length - 1, 0, b.length - 1));
 
         System.out.println("Test findMedianOfTwoSortedArray");
         System.out.println(findMedianOfTwoSortedArray(a, b));
 
         a = new int[]{1, 2, 3, 4, 5, 6};
         b = new int[] {7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
-        System.out.println(kThElement(a, b, 0, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 3, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 0, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 1, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 2, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 3, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 4, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 5, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 6, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 7, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 8, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 9, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 10, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 11, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 12, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 13, 0, a.length - 1, 0, b.length - 1));
-        System.out.println(kThElement(a, b, 14, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 0, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 3, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 0, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 1, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 2, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 3, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 4, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 5, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 6, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 7, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 8, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 9, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 10, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 11, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 12, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 13, 0, a.length - 1, 0, b.length - 1));
+        System.out.println(kthElement(a, b, 14, 0, a.length - 1, 0, b.length - 1));
 
         System.out.println("Test findMedianOfTwoSortedArray");
         System.out.println(findMedianOfTwoSortedArray(a, b));
@@ -902,6 +991,7 @@ public class LeetCode {
         s = "";
 
         System.out.println("Test isMatch");
+        System.out.println(isMatch("a", "ab*"));
 
 
         System.out.println(isMatch("", "abc"));
