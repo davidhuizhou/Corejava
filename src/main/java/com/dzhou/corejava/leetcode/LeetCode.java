@@ -323,7 +323,42 @@ public class LeetCode {
     }
 
 
+    /**
+     * https://oj.leetcode.com/problems/longest-common-prefix/
+     * https://oj.leetcode.com/submissions/detail/9113380/
+     *
+     */
+    public static String longestCommonPrefix(String[] strs) {
+        if(strs.length == 0)
+            return "";
 
+        String s = strs[0];
+        int lo = 0, hi = s.length() - 1;
+
+        while(lo <= hi){
+            int mid = lo + (hi - lo)/2;
+            if(isPrefix(s.substring(lo, hi+1), strs, lo))
+                break;
+            else if (isPrefix(s.substring(lo, mid + 1), strs, lo))
+                lo = mid + 1;
+            else
+                hi = mid - 1;
+        }
+        if(hi >= 0)
+            return s.substring(0, hi + 1);
+        else
+            return "";
+
+    }
+
+    private static boolean isPrefix(String s, String[] strs, int start){
+        for(String str : strs){
+            if(str.substring(start).indexOf(s) != 0)
+                return false;
+        }
+        return true;
+
+    }
 
 
     /////////////////////////////////////////////
@@ -441,10 +476,6 @@ public class LeetCode {
         }
     }
 
-    /**
-     *
-     * https://oj.leetcode.com/problems/longest-common-prefix/
-     */
 
     /**
      *
@@ -630,48 +661,7 @@ public class LeetCode {
         else helper(n, left+1, right, res, temp + "(");
     }
 
-    /**
-     *
-     * https://oj.leetcode.com/problems/longest-common-prefix/
-     */
-    //helper function to check if a string s is a common prefix starting from index start
-    private static boolean isCommonPrefix(String s, String[] strs, int start) {
-        for (String str : strs) {
-            if (start >= str.length())
-                return false;
-            if (str.substring(start).indexOf(s) != 0)
-                return false;
-        }
-        return true;
-    }
 
-    public static String longestCommonPrefix(String[] strs) {
-        if(strs.length == 0)
-            return "";
-
-        String s = strs[0];
-        int lo = 0, hi = s.length() - 1, index = -1;
-
-        while (lo <= hi) {
-            int mid = lo + (hi - lo) / 2;
-            if (isCommonPrefix(s.substring(lo, hi + 1), strs, lo)) {
-                index = hi;
-                break;
-            } else if (isCommonPrefix(s.substring(lo, mid + 1), strs, lo)) {
-                lo = mid + 1;
-                index = mid;
-
-            } else {
-                hi = mid - 1;
-            }
-
-        }
-        if (index >= 0)
-            return s.substring(0, index + 1);
-        else
-            return "";
-
-    }
 
     /**
      *
@@ -1077,7 +1067,7 @@ public class LeetCode {
         }
 
         System.out.println("Test longestCommonPrefix");
-        String[] strs = {"a", "", "a"};
+        String[] strs = {"abca", "abc"};
         System.out.println(longestCommonPrefix(strs));
 
         strs = new String[] {"a", "a", "a"};
