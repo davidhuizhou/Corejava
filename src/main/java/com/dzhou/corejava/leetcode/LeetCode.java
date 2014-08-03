@@ -436,6 +436,70 @@ public class LeetCode {
 
     }
 
+    /**
+     * https://oj.leetcode.com/problems/swap-nodes-in-pairs/
+     * https://oj.leetcode.com/submissions/detail/9273396/
+     */
+    public ListNode swapPairs(ListNode head) {
+        if (head == null)
+            return head;
+
+        ListNode p = head;
+        while (p != null) {
+            ListNode q = p.next;
+
+            if (q != null) {
+                int temp = p.val;
+                p.val = q.val;
+                q.val = temp;
+                p = q.next;
+
+            } else {
+                break;
+            }
+
+
+        }
+        return head;
+
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/reverse-nodes-in-k-group/
+     *
+     */
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null || k <= 1)
+            return head;
+
+        ListNode nextHead = head;
+
+        int count = 0;
+        while (count < k && nextHead != null) {
+            nextHead = nextHead.next;
+            count++;
+        }
+
+        if (count < k) {
+            return head;
+        }
+
+        ListNode r = null;
+        ListNode p = head;
+        ListNode q = p.next;
+
+        for (int i = 0; i < k; i++) {
+            p.next = r;
+            r = p;
+            p = q;
+            q = p.next;
+        }
+        head.next = reverseKGroup(nextHead, k);
+        return head;
+
+    }
+
 
     /////////////////////////////////////////////
 
@@ -803,7 +867,7 @@ public class LeetCode {
      *
      * https://oj.leetcode.com/problems/reverse-nodes-in-k-group/
      */
-    public ListNode reverseKGroup(ListNode head, int k) {
+    public ListNode reverseKGroup2(ListNode head, int k) {
         if (k <= 1)
             return head;
 
@@ -874,7 +938,7 @@ public class LeetCode {
             r = q;
             q = p;
         }
-        head.next = reverseKGroup(p, k);
+        head.next = reverseKGroup1(p, k);
         return r;
     }
 
