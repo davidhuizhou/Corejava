@@ -360,6 +360,82 @@ public class LeetCode {
 
     }
 
+    /**
+     * https://oj.leetcode.com/problems/3sum/
+     * https://oj.leetcode.com/submissions/detail/9259432/
+     */
+    public static List<List<Integer>> threeSum(int[] num) {
+        Set<List<Integer>> set = new HashSet<List<Integer>>();
+        Arrays.sort(num);
+
+        for(int i = 0; i <= num.length - 3; i++){
+            int j = i + 1, k = num.length - 1;
+            while(j < k){
+                int sum = num[i] + num[j] + num[k];
+                if(sum < 0){
+                    j++;
+                } else if (sum > 0){
+                    k--;
+                } else {
+                    List<Integer> r = new ArrayList<Integer>();
+                    r.add(num[i]);
+                    r.add(num[j]);
+                    r.add(num[k]);
+                    set.add(r);
+                    j++;
+                    k--;
+
+                }
+            }
+        }
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        for(List<Integer> s : set){
+            result.add(s);
+        }
+        return result;
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/3sum-closest/
+     * https://oj.leetcode.com/submissions/detail/9260441/
+     *
+     */
+    public static int threeSumClosest(int[] num, int target) {
+        Arrays.sort(num);
+        int min = Integer.MAX_VALUE;
+        int result = 0;
+
+        for (int i = 0; i <= num.length - 3; i++) {
+            int j = i + 1;
+            int k = num.length - 1;
+
+            while (j < k) {
+                int sum = num[i] + num[j] + num[k];
+                int diff = Math.abs(sum - target);
+
+                if (diff < min) {
+                    min = diff;
+                    result = sum;
+                }
+
+                if (sum == target) {
+                    return sum;
+                } else if (sum < target) {
+                    j++;
+                } else {
+                    k--;
+                }
+
+
+            }
+
+
+        }
+        return result;
+
+    }
+
 
     /////////////////////////////////////////////
 
@@ -501,7 +577,7 @@ public class LeetCode {
         }
     }
 
-    public Set<Result> threeSum(int[] a) {
+    public Set<Result> threeSum1(int[] a) {
         Set<Result> results = new HashSet<Result>();
         Arrays.sort(a);
 
@@ -1092,6 +1168,10 @@ public class LeetCode {
 
         int[] A = {1};
         removeDuplicates(A);
+
+        System.out.println("Test threeSumClosest");
+        int[] num = {1, 1, 1, 0};
+        System.out.println("threeCumCloset - " + threeSumClosest(num, -100));
 
     }
 }
