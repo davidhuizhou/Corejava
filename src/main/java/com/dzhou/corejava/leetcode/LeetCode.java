@@ -337,9 +337,9 @@ public class LeetCode {
 
         while(lo <= hi){
             int mid = lo + (hi - lo)/2;
-            if(isPrefix(s.substring(lo, hi+1), strs, lo))
+            if(isCommonPrefix(s.substring(lo, hi + 1), strs, lo))
                 break;
-            else if (isPrefix(s.substring(lo, mid + 1), strs, lo))
+            else if (isCommonPrefix(s.substring(lo, mid + 1), strs, lo))
                 lo = mid + 1;
             else
                 hi = mid - 1;
@@ -351,7 +351,7 @@ public class LeetCode {
 
     }
 
-    private static boolean isPrefix(String s, String[] strs, int start){
+    private static boolean isCommonPrefix(String s, String[] strs, int start){
         for(String str : strs){
             if(str.substring(start).indexOf(s) != 0)
                 return false;
