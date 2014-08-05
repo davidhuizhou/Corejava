@@ -650,6 +650,14 @@ public class StringUtils {
         System.out.print("\n");
     }
 
+    public static void printArray(int[] A){
+        System.out.println("\n");
+        for(int i : A){
+            System.out.println("" +i + ", ");
+        }
+        System.out.println("\n");
+    }
+
     public static void main(String[] args){
 //        InputOutputWrapper wrapper = new InputOutputWrapper(new Scanner(System.in), System.out);
 //        StringUtils util = new StringUtils();

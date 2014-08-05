@@ -464,40 +464,7 @@ public class LeetCode {
 
     }
 
-    /**
-     * https://oj.leetcode.com/problems/reverse-nodes-in-k-group/
-     *
-     */
-    public ListNode reverseKGroup(ListNode head, int k) {
-        if (head == null || k <= 1)
-            return head;
 
-        ListNode nextHead = head;
-
-        int count = 0;
-        while (count < k && nextHead != null) {
-            nextHead = nextHead.next;
-            count++;
-        }
-
-        if (count < k) {
-            return head;
-        }
-
-        ListNode r = null;
-        ListNode p = head;
-        ListNode q = p.next;
-
-        for (int i = 0; i < k; i++) {
-            p.next = r;
-            r = p;
-            p = q;
-            q = p.next;
-        }
-        head.next = reverseKGroup(nextHead, k);
-        return head;
-
-    }
     /**
      * https://oj.leetcode.com/problems/4sum/
      * https://oj.leetcode.com/problems/4sum/
@@ -665,6 +632,80 @@ public class LeetCode {
         return res.next;
 
     }
+
+    /**
+     * https://oj.leetcode.com/problems/reverse-nodes-in-k-group/
+     * https://oj.leetcode.com/submissions/detail/9355999/
+     */
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null || k <= 1)
+            return head;
+
+        int count = 0;
+        ListNode p = head;
+        while(count < k && p != null){
+            count++;
+            p = p.next;
+        }
+
+        if(count < k)
+            return head;
+
+        p = head;
+        ListNode q = head;
+        ListNode r = null;
+
+        for(int i = 0; i < k; i++){
+            p = p.next;
+            q.next = r;
+            r = q;
+            q = p;
+        }
+        head.next = reverseKGroup(p, k);
+        return r;
+
+    }
+
+    /**
+     *
+     * https://oj.leetcode.com/problems/remove-duplicates-from-sorted-array/
+     * https://oj.leetcode.com/submissions/detail/9356997/
+     */
+    public static int removeDuplicates(int[] A) {
+        if(A.length <= 1)
+            return A.length;
+
+        int k = 0;
+        for (int i = 1; i < A.length; i++) {
+
+            if(A[i] != A[k])
+                A[++k] = A[i];
+        }
+        return k + 1;
+    }
+
+    /**
+     *
+     * https://oj.leetcode.com/problems/remove-element/
+     * https://oj.leetcode.com/submissions/detail/9357121/
+     */
+    public int removeElement(int[] A, int elem) {
+        int i = 0, j = 0;
+        while (j < A.length) {
+            if (A[j] != elem) {
+                A[i] = A[j];
+                i++;
+            }
+            j++;
+
+        }
+        return i;
+
+    }
+
+
+
+    /////////////////////////////////////////////
 
     /////////////////////////////////////////////
 
@@ -1107,37 +1148,9 @@ public class LeetCode {
         return r;
     }
 
-    /**
-     *
-     * https://oj.leetcode.com/problems/remove-duplicates-from-sorted-array/
-     */
-    public static int removeDuplicates(int[] A) {
-        int k = -1;
-        for (int i = 0; i < A.length; i++) {
 
-            if(k < 0 || A[i] != A[k])
-                A[++k] = A[i];
-        }
-        return k + 1;
-    }
 
-    /**
-     *
-     * https://oj.leetcode.com/problems/remove-element/
-     */
-    public int removeElement(int[] A, int elem) {
-        int i = 0, j = 0;
-        while (j < A.length) {
-            if (A[j] != elem) {
-                A[i] = A[j];
-                i++;
-            }
-            j++;
 
-        }
-        return i;
-
-    }
 
     public static void main(String[] args){
         System.out.println("Test twoSum");
@@ -1395,8 +1408,11 @@ public class LeetCode {
         strs = new String[] {"abcdefg", "abc", "abckilmko"};
         System.out.println(longestCommonPrefix(strs));
 
-        int[] A = {1};
+        System.out.println("test removeDuplicates");
+        int[] A = {1, 2};
         removeDuplicates(A);
+        StringUtils.printArray(A);
+
 
         System.out.println("Test threeSumClosest");
         int[] num = {1, 1, 1, 0};
