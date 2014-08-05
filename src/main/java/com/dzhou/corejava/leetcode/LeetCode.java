@@ -436,6 +436,170 @@ public class LeetCode {
 
     }
 
+    /**
+     * https://oj.leetcode.com/problems/4sum/
+     * https://oj.leetcode.com/problems/4sum/
+     */
+    public static List<List<Integer>> fourSum(int[] num, int target) {
+        Set<List<Integer>> set = new HashSet<List<Integer>>();
+        Arrays.sort(num);
+
+        for(int i = 0; i <= num.length - 4; i++){
+            for(int j = i + 1; j <= num.length - 3; j++){
+                int m = j + 1;
+                int n = num.length - 1;
+
+                while(m < n) {
+                    int sum = num[i] + num[j] + num[m] + num[n];
+
+                    if (sum == target) {
+                        List<Integer> l = new ArrayList<Integer>();
+                        l.add(num[i]);
+                        l.add(num[j]);
+                        l.add(num[m]);
+                        l.add(num[n]);
+                        set.add(l);
+                        m++;
+                        n--;
+                    } else if (sum < target) {
+                        m++;
+                    } else {
+                        n--;
+                    }
+                }
+            }
+        }
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        for(List<Integer> s : set){
+            result.add(s);
+        }
+        return result;
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/remove-nth-node-from-end-of-list/
+     * https://oj.leetcode.com/submissions/detail/9265681/
+     *
+     */
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        if (head == null)
+            return head;
+        if (n <= 0)
+            return head;
+
+        ListNode p = head;
+        ListNode q = head;
+
+        int count = 0;
+        for (int i = 0; i <= n - 1 && q != null; i++) {
+            q = q.next;
+            count++;
+        }
+
+        if (count < n)
+            return head;
+
+        else {
+            if (q == null)
+                return head.next;
+            else {
+                while (q.next != null) {
+                    p = p.next;
+                    q = q.next;
+                }
+                if (p.next != null)
+                    p.next = p.next.next;
+            }
+        }
+        return head;
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/valid-parentheses/
+     * https://oj.leetcode.com/submissions/detail/9269784/
+     */
+    public boolean isValid(String s) {
+        Stack<Character> stack = new Stack<Character>();
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            if (c == '{' || c == '(' || c == '[')
+                stack.push(c);
+            else if (c == '}' && (stack.isEmpty() || stack.pop() != '{')) {
+                return false;
+            } else if (c == ')' && (stack.isEmpty() || stack.pop() != '(')) {
+                return false;
+            } else if (c == ']' && (stack.isEmpty() || stack.pop() != '[')) {
+                return false;
+            }
+
+        }
+        return stack.isEmpty();
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/generate-parentheses/
+     * https://oj.leetcode.com/submissions/detail/9270187/
+     */
+    public List<String> generateParenthesis(int n) {
+        List<String> parenthesis = new ArrayList<String>();
+        if(n==0) {
+            parenthesis.add("");
+            return parenthesis;
+        }
+
+        generateParenthesisHelper(parenthesis, n, 0, 0, "");
+        return parenthesis;
+
+    }
+    private void generateParenthesisHelper(List<String> parenthesis, int n, int left, int right, String s){
+        if(left == n){
+            for(int i = 0; i < n - right; i++)
+                s += ")";
+
+            parenthesis.add(s);
+
+
+        } else if (left > right){
+            generateParenthesisHelper(parenthesis, n, left+1, right, s+"(");
+            generateParenthesisHelper(parenthesis, n, left, right + 1, s+")");
+        } else if(left == right){
+            generateParenthesisHelper(parenthesis, n, left+1, right, s+"(");
+        }
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/merge-k-sorted-lists/
+     * https://oj.leetcode.com/submissions/detail/9271178/
+     */
+    public ListNode mergeKLists(List<ListNode> lists) {
+        if(lists == null)
+            return null;
+
+        PriorityQueue<Integer> pq = new PriorityQueue<Integer>();
+        for(ListNode node : lists){
+            while(node != null){
+                pq.add(node.val);
+                node = node.next;
+            }
+        }
+
+
+        ListNode res = new ListNode(0);
+        ListNode tail = res;
+
+        while(!pq.isEmpty()){
+            tail.next = new ListNode(pq.poll());
+            tail = tail.next;
+        }
+
+        return res.next;
+
+    }
 
     /////////////////////////////////////////////
 
@@ -707,7 +871,7 @@ public class LeetCode {
 
     }
 
-    public static ArrayList<String> generateParenthesis(int n) {
+    public static ArrayList<String> generateParenthesis1(int n) {
         ArrayList<String> res = new ArrayList<String>();
         if(n==0) {
             res.add("");
@@ -743,7 +907,7 @@ public class LeetCode {
      *
      * https://oj.leetcode.com/problems/remove-nth-node-from-end-of-list/
      */
-    public ListNode removeNthFromEnd(ListNode head, int n) {
+    public ListNode removeNthFromEnd1(ListNode head, int n) {
         if (n <= 0) return head;
 
         ListNode p = head;
