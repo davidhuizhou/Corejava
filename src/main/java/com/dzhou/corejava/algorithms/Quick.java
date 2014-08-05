@@ -7,6 +7,8 @@ import com.dzhou.lib.algorithms.StdIn;
 import com.dzhou.lib.algorithms.StdOut;
 import com.dzhou.lib.algorithms.StdRandom;
 
+import java.util.Random;
+
 /**
  *  The <tt>com.dzhou.corejava.algs4.Quick</tt> class provides static methods for sorting an
  *  array and selecting the ith smallest element in an array using quicksort.
@@ -19,6 +21,16 @@ import com.dzhou.lib.algorithms.StdRandom;
  */
 public class Quick {
 
+    private static Random random;    // pseudo-random number generator
+    private static long seed;        // pseudo-random number generator seed
+
+    // static initializer
+    static {
+        // this is how the seed was set in Java 1.4
+        seed = System.currentTimeMillis();
+        random = new Random(seed);
+    }
+
     // This class should not be instantiated.
     private Quick() { }
 
@@ -28,7 +40,20 @@ public class Quick {
      */
     public static void sort(int[] a) {
 //        StdRandom.shuffle(a);
+        shuffle(a);
         sort(a, 0, a.length - 1);
+    }
+
+    private static void shuffle(int[] a){
+        int N = a.length;
+
+        for(int i = 0; i < a.length; i++){
+            int r = random.nextInt(N - i);
+            exch(a, i, i + r);
+        }
+
+
+
     }
 
     // quicksort the subarray from a[lo] to a[hi]
@@ -43,32 +68,39 @@ public class Quick {
     // partition the subarray a[lo..hi] so that a[lo..j-1] <= a[j] <= a[j+1..hi]
     // and return the index j.
     private static int partition(int[] a, int lo, int hi) {
+        int key = a[lo];
         int i = lo;
-        int j = hi + 1;
-        int v = a[lo];
-        while (true) {
+        int j = hi +1;
 
-            // find item on lo to swap
-            while (a[++i] < v)
-                if (i == hi) break;
+        while(true){
+            while(a[++i] < key)
+                if(i==hi) break;
 
-            // find item on hi to swap
-            while (a[--j] > v)
-                if (j == lo) break;      // redundant since a[lo] acts as sentinel
+            while(a[--j] > key)
+                if(j == lo) break;
 
-            // check if pointers cross
-            if (i >= j) break;
+            if(i >= j)
+                break;
 
             exch(a, i, j);
         }
-
-        // put partitioning item v at a[j]
         exch(a, lo, j);
-
-        // now, a[lo .. j-1] <= a[j] <= a[j+1 .. hi]
         return j;
     }
 
+    private static void sortThree(int[] a, int lo, int hi){
+        if(hi <= lo) return;
+        int lt = lo, i = lo + 1, gt = hi;
+        int key = a[lo];
+        while(i <= gt){
+            if(a[i] < key) exch(a, lt++, i++);
+            else if (a[i] > key) exch(a, i, gt--);
+            else i++;
+        }
+        sortThree(a, lo, lt-1);
+        sortThree(a, gt+1, hi);
+
+    }
     /**
      * Rearranges the array so that a[k] contains the kth smallest key;
      * a[0] through a[k-1] are less than (or equal to) a[k]; and
@@ -129,6 +161,7 @@ public class Quick {
         for (int i = 0; i < a.length; i++) {
             StdOut.print(a[i] + " ");
         }
+        System.out.println("");
     }
 
     /**
@@ -139,7 +172,14 @@ public class Quick {
      */
     public static void main(String[] args) {
         int[] a = {4, 10,10,8,9,9,5,4,4,4,4,8,9,10, 7, 3, 2, 1, 4, 4, 1, 6, 4, 4, 4, 12,3,2,2,2,1,1,3,3,3, 10};
+        shuffle(a);
+        show(a);
+        System.out.println("");
         Quick.sort(a);
+        show(a);
+        shuffle(a);
+        show(a);
+        sortThree(a, 0, a.length -1);
         show(a);
 
 

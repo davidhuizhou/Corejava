@@ -337,9 +337,9 @@ public class LeetCode {
 
         while(lo <= hi){
             int mid = lo + (hi - lo)/2;
-            if(isPrefix(s.substring(lo, hi+1), strs, lo))
+            if(isCommonPrefix(s.substring(lo, hi + 1), strs, lo))
                 break;
-            else if (isPrefix(s.substring(lo, mid + 1), strs, lo))
+            else if (isCommonPrefix(s.substring(lo, mid + 1), strs, lo))
                 lo = mid + 1;
             else
                 hi = mid - 1;
@@ -351,7 +351,7 @@ public class LeetCode {
 
     }
 
-    private static boolean isPrefix(String s, String[] strs, int start){
+    private static boolean isCommonPrefix(String s, String[] strs, int start){
         for(String str : strs){
             if(str.substring(start).indexOf(s) != 0)
                 return false;
@@ -437,12 +437,77 @@ public class LeetCode {
     }
 
     /**
+     * https://oj.leetcode.com/problems/swap-nodes-in-pairs/
+     * https://oj.leetcode.com/submissions/detail/9273396/
+     */
+    public ListNode swapPairs(ListNode head) {
+        if (head == null)
+            return head;
+        ListNode p = head;
+        while (p != null) {
+            ListNode q = p.next;
+
+            if (q != null) {
+                int temp = p.val;
+                p.val = q.val;
+                q.val = temp;
+                p = q.next;
+
+            } else {
+                break;
+            }
+
+
+        }
+        return head;
+
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/reverse-nodes-in-k-group/
+     *
+     */
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null || k <= 1)
+            return head;
+
+        ListNode nextHead = head;
+
+        int count = 0;
+        while (count < k && nextHead != null) {
+            nextHead = nextHead.next;
+            count++;
+        }
+
+        if (count < k) {
+            return head;
+        }
+
+        ListNode r = null;
+        ListNode p = head;
+        ListNode q = p.next;
+
+        for (int i = 0; i < k; i++) {
+            p.next = r;
+            r = p;
+            p = q;
+            q = p.next;
+        }
+        head.next = reverseKGroup(nextHead, k);
+        return head;
+
+    }
+    /**
      * https://oj.leetcode.com/problems/4sum/
      * https://oj.leetcode.com/problems/4sum/
      */
     public static List<List<Integer>> fourSum(int[] num, int target) {
         Set<List<Integer>> set = new HashSet<List<Integer>>();
         Arrays.sort(num);
+
+
+
 
         for(int i = 0; i <= num.length - 4; i++){
             for(int j = i + 1; j <= num.length - 3; j++){
@@ -545,7 +610,7 @@ public class LeetCode {
      * https://oj.leetcode.com/problems/generate-parentheses/
      * https://oj.leetcode.com/submissions/detail/9270187/
      */
-    public List<String> generateParenthesis(int n) {
+    public static List<String> generateParenthesis(int n) {
         List<String> parenthesis = new ArrayList<String>();
         if(n==0) {
             parenthesis.add("");
@@ -556,7 +621,7 @@ public class LeetCode {
         return parenthesis;
 
     }
-    private void generateParenthesisHelper(List<String> parenthesis, int n, int left, int right, String s){
+    private static void generateParenthesisHelper(List<String> parenthesis, int n, int left, int right, String s){
         if(left == n){
             for(int i = 0; i < n - right; i++)
                 s += ")";
@@ -967,7 +1032,7 @@ public class LeetCode {
      *
      * https://oj.leetcode.com/problems/reverse-nodes-in-k-group/
      */
-    public ListNode reverseKGroup(ListNode head, int k) {
+    public ListNode reverseKGroup2(ListNode head, int k) {
         if (k <= 1)
             return head;
 
@@ -1038,7 +1103,7 @@ public class LeetCode {
             r = q;
             q = p;
         }
-        head.next = reverseKGroup(p, k);
+        head.next = reverseKGroup1(p, k);
         return r;
     }
 
@@ -1301,7 +1366,7 @@ public class LeetCode {
         StringUtils.printSet(set);
 
 
-        ArrayList<String> parenthesis = generateParenthesis(3);
+        List<String> parenthesis = generateParenthesis(3);
         for(String p : parenthesis){
             System.out.print(p + "|");
         }
