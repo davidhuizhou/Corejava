@@ -164,6 +164,8 @@ public class Quick {
         System.out.println("");
     }
 
+
+
     /**
      * Reads in a sequence of strings from standard input; quicksorts them;
      * and prints them to standard output in ascending order.
@@ -181,6 +183,12 @@ public class Quick {
         show(a);
         sortThree(a, 0, a.length -1);
         show(a);
+
+        shuffle(a);
+        show(a);
+
+
+
 
 
     }
