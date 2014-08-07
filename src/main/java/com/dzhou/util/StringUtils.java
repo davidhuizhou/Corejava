@@ -658,6 +658,14 @@ public class StringUtils {
         System.out.println("\n");
     }
 
+    public static void printList(List<Integer> A){
+        System.out.println("\n");
+        for(Integer i : A){
+            System.out.println("" +i + ", ");
+        }
+        System.out.println("\n");
+    }
+
     public static void main(String[] args){
 //        InputOutputWrapper wrapper = new InputOutputWrapper(new Scanner(System.in), System.out);
 //        StringUtils util = new StringUtils();
