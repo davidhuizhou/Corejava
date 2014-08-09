@@ -1037,6 +1037,276 @@ public class LeetCode {
         return longestLength;
     }
 
+    /**
+     * https://oj.leetcode.com/problems/search-in-rotated-sorted-array/
+     * http://www.darrensunny.me/leetcode-search-in-rotated-sorted-array/
+     * http://www.darrensunny.me/leetcode-search-in-rotated-sorted-array-ii/
+     * https://oj.leetcode.com/submissions/detail/9551838/
+     * https://oj.leetcode.com/submissions/detail/9552605/
+     *
+     */
+    public int search1(int[] A, int target) {
+        if(A == null || A.length == 0) return -1;
+        return searchHelper(A, target, 0, A.length - 1);
+
+    }
+    private int searchHelper(int[] A, int target, int start, int end){
+        if (start > end)
+            return -1;
+
+        int mid = start + (end - start) / 2;
+
+        if (A[mid] == target)
+            return mid;
+        else if (target > A[mid]) {
+            if (A[end] >= A[mid] && target > A[end])
+                return searchHelper(A, target, start, mid - 1);
+            else
+                return searchHelper(A, target, mid + 1, end);
+
+
+        } else {
+            if (A[start] <= A[mid] && target < A[start])
+                return searchHelper(A, target, mid + 1, end);
+            else
+                return searchHelper(A, target, start, mid - 1);
+
+
+        }
+    }
+
+
+    public int search(int[] A, int target){
+        if(A == null || A.length == 0) return -1;
+        int left = 0,right = A.length -1;
+
+        while(left <= right){
+            int mid = (left + right) / 2;
+            if(A[mid] == target)
+                return mid;
+            else if (A[mid] > A[left]){
+                if(target >= A[left] && target < A[mid])
+                    right = mid -1;
+                else
+                    left = mid + 1;
+            } else if(A[mid] < A[left]){
+                if(target > A[mid] && target <= A[right])
+                    left = mid + 1;
+                else
+                    right = mid -1;
+            } else {
+                left++;
+            }
+
+        }
+        return -1;
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/search-for-a-range/
+     * http://www.darrensunny.me/leetcode-search-for-a-range/
+     * https://oj.leetcode.com/submissions/detail/9556992/
+     *
+     */
+    public static int[] searchRange(int[] A, int target) {
+        if(A == null || A.length == 0)
+            return new int[]{-1, -1};
+
+        int left = 0, right = A.length-1;
+
+        //Find left matching index
+        while(left < right){
+
+            if(A[left] > target || A[right] < target)
+                return new int[] {-1, -1};
+
+            int mid = (left+right) / 2;
+
+            if(A[mid] < target)
+                left = mid+1;
+            else
+                right = mid;
+
+
+        }
+
+        if(A[left] != target)
+            return new int[] {-1, -1};
+
+        int index1 = left;
+
+        right = A.length-1;
+        while(left < right){
+            int mid = (left+right + 1)/2;
+
+            if(A[mid] > target)
+                right = mid -1;
+            else
+                left = mid;
+        }
+        return new int[] {index1, right};
+    }
+
+
+    /**
+     * https://oj.leetcode.com/problems/search-insert-position/
+     * http://www.programcreek.com/2013/01/leetcode-search-insert-position/
+     * https://oj.leetcode.com/submissions/detail/9557823/
+     *
+     */
+    public int searchInsert(int[] A, int target) {
+        if(A==null || A.length == 0) return 0;
+        int left = 0, right = A.length -1;
+        while(left <= right){
+            if(target < A[left]) return left;
+            if(target > A[right]) return right+1;
+
+            int mid = (left+right)/2;
+            if(A[mid] == target) return mid;
+            else if(A[mid] < target) left = mid+1;
+            else right = mid -1;
+        }
+        return left;
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/valid-sudoku/
+     * https://oj.leetcode.com/submissions/detail/9559909/
+     *
+     */
+    public static boolean isValidSudoku(char[][] board) {
+        for(int i = 0; i < 9; i++){
+            char[] row = board[i];
+            if(!isValidSudoku(row))
+                return false;
+        }
+
+        char[] column = new char[9];
+        for(int i = 0; i < 9; i++){
+            for(int j = 0; j < 9; j++)
+                column[j] = board[j][i];
+
+            if(!isValidSudoku(column))
+                return false;
+
+
+        }
+
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++ ){
+
+                char[] box = new char[9];
+                for(int m = 0; m < 3; m++){
+                    int ii = i*3 + m;
+                    for(int n = 0; n < 3; n++){
+                        int jj = j*3 + n;
+                        box[m*3 + n] = board[ii][jj];
+                    }
+                }
+                if(!isValidSudoku(box))
+                    return false;
+
+            }
+        }
+
+        return true;
+
+    }
+
+    private static boolean isValidSudoku(char[] c){
+        Map<Character, Integer> map = new HashMap<Character, Integer>();
+        for(int i= 0; i < c.length; i++){
+            if(c[i] == '.')
+                continue;
+            else {
+                if(c[i] >= '1' && c[i] <= '9' && map.get(c[i]) == null)
+                    map.put(c[i], 1);
+                else
+                    return false;
+            }
+        }
+        return true;
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/sudoku-solver/
+     * http://rleetcode.blogspot.com/2014/01/sudoku-solver-java.html
+     * https://oj.leetcode.com/submissions/detail/9560489/
+     *
+     */
+    public void solveSudoku(char[][] board) {
+        if (board==null||board.length==0){
+            return;
+        }
+
+        solved(board);
+
+
+    }
+    private boolean solved(char[][] board){
+
+        for(int i=0; i<board.length; i++){
+            for (int j=0; j<board[0].length; j++){
+                if (board[i][j]=='.'){
+                    for (char num='1'; num<='9'; num++){
+
+                        if(isValid(board, i, j, num)){
+                            // no conflict
+                            board[i][j]=num;
+
+                            if (solved(board)){
+                                return true;
+                            }
+                            else{
+                                board[i][j]='.';
+                            }
+
+                        }
+
+                    }
+                    // if no proper number found, return false
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private boolean isValid(char[][] board, int i, int j, char c){
+
+        // check column
+        for (int row=0; row<9; row++){
+            if (board[row][j]==c){
+                return false;
+            }
+
+
+        }
+
+        // check row
+        for (int col=0; col<9; col++){
+            if (board[i][col]==c){
+                return false;
+            }
+
+        }
+
+        // check block
+        for(int row=i/3*3; row<i/3*3+3; row++){
+            for (int col=j/3*3; col<j/3*3+3; col++){
+                if (board[row][col]==c){
+                    return false;
+                }
+
+            }
+        }
+
+        return true;
+
+    }
+
     /////////////////////////////////////////////
 
     /////////////////////////////////////////////
@@ -1870,6 +2140,20 @@ public class LeetCode {
 
         p = ")()(((())))(";
         System.out.println(longestValidParentheses(p));
+
+        searchRange(new int[]{2,2}, 2);
+
+        char[][] board = {  ".87654321".toCharArray(),
+                            "2........".toCharArray(),
+                            "3........".toCharArray(),
+                            "4........".toCharArray(),
+                            "5........".toCharArray(),
+                            "6........".toCharArray(),
+                            "7........".toCharArray(),
+                            "8........".toCharArray(),
+                            "9........".toCharArray()};
+        System.out.println(isValidSudoku(board));
+
 
     }
 }
