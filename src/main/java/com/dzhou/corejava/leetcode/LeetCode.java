@@ -895,6 +895,147 @@ public class LeetCode {
 
     }
 
+    /**
+     * https://oj.leetcode.com/problems/next-permutation/
+     * https://oj.leetcode.com/submissions/detail/9469583/
+     */
+    public static void nextPermutation(int[] num) {
+        if(num == null) return;
+
+        int len = num.length;
+        if(len <= 1) return;
+
+        for(int i = len - 2; i >= 0; i--){
+            int min = findMin(num, i, len -1);
+            if(i < min){
+                exch(num, i, min);
+                sort(num, i+1, len-1);
+                return;
+            }
+        }
+        sort(num, 0, len-1);
+    }
+
+    private static int findMin(int[] num, int start, int end){
+
+        if(start == end)
+            return start;
+
+        int min = start;
+        int i = start;
+
+        while(i <= end && num[i] <= num[start])
+            i++;
+
+        if(i <= end)
+            min = i;
+
+        for(i = min+1; i <= end; i++){
+            if(num[i] <= num[min] && num[i] > num[start])
+                min = i;
+        }
+        return min;
+
+    }
+
+    private static void exch(int[] a, int i, int j) {
+        int swap = a[i];
+        a[i] = a[j];
+        a[j] = swap;
+    }
+
+    private static void sort(int[] num, int start, int end){
+        if(start == end) return;
+
+        for(int i = start+1; i <= end; i++){
+            for(int j = i; j > start && num[j] < num[j-1]; j--){
+                exch(num, j-1, j);
+            }
+
+        }
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/longest-valid-parentheses/
+     * https://oj.leetcode.com/submissions/detail/9511539/
+     */
+    public static int longestValidParentheses1(String s) {
+        int res = 0;
+        if(s == null || s.length() == 0)
+            return 0;
+
+        int left = 0, right = 0;
+
+        for(int i = 0; i <= s.length() -1; i++){
+            if(s.charAt(i) == '('){
+                left++;
+            } else if (s.charAt(i) == ')'){
+                right++;
+                if(right == left){
+                    if(2*left > res){
+                        res = 2*left;
+                    }
+                } else if(right > left){
+                    left = 0;
+                    right = 0;
+                }
+            }
+        }
+
+        left = 0;
+        right = 0;
+
+        for(int i = s.length()-1; i >= 0; i--){
+            if(s.charAt(i) == ')'){
+                right++;
+            } else if (s.charAt(i) == '('){
+                left++;
+                if(left == right){
+                    if(2*left > res){
+                        res = 2*left;
+                    }
+                } else if(left > right){
+                    left = 0;
+                    right = 0;
+                }
+            }
+        }
+
+        return res;
+
+    }
+
+    /**
+     * http://www.darrensunny.me/leetcode-longest-valid-parentheses/
+     * @param s
+     * @return
+     */
+    public static int longestValidParentheses(String s) {
+        if (s == null || s.length() == 0)
+            return 0;
+        int longestLength = 0;      // Length of the longest valid parentheses
+        int start = 0;  // The start index of the possibly longest valid parentheses
+        Stack<Integer> stack = new Stack<Integer>();
+        // One-pass scan
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {   // Opening parenthesis
+                stack.push(i);          // Push its index
+            } else {        // Closing parenthesis
+                if (stack.empty()) {    // No opening parenthesis to match
+                    start = i + 1;      // i+1 is the start of next possibly LVP
+                } else {
+                    stack.pop();    // The index of the opening parenthesis matched by s[i]
+                    if (stack.empty())  // s[start...i] is matched
+                        longestLength = Math.max(longestLength, i-start+1);
+                    else    // s[stack.peek()] is unmatched; s[stack.peek()+1...i] is matched
+                        longestLength = Math.max(longestLength, i-stack.peek());
+                }
+            }
+        }
+
+        return longestLength;
+    }
 
     /////////////////////////////////////////////
 
@@ -1702,6 +1843,33 @@ public class LeetCode {
         s2 = System.currentTimeMillis();
         System.out.println("findSubstring took " + (s2 - s1));
         StringUtils.printList(list);
+
+        int[] nums = {2, 3, 1};
+        nextPermutation(nums);
+        StringUtils.printArray(nums);
+
+        System.out.println("Test longestValidParentheses");
+        String p = "(()";
+        System.out.println(longestValidParentheses(p));
+
+        p = "";
+        System.out.println(longestValidParentheses(p));
+
+        p = "()";
+        System.out.println(longestValidParentheses(p));
+
+        p = "()()";
+        System.out.println(longestValidParentheses(p));
+
+        p = ")()())";
+        System.out.println(longestValidParentheses(p));
+
+
+        p = "()(()";
+        System.out.println(longestValidParentheses(p));
+
+        p = ")()(((())))(";
+        System.out.println(longestValidParentheses(p));
 
     }
 }
