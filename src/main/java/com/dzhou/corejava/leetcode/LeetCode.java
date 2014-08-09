@@ -952,6 +952,56 @@ public class LeetCode {
 
     }
 
+    /**
+     * https://oj.leetcode.com/problems/substring-with-concatenation-of-all-words/
+     * https://oj.leetcode.com/submissions/detail/9464973/
+     */
+    public List<Integer> findSubstring(String S, String[] L) {
+        List<Integer> result = new ArrayList<Integer>();
+        if(S == null || L == null) return result;
+
+        int n = L.length;
+        if(n == 0) return result;
+        int m = L[0].length();
+        int l = S.length();
+
+        Map<String, Integer> countMap = new HashMap<String, Integer>();
+        for(String w : L){
+            Integer count = countMap.get(w);
+            if(count == null)
+                countMap.put(w, 1);
+            else
+                countMap.put(w, count+1);
+
+        }
+
+        for(int i = 0; i <= l - n*m; i++){
+            Map<String, Integer> temp = new HashMap<String, Integer>(countMap);
+            boolean isSubStr = true;
+            for(int j = 0; j < n; j++){
+                String w = S.substring(i+j*m, i+(j+1)*m);
+                Integer count = temp.get(w);
+                if(count == null || count == 0) {
+                    isSubStr = false;
+                    break;
+                }
+                else{
+                    count--;
+                    temp.put(w, count);
+                }
+            }
+            if(isSubStr)
+                result.add(i);
+
+
+        }
+
+
+        return result;
+
+    }
+
+
     /////////////////////////////////////////////
 
     /////////////////////////////////////////////
