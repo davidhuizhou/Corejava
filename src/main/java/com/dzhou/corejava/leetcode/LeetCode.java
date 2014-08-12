@@ -1307,6 +1307,101 @@ public class LeetCode {
 
     }
 
+    /**
+     * https://oj.leetcode.com/problems/count-and-say/
+     * https://oj.leetcode.com/submissions/detail/9651625/
+     *
+     */
+    public String countAndSay(int n) {
+        if(n <= 0) return null;
+        if(n == 1) return "1";
+        StringBuilder sb = new StringBuilder("1");
+        for(int i = 2; i <=n; i++){
+            String s = sb.toString();
+            sb = new StringBuilder();
+            int count = 1, j = 1;
+            for(j = 1; j < s.length(); j++){
+                if(s.charAt(j) == s.charAt(j-1)){
+                    count++;
+
+                } else {
+                    sb.append(count).append(s.charAt(j-1));
+                    count = 1;
+                }
+            }
+            sb.append(count).append(s.charAt(j-1));
+        }
+        return sb.toString();
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/combination-sum/
+     * https://oj.leetcode.com/submissions/detail/9655670/
+     *
+     */
+    public static List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> r = new ArrayList<List<Integer>>();
+
+        if(candidates == null || candidates.length == 0)
+            return r;
+
+        Arrays.sort(candidates);
+        int N = 0;
+        while(N <= candidates.length - 1 && candidates[N] <= target)
+            N++;
+
+        return combinationSum(candidates, N, target);
+
+    }
+
+    private static List<List<Integer>> combinationSum(int[] c, int N, int target) {
+        List<List<Integer>> r = new ArrayList<List<Integer>>();
+
+        if(N == 0){
+
+        }else if (N == 1) {
+            if(target % c[0] == 0) {
+                List<Integer> l = new ArrayList<Integer>();
+                for (int n = 0; n < target / c[0]; n++)
+                    l.add(c[0]);
+                r.add(l);
+            }
+        } else {
+            int d = c[N - 1];
+            if (d <= target) {
+                for (int n = 0; n <= target / d; n++) {
+                    int newTarget = target - n * d;
+
+                    if (target > 0) {
+                        List<List<Integer>> l = combinationSum(c, N - 1, newTarget);
+                        for (List<Integer> b : l) {
+                            for (int j = 0; j < n; j++)
+                                b.add(d);
+                            r.add(b);
+                        }
+                    } else {
+                        List<Integer> l = new ArrayList<Integer>();
+                        for (int m = 0; m < n; m++) {
+                            l.add(d);
+                        }
+                        r.add(l);
+                    }
+                }
+
+
+            } else {
+                r = combinationSum(c, N - 1, target);
+
+            }
+        }
+        return r;
+
+
+    }
+
+
+
     /////////////////////////////////////////////
 
     /////////////////////////////////////////////
@@ -2153,6 +2248,13 @@ public class LeetCode {
                             "8........".toCharArray(),
                             "9........".toCharArray()};
         System.out.println(isValidSudoku(board));
+
+
+        System.out.println("Test combineSum");
+        int[] candidates = new int[]{1, 2};
+        int target = 3;
+        List<List<Integer>> r = combinationSum(candidates, target);
+        System.out.println(r);
 
 
     }

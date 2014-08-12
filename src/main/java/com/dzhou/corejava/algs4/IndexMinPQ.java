@@ -304,6 +304,12 @@ public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer
         String[] strings = { "it", "was", "the", "best", "of", "times", "it", "was", "the", "worst" };
 
         IndexMinPQ<String> pq = new IndexMinPQ<String>(strings.length);
+
+        pq.insert(0, strings[0]);
+        pq.insert(2, strings[2]);
+        pq.insert(3, strings[3]);
+        pq.insert(1, strings[1]);
+
         for (int i = 0; i < strings.length; i++) {
             pq.insert(i, strings[i]);
         }
