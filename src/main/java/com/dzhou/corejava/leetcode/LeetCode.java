@@ -1337,6 +1337,7 @@ public class LeetCode {
 
     /**
      * https://oj.leetcode.com/problems/combination-sum/
+     * http://www.darrensunny.me/leetcode-combination-sum/
      * https://oj.leetcode.com/submissions/detail/9655670/
      *
      */
@@ -1373,7 +1374,7 @@ public class LeetCode {
                 for (int n = 0; n <= target / d; n++) {
                     int newTarget = target - n * d;
 
-                    if (target > 0) {
+                    if (newTarget > 0) {
                         List<List<Integer>> l = combinationSum(c, N - 1, newTarget);
                         for (List<Integer> b : l) {
                             for (int j = 0; j < n; j++)
@@ -1398,6 +1399,119 @@ public class LeetCode {
         return r;
 
 
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/combination-sum-ii/
+     * https://oj.leetcode.com/submissions/detail/9701592/
+     *
+     */
+    public static List<List<Integer>> combinationSum2(int[] num, int target) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        Set<ArrayList<Integer>> set = new HashSet<ArrayList<Integer>>();
+        if (num == null || num.length == 0)
+            return result;
+
+        Arrays.sort(num);        // Sort the candidate in non-descending order
+        ArrayList<Integer> current = new ArrayList<Integer>();
+        recursiveAppend(num, target, 0, current, set);
+
+        for(ArrayList<Integer> l : set) {
+            result.add(l);
+        }
+        return result;
+
+    }
+
+    private static void recursiveAppend(int[] candidates, int target, int startIndex,
+        ArrayList<Integer> current, Set<ArrayList<Integer>> result) {
+        if (target < 0)
+            return;
+        if (target == 0) {     // The current array is an solution
+            result.add(new ArrayList<Integer>(current));
+            return;
+        }
+        for (int i = startIndex; i < candidates.length; i++) {
+            if (candidates[i] > target)    // No need to try the remaining candidates
+                break;
+            // Add candidate[i] to the current array
+            ArrayList<Integer> copy = new ArrayList(current);
+            copy.add(candidates[i]);
+            // Recursively append the current array to compose a solution
+            recursiveAppend(candidates, target-candidates[i], i + 1, copy, result);
+
+        }
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/first-missing-positive/
+     * https://oj.leetcode.com/submissions/detail/9702757/
+     *
+     */
+    public int firstMissingPositive(int[] A) {
+        if(A == null || A.length == 0) return 1;
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        for(int i = 0; i < A.length; i++)
+            map.put(A[i], 1);
+
+        int missing = 1;
+        while(map.get(missing) != null) missing++;
+        return missing;
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/trapping-rain-water/
+     * https://oj.leetcode.com/submissions/detail/9704165/
+     *
+     */
+    public int trap(int[] A) {
+        if(A == null || A.length <= 2)
+            return 0;
+
+        int result = 0;
+
+        int N = A.length;
+
+        HashMap<Integer, LeftAndRight> map = new HashMap<Integer, LeftAndRight>();
+        map.put(1, new LeftAndRight(A[0], 0));
+
+        for(int i = 2; i <= N -2; i++){
+            int left = map.get(i-1).left;
+            int a = Math.max(left, A[i-1]);
+            map.put(i, new LeftAndRight(a, 0));
+        }
+
+        LeftAndRight l = map.get(N - 2);
+        l.right = A[N-1];
+        map.put(N-2, l);
+
+        for(int i = A.length - 3; i >= 1; i--){
+            int right = map.get(i+1).right;
+            int b = Math.max(A[i+1], right);
+            LeftAndRight r = map.get(i);
+            r.right = b;
+            map.put(i, r);
+        }
+
+        for(int i = 1; i <= N -2; i++){
+            LeftAndRight m = map.get(i);
+            int k = Math.min(m.left, m.right);
+            if(k > A[i]) result += (k - A[i]);
+        }
+
+        return result;
+
+    }
+
+    private class LeftAndRight{
+        int left;
+        int right;
+
+        LeftAndRight(int left, int right){
+            this.left = left;
+            this.right = right;
+        }
     }
 
 
@@ -2254,6 +2368,12 @@ public class LeetCode {
         int[] candidates = new int[]{1, 2};
         int target = 3;
         List<List<Integer>> r = combinationSum(candidates, target);
+        System.out.println(r);
+
+
+        candidates = new int[]{1, 1};
+        target = 1;
+        r = combinationSum2(candidates, target);
         System.out.println(r);
 
 
