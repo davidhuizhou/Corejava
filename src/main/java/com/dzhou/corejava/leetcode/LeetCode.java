@@ -1408,37 +1408,36 @@ public class LeetCode {
      */
     public static List<List<Integer>> combinationSum2(int[] num, int target) {
         List<List<Integer>> result = new ArrayList<List<Integer>>();
-        Set<ArrayList<Integer>> set = new HashSet<ArrayList<Integer>>();
         if (num == null || num.length == 0)
             return result;
 
         Arrays.sort(num);        // Sort the candidate in non-descending order
         ArrayList<Integer> current = new ArrayList<Integer>();
-        recursiveAppend(num, target, 0, current, set);
+        recursiveAppend(num, target, 0, current, result);
 
-        for(ArrayList<Integer> l : set) {
-            result.add(l);
-        }
         return result;
 
     }
 
-    private static void recursiveAppend(int[] candidates, int target, int startIndex,
-        ArrayList<Integer> current, Set<ArrayList<Integer>> result) {
+    private static void recursiveAppend(int[] num, int target, int startIndex,
+        List<Integer> current, List<List<Integer>> result) {
         if (target < 0)
             return;
         if (target == 0) {     // The current array is an solution
             result.add(new ArrayList<Integer>(current));
             return;
         }
-        for (int i = startIndex; i < candidates.length; i++) {
-            if (candidates[i] > target)    // No need to try the remaining candidates
+        for (int i = startIndex; i < num.length; i++) {
+            if (num[i] > target)    // No need to try the remaining candidates
                 break;
             // Add candidate[i] to the current array
             ArrayList<Integer> copy = new ArrayList(current);
-            copy.add(candidates[i]);
+            copy.add(num[i]);
+
+            while (i <= num.length - 2 && num[i + 1] == num[i])
+                i++;
             // Recursively append the current array to compose a solution
-            recursiveAppend(candidates, target-candidates[i], i + 1, copy, result);
+            recursiveAppend(num, target - num[i], i + 1, copy, result);
 
         }
     }
@@ -1513,6 +1512,142 @@ public class LeetCode {
             this.right = right;
         }
     }
+
+    /**
+     * https://oj.leetcode.com/problems/multiply-strings/
+     * http://www.darrensunny.me/leetcode-multiply-strings/
+     * https://oj.leetcode.com/submissions/detail/9825634/
+     *
+     */
+    public String multiply1(String num1, String num2) {
+        if (num1 == null || num1.length() == 0 ||
+                num2 == null || num2.length() == 0)
+            return "";
+        if (num1.equals("0") || num2.equals("0"))   // Either one is 0
+            return "0";
+        int m = num1.length(), n = num2.length();
+        // Multiply single digit of each number and add up products at each position
+        int[] prods = new int[m+n];
+        for (int i = n-1; i >= 0; i--)
+            for (int j = m-1; j >= 0; j--)
+                prods[i+j+1] += (num2.charAt(i)-'0') * (num1.charAt(j)-'0');
+        // Keep a single digit at each position and add carry to a higher position
+        StringBuilder result = new StringBuilder();
+        for (int i = n+m-1; i >= 0; i--) {
+            result.insert(0, prods[i]%10);
+            if (i > 0)
+                prods[i-1] += prods[i] / 10;    // Carry
+        }
+        // Get rid of one leaing "0" (if any)
+        if (result.charAt(0) == '0')
+            result.deleteCharAt(0);
+
+        return result.toString();
+    }
+
+    public static String multiply(String num1, String num2) {
+        if(num1 == null && num2 == null ) return null;
+        if(num1 != null && num2 == null) return num1;
+        if(num1 == null && num2 != null) return num2;
+        if(num1.equals("0") || num2.equals("0")) return "0";
+
+        int N1 = num1.length();
+        int N2 = num2.length();
+
+        String result = "";
+
+        if(N1 > N2){
+            for(int i = 0; i < N2; i++){
+                String s = "";
+                int c = num2.charAt(i) - '0';
+
+                for(int j = 0; j < c; j++){
+                    s = add(s, num1);
+                }
+                for(int j = 0; j < (N2 - 1 -i); j++)
+                    s += "0";
+                result = add(result, s);
+
+            }
+        } else {
+            for(int i = 0; i < N1; i++){
+                String s = "";
+                int c = num1.charAt(i) - '0';
+
+                for(int j = 0; j < c; j++){
+                    s = add(s, num2);
+                }
+                for(int j = 0; j < (N1 - 1 -i); j++)
+                    s += "0";
+
+                result = add(result, s);
+
+            }
+        }
+        return result;
+
+    }
+
+    private static String add(String num1, String num2){
+        if(num1 == null && num2 == null ) return null;
+        if(num1 != null && (num2 == null || num2.length() == 0 || num2.equals("0"))) return num1;
+        if((num1 == null || num1.length() == 0 || num1.equals("0")) && num2 != null) return num2;
+
+        Stack<Character> s1 = new Stack<Character>();
+        Stack<Character> s2 = new Stack<Character>();
+        Stack<Character> s3 = new Stack<Character>();
+
+        for(int i = 0; i < num1.length(); i++)
+            s1.push(num1.charAt(i));
+
+        for(int i = 0; i < num2.length(); i++)
+            s2.push(num2.charAt(i));
+
+        int carryOver = 0;
+
+        while(!s1.isEmpty() || !s2.isEmpty()) {
+            Character c1 = null;
+            Character c2 = null;
+
+            if (!s1.isEmpty())
+                c1 = s1.pop();
+            if (!s2.isEmpty())
+                c2 = s2.pop();
+
+            if (c1 != null)
+                carryOver += c1 - '0';
+            if (c2 != null)
+                carryOver += c2 - '0';
+
+            s3.push(toCharacter(carryOver % 10));
+            carryOver /= 10;
+        }
+        if(carryOver == 1)
+            s3.push(toCharacter(carryOver));
+
+        StringBuilder sb = new StringBuilder();
+        while(!s3.isEmpty())
+            sb.append(s3.pop());
+        return sb.toString();
+
+
+    }
+
+    private static Character toCharacter(int c){
+        if(c == 0) return '0';
+        else if (c == 1) return '1';
+        else if (c == 2) return '2';
+        else if (c == 3) return '3';
+        else if (c == 4) return '4';
+        else if (c == 5) return '5';
+        else if (c == 6) return '6';
+        else if (c == 7) return '7';
+        else if (c == 8) return '8';
+        else if (c == 9) return '9';
+        else return null;
+    }
+
+
 
 
 
@@ -2297,7 +2432,7 @@ public class LeetCode {
 
 
         String S = "pjzkrkevzztxductzzxmxsvwjkxpvukmfjywwetvfnujhweiybwvvsrfequzkhossmootkmyxgjgfordrpapjuunmqnxxdrqrfgkrsjqbszgiqlcfnrpjlcwdrvbumtotzylshdvccdmsqoadfrpsvnwpizlwszrtyclhgilklydbmfhuywotjmktnwrfvizvnmfvvqfiokkdprznnnjycttprkxpuykhmpchiksyucbmtabiqkisgbhxngmhezrrqvayfsxauampdpxtafniiwfvdufhtwajrbkxtjzqjnfocdhekumttuqwovfjrgulhekcpjszyynadxhnttgmnxkduqmmyhzfnjhducesctufqbumxbamalqudeibljgbspeotkgvddcwgxidaiqcvgwykhbysjzlzfbupkqunuqtraxrlptivshhbihtsigtpipguhbhctcvubnhqipncyxfjebdnjyetnlnvmuxhzsdahkrscewabejifmxombiamxvauuitoltyymsarqcuuoezcbqpdaprxmsrickwpgwpsoplhugbikbkotzrtqkscekkgwjycfnvwfgdzogjzjvpcvixnsqsxacfwndzvrwrycwxrcismdhqapoojegggkocyrdtkzmiekhxoppctytvphjynrhtcvxcobxbcjjivtfjiwmduhzjokkbctweqtigwfhzorjlkpuuliaipbtfldinyetoybvugevwvhhhweejogrghllsouipabfafcxnhukcbtmxzshoyyufjhzadhrelweszbfgwpkzlwxkogyogutscvuhcllphshivnoteztpxsaoaacgxyaztuixhunrowzljqfqrahosheukhahhbiaxqzfmmwcjxountkevsvpbzjnilwpoermxrtlfroqoclexxisrdhvfsindffslyekrzwzqkpeocilatftymodgztjgybtyheqgcpwogdcjlnlesefgvimwbxcbzvaibspdjnrpqtyeilkcspknyylbwndvkffmzuriilxagyerjptbgeqgebiaqnvdubrtxibhvakcyotkfonmseszhczapxdlauexehhaireihxsplgdgmxfvaevrbadbwjbdrkfbbjjkgcztkcbwagtcnrtqryuqixtzhaakjlurnumzyovawrcjiwabuwretmdamfkxrgqgcdgbrdbnugzecbgyxxdqmisaqcyjkqrntxqmdrczxbebemcblftxplafnyoxqimkhcykwamvdsxjezkpgdpvopddptdfbprjustquhlazkjfluxrzopqdstulybnqvyknrchbphcarknnhhovweaqawdyxsqsqahkepluypwrzjegqtdoxfgzdkydeoxvrfhxusrujnmjzqrrlxglcmkiykldbiasnhrjbjekystzilrwkzhontwmehrfsrzfaqrbbxncphbzuuxeteshyrveamjsfiaharkcqxefghgceeixkdgkuboupxnwhnfigpkwnqdvzlydpidcljmflbccarbiegsmweklwngvygbqpescpeichmfidgsjmkvkofvkuehsmkkbocgejoiqcnafvuokelwuqsgkyoekaroptuvekfvmtxtqshcwsztkrzwrpabqrrhnlerxjojemcxel";
-        L = new String[]{"dhvf","sind","ffsl","yekr","zwzq","kpeo","cila","tfty","modg"};//,"ztjg","ybty","heqg","cpwo","gdcj","lnle","sefg","vimw","bxcb"};
+        L = new String[]{"dhvf","sind","ffsl"}; //,"yekr","zwzq","kpeo","cila","tfty","modg"};//,"ztjg","ybty","heqg","cpwo","gdcj","lnle","sefg","vimw","bxcb"};
 
         result = new HashSet<String>();
         permute(result, L, "", 0, L.length);
@@ -2376,6 +2511,13 @@ public class LeetCode {
         r = combinationSum2(candidates, target);
         System.out.println(r);
 
+
+
+        System.out.println("test multiply");
+        //System.out.println(add("0", "0"));
+        System.out.println(multiply("0", "0"));
+
+//
 
     }
 }
