@@ -1783,6 +1783,33 @@ public class LeetCode {
         return B[0];
 
     }
+
+    public int jump2(int[] A) {
+        if (A == null) return -1;
+        int n = A.length;
+        if (n == 1) return 0;
+
+        int jump = 0;       // The number of jumps
+        // The beginning and ending indices of elements that are "jump" jumps
+        // away from the first element
+        int begin = 0, end = 0;
+        // For each outer loop, find the largest index of the element that are
+        // "jump+1" jumps from the first
+        while (true) {
+            jump++;
+            int temp = 0;   // Used to keep track of the largest index
+            // The elements "jump+1" jumps away are approachable by the elements
+            // that are "jump" jumps away
+            for (int i = begin; i <= end; i++) {
+                temp = Math.max(temp, A[i]+i);
+                if (temp >= n-1)    // Once the largest index exceeds the array, we are done
+                    return jump;
+            }
+            // Update "begin" and "end" as the indices of the elements "jump" jumps away
+            begin = end + 1;
+            end = temp;
+        }
+    }
     /**
      * https://oj.leetcode.com/problems/permutations/
      * http://www.programcreek.com/2013/02/leetcode-permutations-java/
@@ -1817,6 +1844,93 @@ public class LeetCode {
 
         }
 
+    }
+
+    /**
+     * http://www.programcreek.com/2013/02/leetcode-permutations-java
+     */
+    public static List<List<Integer>> permute1(int[] num){
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        result.add(new ArrayList<Integer>());
+
+        for(int i = 0; i < num.length; i++){
+            List<List<Integer>> current = new ArrayList<List<Integer>>();
+
+            for(List<Integer> l : result){
+                for(int j = 0; j <= l.size(); j++){
+                    l.add(j, num[i]);
+
+                    List<Integer> temp = new ArrayList<Integer>(l);
+                    current.add(temp);
+
+                    l.remove(j);
+                }
+
+            }
+
+            result = new ArrayList<List<Integer>>(current);
+
+        }
+        return result;
+    }
+
+    /**
+     *  http://www.programcreek.com/2013/02/leetcode-permutations-java/
+     */
+    public List<List<Integer>> permute2(int[] num) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        permute(num, 0, result);
+        return result;
+    }
+
+    void permute(int[] num, int start, List<List<Integer>> result) {
+
+        if (start >= num.length) {
+            ArrayList<Integer> item = convertArrayToList(num);
+            result.add(item);
+        }
+
+        for (int j = start; j <= num.length - 1; j++) {
+            swap(num, start, j);
+            permute(num, start + 1, result);
+            swap(num, start, j);
+        }
+    }
+
+    /**
+     * http://www.darrensunny.me/leetcode-permutations/
+     */
+    public List<List<Integer>> permute3(int[] num) {
+        if (num == null)
+            return null;
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        if (num.length == 0)
+            return result;
+        recursivePermute(num, new boolean[num.length], new ArrayList<Integer>(), result);
+        return result;
+    }
+
+    // If "current" is already a permutation of "num", add it to "result";
+// otherwise, append each unused number to "current", and recursively try next unused number
+    private void recursivePermute(int[] num, boolean[] used, ArrayList<Integer> current,
+                                  ArrayList<ArrayList<Integer>> result) {
+        if (current.size() == num.length) {     // "current" is already a permutation of "num"
+            result.add(new ArrayList<Integer>(current));
+            return;
+        }
+        // Append each unused number to "current", and recursively try next unused number
+        for (int i = 0; i < num.length; i++) {
+            if (!used[i]) {
+                // Append an unused number
+                used[i] = true;
+                current.add(num[i]);
+                // Recursively append next unused number
+                recursivePermute(num, used, current, result);
+                // Get back to original state, get ready for appending another unused number
+                current.remove(current.size()-1);
+                used[i] = false;
+            }
+        }
     }
 
     /**
