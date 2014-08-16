@@ -1753,6 +1753,157 @@ public class LeetCode {
         return posS == m && posP == n;
     }
 
+    /**
+     * https://oj.leetcode.com/problems/jump-game-ii/
+     * http://www.darrensunny.me/leetcode-jump-game-ii/
+     * https://oj.leetcode.com/submissions/detail/9860022/
+     *
+     */
+    public int jump(int[] A) {
+        if(A == null || A.length == 1) return 0;
+        int N = A.length;
+        if(N == 2 || A[0] >= N - 1) return 1;
+
+        int[] B = new int[N];
+        B[N-1] = 0;
+        B[N-2] = 1;
+
+        for(int i = N - 3; i >= 0; i--){
+            if(A[i] >= N - 1 - i)
+                B[i] = 1;
+            else {
+                int min = N;
+                for(int j = i + 1; j <= i + A[i]; j++){
+                    if(B[j] < min)
+                        min = B[j];
+                }
+                B[i] = min + 1;
+            }
+        }
+        return B[0];
+
+    }
+    /**
+     * https://oj.leetcode.com/problems/permutations/
+     * http://www.programcreek.com/2013/02/leetcode-permutations-java/
+     * http://www.darrensunny.me/leetcode-permutations/
+     * https://oj.leetcode.com/submissions/detail/9861658/
+     *
+     */
+    public static List<List<Integer>> permute(int[] num) {
+        List<List<Integer>> r = new ArrayList<List<Integer>>();
+        Set<List<Integer>> set = new HashSet<List<Integer>>();
+        List<Integer> list = new ArrayList<Integer>();
+        permuteHelper(set, num, list, num.length);
+        for(List<Integer> l : set)
+            r.add(l);
+        return r;
+    }
+
+    private static void permuteHelper(Set<List<Integer>> set, int[] num, List<Integer> list, int total){
+        if(list.size() == total)
+            set.add(list);
+        if(num == null || num.length == 0) return;
+
+        int N = num.length;
+        for(int i = 0; i < N; i++){
+            int n = num[i];
+            List<Integer> copyList = new ArrayList<Integer>(list);
+            copyList.add(n);
+            int[] copyNum = new int[N-1];
+            for(int j = 0; j < i; j++) copyNum[j] = num[j];
+            for(int j = i; j < N -1; j++) copyNum[j] = num[j+1];
+            permuteHelper(set, copyNum, copyList, total);
+
+        }
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/permutations-ii/
+     * https://oj.leetcode.com/submissions/detail/9863455/
+     *
+     */
+
+    public static List<List<Integer>> permuteUnique(int[] num) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        permuteUnique(num, 0, result);
+        return result;
+    }
+
+    private static void permuteUnique(int[] num, int start, List<List<Integer>> result) {
+
+        if (start >= num.length) {
+            ArrayList<Integer> item = convertArrayToList(num);
+            result.add(item);
+            return;
+        }
+
+        permuteUnique(num, start+1, result);
+        Set<Integer> set = new HashSet<Integer>();
+        for (int j = start + 1; j <= num.length - 1; j++) {
+            if(num[start] != num[j] && !set.contains(num[j])) {
+                set.add(num[j]);
+                swap(num, start, j);
+                permuteUnique(num, start + 1, result);
+                swap(num, start, j);
+            }
+
+        }
+    }
+
+    private static ArrayList<Integer> convertArrayToList(int[] num) {
+        ArrayList<Integer> item = new ArrayList<Integer>();
+        for (int h = 0; h < num.length; h++) {
+            item.add(num[h]);
+        }
+        return item;
+    }
+
+    private static void swap(int[] a, int i, int j) {
+        int temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
+    }
+
+
+    public static List<List<Integer>> permuteUnique2(int[] num) {
+        if (num == null)
+            return null;
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        if (num.length == 0)
+            return result;
+        Arrays.sort(num);       // Sort the array in non-descending order
+        recursivePermute(num, new boolean[num.length], new ArrayList<Integer>(), result);
+        return result;
+    }
+
+    // If "current" is already a permutation of "num", add it to "result";
+    // otherwise, append each unused number to "current", and recursively try next unused number
+    private static void recursivePermute(int[] num, boolean[] used, List<Integer> current,
+                                  List<List<Integer>> result) {
+        if (current.size() == num.length) {     // "current" is already a permutation of "num"
+            result.add(new ArrayList<Integer>(current));
+            return;
+        }
+        // Append each unused number to "current", and recursively try next unused number
+        for (int i = 0; i < num.length; i++) {
+            if (i > 0 && !used[i-1] && num[i]==num[i-1])
+                // Do not consider a duplicate number if its earlier appearance has
+                // not been considered yet
+                continue;
+            if (!used[i]) {
+                // Append an unused number
+                used[i] = true;
+                current.add(num[i]);
+                // Recursively append next unused number
+                recursivePermute(num, used, current, result);
+                // Get back to original state, get ready for appending another unused number
+                current.remove(current.size()-1);
+                used[i] = false;
+            }
+        }
+    }
 
 
     /////////////////////////////////////////////
@@ -2630,5 +2781,15 @@ public class LeetCode {
         System.out.println(isMatch4("abcdefaaahicg", "ab*aaaa"));
         s2 = System.currentTimeMillis();
         System.out.println("s2 - s1 = " + (s2 - s1));
+
+        System.out.println("Test permute");
+        int[] num2 = new int[]{0, 1};
+        List<List<Integer>> list2 = permute(num2);
+
+
+
+        num2 = new int[] {2,2,1,1};
+        list2 = permuteUnique2(num2);
+        System.out.println("End");
     }
 }
