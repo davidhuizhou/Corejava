@@ -1245,7 +1245,6 @@ public class LeetCode {
 
     }
     private boolean solved(char[][] board){
-
         for(int i=0; i<board.length; i++){
             for (int j=0; j<board[0].length; j++){
                 if (board[i][j]=='.'){
@@ -2171,7 +2170,117 @@ public class LeetCode {
             return y;
 
     }
+    /**
+     * https://oj.leetcode.com/problems/n-queens/
+     * http://www.darrensunny.me/leetcode-n-queens/
+     * https://oj.leetcode.com/submissions/detail/9980530/
+     *
+     */
+    public static List<String[]> solveNQueens(int n) {
+        List<String[]> result = new ArrayList<String[]>();
+        if (n <= 0) return result;
+        solved(result, newBoard(n), 0);
+        return result;
 
+    }
+
+    private static char[][] newBoard(int n) {
+        char[][] board = new char[n][n];
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
+                board[i][j] = '.';
+        return board;
+    }
+
+
+    private static String[] toStringArray(char[][] board) {
+        int N = board.length;
+        String[] strs = new String[N];
+        for (int i = 0; i < N; i++) {
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < N; j++) {
+                sb.append(board[i][j]);
+            }
+            strs[i] = sb.toString();
+        }
+        return strs;
+    }
+
+    private static void solved(List<String[]> result, char[][] board, int row) {
+        int N = board.length;
+
+        if(row == N)
+            result.add(toStringArray(board));
+        else {
+            for (int j = 0; j < N; j++) {
+                if (isValid(board, row, j)) {
+                    board[row][j] = 'Q';
+                    solved(result, board, row + 1);
+                }
+                board[row][j] = '.';
+
+            }
+
+        }
+
+
+    }
+
+
+    private static boolean isValid(char[][] board, int i, int j) {
+        int N = board.length;
+
+        //check column
+        for (int row = 0; row < N; row++) {
+            if (board[row][j] == 'Q')
+                return false;
+        }
+
+        //check row
+        for (int col = 0; col < N; col++) {
+            if (board[i][col] == 'Q')
+                return false;
+        }
+
+        //check diagnal
+        int row = i - 1;
+        int col = j - 1;
+        while (row >= 0 && col >= 0) {
+            if (board[row][col] == 'Q')
+                return false;
+            row--;
+            col--;
+        }
+
+        row = i + 1;
+        col = j + 1;
+        while (row < N && col < N) {
+            if (board[row][col] == 'Q')
+                return false;
+            row++;
+            col++;
+        }
+
+        row = i - 1;
+        col = j + 1;
+        while (row >= 0 && col < N) {
+            if (board[row][col] == 'Q')
+                return false;
+            row--;
+            col++;
+        }
+
+        row = i + 1;
+        col = j - 1;
+        while (row < N && col >= 0) {
+            if (board[row][col] == 'Q')
+                return false;
+            row++;
+            col--;
+        }
+
+        return true;
+    }
 
 
 
@@ -3073,6 +3182,21 @@ public class LeetCode {
         s2  = System.currentTimeMillis();
         System.out.println(list3.size());
         System.out.println("s2 - s1 = " + (s2 - s1));
+
+        System.out.println("solve Queen");
+        List<String[]> result1 = solveNQueens(5);
+        for(String[] queens : result1){
+            System.out.println("");
+            System.out.print("{");
+            for(String q : queens){
+                System.out.print("\"");
+                System.out.print(q);
+                System.out.print("\",");
+
+            }
+            System.out.println("}\n");
+        }
+
         System.out.println("End");
     }
 }
