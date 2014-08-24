@@ -1989,6 +1989,94 @@ public class LeetCode {
     }
 
     /**
+     * https://oj.leetcode.com/problems/permutation-sequence/
+     * https://oj.leetcode.com/submissions/detail/10252180/
+     *
+     */
+    public static String getPermutation(int n, int k) {
+        int[] N = new int[n];
+        for(int i = 0; i < n; i++) {
+            N[i] = i + 1;
+        }
+
+        return getPermutation(N, k);
+
+    }
+
+    private static String getPermutation(int[] N, int k){
+
+        if(k == 1) {
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0; i < N.length; i++){
+                sb.append(N[i]);
+            }
+            return sb.toString();
+
+        }
+
+        int startIndex = (k - 1) / factorial(N.length -1);
+        String start = "" + N[startIndex];
+        k = k - startIndex * factorial(N.length - 1);
+
+        int[] M = new int[N.length - 1];
+        for(int i = 0; i < startIndex; i++){
+            M[i] = N[i];
+
+        }
+        for(int i = startIndex; i <= N.length - 2; i++){
+            M[i] = N[i+1];
+        }
+
+        return start + getPermutation(M, k);
+
+
+    }
+
+    private static int factorial(int n){
+        int result = 1;
+        for(int i = 1; i <= n; i++){
+            result *= i;
+        }
+        return result;
+    }
+
+
+    /**
+     * https://oj.leetcode.com/problems/rotate-list/
+     * https://oj.leetcode.com/submissions/detail/10253951/
+     */
+    public ListNode rotateRight(ListNode head, int n) {
+
+        if(n == 0 || head == null) return head;
+
+        //Get the length of the list
+        int len = 1;
+        ListNode node = head;
+        while(node.next != null){
+            node = node.next;
+            len++;
+        }
+
+        if(len == 1 || n % len == 0) return head;
+
+        int offset = len - n % len;
+        ListNode prev = head;
+        while(offset > 1){
+            prev = prev.next;
+            offset--;
+        }
+        ListNode newHead = prev.next;
+        prev.next = null;
+        node.next = head;
+        return newHead;
+
+
+    }
+
+
+
+
+    /**
      * https://oj.leetcode.com/problems/rotate-image/
      * https://oj.leetcode.com/submissions/detail/9903296/
      */
@@ -2390,6 +2478,68 @@ public class LeetCode {
 
             for (int i = rowEnd - 1; i >= rowStart + 1; i--)
                 result.add(matrix[i][colStart]);
+        }
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/spiral-matrix-ii/
+     * https://oj.leetcode.com/submissions/detail/10248635/
+     *
+     */
+    public int[][] generateMatrix(int n) {
+        if(n < 0) return null;
+        int[][] matrix = new int[n][n];
+
+        if(n == 0) return matrix;
+
+        int[] count = new int[1];
+        count[0] = 1;
+
+        for (int offset = 0; offset <= (n + 1) / 2 - 1; offset++) {
+            int rowStart = offset, rowEnd = n - 1 - offset, colStart = offset, colEnd = n - 1 - offset;
+            spiralMatrix(matrix, rowStart, rowEnd, colStart, colEnd, count);
+        }
+
+        return matrix;
+
+
+
+    }
+
+    private static void spiralMatrix(int[][] matrix, int rowStart, int rowEnd, int colStart, int colEnd, int[] count) {
+
+        if (rowStart == rowEnd)
+            for (int i = colStart; i <= colEnd; i++) {
+                matrix[rowStart][i] = count[0];
+                count[0]++;
+            }
+        else if (colStart == colEnd)
+            for (int i = rowStart; i <= rowEnd; i++) {
+                matrix[i][colStart] = count[0];
+                count[0]++;
+            }
+        else if (rowStart < rowEnd && colStart < colEnd) {
+
+            for (int i = colStart; i <= colEnd; i++) {
+                matrix[rowStart][i] = count[0];
+                count[0]++;
+            }
+
+            for (int i = rowStart + 1; i <= rowEnd; i++) {
+                matrix[i][colEnd] = count[0];
+                count[0]++;
+            }
+
+            for (int i = colEnd - 1; i >= colStart; i--) {
+                matrix[rowEnd][i] = count[0];
+                count[0]++;
+            }
+
+            for (int i = rowEnd - 1; i >= rowStart + 1; i--) {
+                matrix[i][colStart] = count[0];
+                count[0]++;
+            }
         }
 
     }
@@ -3510,6 +3660,13 @@ public class LeetCode {
 
         intervals = insert(intervals, newInterval);
 
+        System.out.println("Test getPermutation");
+//        System.out.println(getPermutation(3, 1));
+        System.out.println(getPermutation(9, factorial(7)));
+//        System.out.println(getPermutation(3, 3));
+//        System.out.println(getPermutation(3, 4));
+//        System.out.println(getPermutation(3, 5));
+//        System.out.println(getPermutation(3, 6));
 
         System.out.println("End");
     }
