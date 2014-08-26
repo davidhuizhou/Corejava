@@ -3184,7 +3184,7 @@ public class LeetCode {
         System.out.println("s2 - s1 = " + (s2 - s1));
 
         System.out.println("solve Queen");
-        List<String[]> result1 = solveNQueens(5);
+        List<String[]> result1 = solveNQueens(4);
         for(String[] queens : result1){
             System.out.println("");
             System.out.print("{");
