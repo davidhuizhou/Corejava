@@ -11,22 +11,22 @@ import java.util.*;
 public class LeetCode {
 
     /**
-     *  http://www.programcreek.com/2012/12/leetcode-solution-of-two-sum-in-java/
-     *  https://oj.leetcode.com/submissions/detail/9009004/
+     * http://www.programcreek.com/2012/12/leetcode-solution-of-two-sum-in-java/
+     * https://oj.leetcode.com/submissions/detail/9009004/
      */
 
     public static int[] twoSum(int[] numbers, int target) {
         int[] result = {-1, -1};
-        if(numbers == null)
+        if (numbers == null)
             return result;
         HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
-        for(int i = 0; i < numbers.length; i++){
-            if(map.containsKey(numbers[i])){
+        for (int i = 0; i < numbers.length; i++) {
+            if (map.containsKey(numbers[i])) {
                 result[0] = map.get(numbers[i]) + 1;
                 result[1] = i + 1;
                 break;
             } else {
-                map.put(target-numbers[i], i);
+                map.put(target - numbers[i], i);
             }
         }
         return result;
@@ -40,38 +40,38 @@ public class LeetCode {
     public static double findMedianSortedArrays(int A[], int B[]) {
         int aLen = A.length;
         int bLen = B.length;
-        int len = aLen+bLen;
-        if(len % 2 == 0)
-            return (kthElement(A, B, len/2-1, 0, aLen-1, 0, bLen-1)
-                    + kthElement(A, B, len/2, 0, aLen-1, 0, bLen-1)) * 0.5;
+        int len = aLen + bLen;
+        if (len % 2 == 0)
+            return (kthElement(A, B, len / 2 - 1, 0, aLen - 1, 0, bLen - 1)
+                    + kthElement(A, B, len / 2, 0, aLen - 1, 0, bLen - 1)) * 0.5;
         else
-            return kthElement(A, B, len/2, 0, aLen-1, 0, bLen-1);
+            return kthElement(A, B, len / 2, 0, aLen - 1, 0, bLen - 1);
     }
 
-    private static int kthElement(int[] A, int[] B, int k, int aStart, int aEnd, int bStart, int bEnd){
+    private static int kthElement(int[] A, int[] B, int k, int aStart, int aEnd, int bStart, int bEnd) {
         int aLen = aEnd - aStart + 1;
         int bLen = bEnd - bStart + 1;
 
-        if(aLen <= 0 || A.length <= 0)
-            return B[bStart+k];
-        if(bLen <= 0 || B.length <= 0)
-            return A[aStart+k];
-        if(k==0)
-            return Math.min(A[aStart+k], B[bStart+k]);
+        if (aLen <= 0 || A.length <= 0)
+            return B[bStart + k];
+        if (bLen <= 0 || B.length <= 0)
+            return A[aStart + k];
+        if (k == 0)
+            return Math.min(A[aStart + k], B[bStart + k]);
 
-        int aMid = k * aLen/(aLen+bLen);
+        int aMid = k * aLen / (aLen + bLen);
         int bMid = k - aMid - 1;
-        aMid = aStart+aMid;
-        bMid = bStart+bMid;
+        aMid = aStart + aMid;
+        bMid = bStart + bMid;
 
-        if(A[aMid]>=B[bMid]){
-            k = k - (bMid-bStart+1);
+        if (A[aMid] >= B[bMid]) {
+            k = k - (bMid - bStart + 1);
             aEnd = aMid;
-            bStart = bMid+1;
-        } else{
-            k = k - (aMid-aStart+1);
+            bStart = bMid + 1;
+        } else {
+            k = k - (aMid - aStart + 1);
             bEnd = bMid;
-            aStart = aMid+1;
+            aStart = aMid + 1;
         }
         return kthElement(A, B, k, aStart, aEnd, bStart, bEnd);
 
@@ -80,25 +80,24 @@ public class LeetCode {
     /**
      * https://oj.leetcode.com/problems/longest-substring-without-repeating-characters/
      * https://oj.leetcode.com/submissions/detail/9010153/
-     *
      */
     public static int lengthOfLongestSubstring(String s) {
-        if(s == null)
+        if (s == null)
             return 0;
-        if(s.length() <= 1)
+        if (s.length() <= 1)
             return s.length();
         int longest = 1;
         int i = 0;
         int j = 1;
-        for(j = 1; j < s.length(); j++){
+        for (j = 1; j < s.length(); j++) {
             int index = s.substring(i, j).indexOf(s.charAt(j));
-            if(index >= 0){
-                if(j-i > longest)
+            if (index >= 0) {
+                if (j - i > longest)
                     longest = j - i;
                 i = i + index + 1;
             }
         }
-        if(j-i> longest)
+        if (j - i > longest)
             longest = j - i;
         return longest;
 
@@ -107,7 +106,6 @@ public class LeetCode {
     /**
      * https://oj.leetcode.com/problems/add-two-numbers/
      * https://oj.leetcode.com/submissions/detail/9011366/
-     *
      */
     public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         ListNode sentinel = new ListNode(0);
@@ -140,64 +138,63 @@ public class LeetCode {
     /**
      * https://oj.leetcode.com/problems/longest-palindromic-substring/
      * https://oj.leetcode.com/submissions/detail/9012368/
-     *
      */
     public static String longestPalindrome(String s) {
-        if(s == null)
+        if (s == null)
             return null;
-        if(s.length() == 1)
+        if (s.length() == 1)
             return s;
         String longest = s.substring(0, 1);
-        for(int i = 0; i <= s.length()-2; i++){
+        for (int i = 0; i <= s.length() - 2; i++) {
             String pStr = expend(s, i, i);
-            String qStr = expend(s, i, i+1);
-            if(pStr.length() > longest.length())
+            String qStr = expend(s, i, i + 1);
+            if (pStr.length() > longest.length())
                 longest = pStr;
-            if(qStr.length() > longest.length())
+            if (qStr.length() > longest.length())
                 longest = qStr;
         }
         return longest;
 
     }
 
-    private static String expend(String s, int i, int j){
-        if(s == null || i< 0 || i > s.length() -1 || j < 0 || j > s.length() - 1 || i > j || s.charAt(i) != s.charAt(j))
+    private static String expend(String s, int i, int j) {
+        if (s == null || i < 0 || i > s.length() - 1 || j < 0 || j > s.length() - 1 || i > j || s.charAt(i) != s.charAt(j))
             return "";
 
-        while(i >= 0 && j < s.length() && s.charAt(i) == s.charAt(j)){
+        while (i >= 0 && j < s.length() && s.charAt(i) == s.charAt(j)) {
             i--;
             j++;
         }
-        return s.substring(i+1, j);
+        return s.substring(i + 1, j);
     }
 
-    public static Set<String> longestPalindromSubStrings1(String s){
+    public static Set<String> longestPalindromSubStrings1(String s) {
         Set<String> results = new HashSet<String>();
 
-        if(s.isEmpty())
+        if (s.isEmpty())
             return null;
 
-        if(s.length() == 1){
+        if (s.length() == 1) {
             results.add(s);
             return results;
         }
 
         int longest = 1;
 
-        for(int i = 0; i < s.length(); i++){
+        for (int i = 0; i < s.length(); i++) {
             String l = expend(s, i, i);
-            if(l.length() == longest){
+            if (l.length() == longest) {
                 results.add(l);
-            }else if(l.length() > longest){
+            } else if (l.length() > longest) {
                 results.clear();
                 results.add(l);
                 longest = l.length();
             }
 
             l = expend(s, i, i + 1);
-            if(l.length() == longest){
+            if (l.length() == longest) {
                 results.add(l);
-            }else if(l.length() > longest){
+            } else if (l.length() > longest) {
                 results.clear();
                 results.add(l);
                 longest = l.length();
@@ -214,12 +211,12 @@ public class LeetCode {
      */
     public static int reverse(int x) {
         int sign = 1;
-        if(x < 0){
+        if (x < 0) {
             sign = -1;
             x = x * (-1);
         }
         int result = 0;
-        while(x > 0){
+        while (x > 0) {
             result = 10 * result + x % 10;
             x /= 10;
         }
@@ -229,11 +226,11 @@ public class LeetCode {
 
 
     /**
-     *   http://www.programcreek.com/2012/12/leetcode-string-to-integer-atoi/
-     *   https://oj.leetcode.com/submissions/detail/9014031/
-     **/
-    public static int atoi(String str){
-        if(str == null || str.trim().length() == 0)
+     * http://www.programcreek.com/2012/12/leetcode-string-to-integer-atoi/
+     * https://oj.leetcode.com/submissions/detail/9014031/
+     */
+    public static int atoi(String str) {
+        if (str == null || str.trim().length() == 0)
             return 0;
 
         str = str.trim();
@@ -242,30 +239,30 @@ public class LeetCode {
         int i = 0;
 
 
-        if(str.charAt(0) == '+'){
+        if (str.charAt(0) == '+') {
             i++;
         }
-        if(str.charAt(0) == '-') {
+        if (str.charAt(0) == '-') {
             sign = -1;
             i++;
         }
 
         double result = 0.0;
 
-        while(i < str.length() && str.charAt(i) >= '0' && str.charAt(i) <= '9'){
+        while (i < str.length() && str.charAt(i) >= '0' && str.charAt(i) <= '9') {
             result = 10.0 * result + (str.charAt(i) - '0');
             i++;
         }
 
         result = sign * result;
 
-        if(result >= Integer.MAX_VALUE)
+        if (result >= Integer.MAX_VALUE)
             return Integer.MAX_VALUE;
 
-        if(result <= Integer.MIN_VALUE)
+        if (result <= Integer.MIN_VALUE)
             return Integer.MIN_VALUE;
 
-        return (int)result;
+        return (int) result;
 
     }
 
@@ -274,17 +271,17 @@ public class LeetCode {
      * https://oj.leetcode.com/submissions/detail/9014691/
      */
     public static boolean isPalindrome(int x) {
-        if(x < 0)
+        if (x < 0)
             return false;
-        if(x < 10)
+        if (x < 10)
             return true;
         int div = 10;
-        while(x / div >= 10)
+        while (x / div >= 10)
             div *= 10;
-        while(div >=10){
+        while (div >= 10) {
             int left = x / div;
             int right = x % 10;
-            if(left != right)
+            if (left != right)
                 return false;
             x = (x % div) / 10;
             div /= 100;
@@ -298,22 +295,22 @@ public class LeetCode {
      * https://oj.leetcode.com/submissions/detail/9016055/
      */
     public static boolean isMatch(String s, String p) {
-        if(s == null)
+        if (s == null)
             return p == null;
-        if(p == null)
+        if (p == null)
             return s == null;
 
-        if(p.length() == 0)
+        if (p.length() == 0)
             return s.length() == 0;
 
-        if(p.length() == 1 || p.charAt(1) != '*'){
-            if(s.length() < 1 || (p.charAt(0) != '.' && p.charAt(0) != s.charAt(0)))
+        if (p.length() == 1 || p.charAt(1) != '*') {
+            if (s.length() < 1 || (p.charAt(0) != '.' && p.charAt(0) != s.charAt(0)))
                 return false;
             return isMatch(s.substring(1), p.substring(1));
         } else {
             int i = -1;
-            while(i < s.length() && (i < 0 || p.charAt(0) == '.' || p.charAt(0) == s.charAt(i))){
-                if(isMatch(s.substring(i+1), p.substring(2)))
+            while (i < s.length() && (i < 0 || p.charAt(0) == '.' || p.charAt(0) == s.charAt(i))) {
+                if (isMatch(s.substring(i + 1), p.substring(2)))
                     return true;
                 i++;
             }
@@ -326,34 +323,33 @@ public class LeetCode {
     /**
      * https://oj.leetcode.com/problems/longest-common-prefix/
      * https://oj.leetcode.com/submissions/detail/9113380/
-     *
      */
     public static String longestCommonPrefix(String[] strs) {
-        if(strs.length == 0)
+        if (strs.length == 0)
             return "";
 
         String s = strs[0];
         int lo = 0, hi = s.length() - 1;
 
-        while(lo <= hi){
-            int mid = lo + (hi - lo)/2;
-            if(isCommonPrefix(s.substring(lo, hi + 1), strs, lo))
+        while (lo <= hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (isCommonPrefix(s.substring(lo, hi + 1), strs, lo))
                 break;
             else if (isCommonPrefix(s.substring(lo, mid + 1), strs, lo))
                 lo = mid + 1;
             else
                 hi = mid - 1;
         }
-        if(hi >= 0)
+        if (hi >= 0)
             return s.substring(0, hi + 1);
         else
             return "";
 
     }
 
-    private static boolean isCommonPrefix(String s, String[] strs, int start){
-        for(String str : strs){
-            if(str.substring(start).indexOf(s) != 0)
+    private static boolean isCommonPrefix(String s, String[] strs, int start) {
+        for (String str : strs) {
+            if (str.substring(start).indexOf(s) != 0)
                 return false;
         }
         return true;
@@ -368,13 +364,13 @@ public class LeetCode {
         Set<List<Integer>> set = new HashSet<List<Integer>>();
         Arrays.sort(num);
 
-        for(int i = 0; i <= num.length - 3; i++){
+        for (int i = 0; i <= num.length - 3; i++) {
             int j = i + 1, k = num.length - 1;
-            while(j < k){
+            while (j < k) {
                 int sum = num[i] + num[j] + num[k];
-                if(sum < 0){
+                if (sum < 0) {
                     j++;
-                } else if (sum > 0){
+                } else if (sum > 0) {
                     k--;
                 } else {
                     List<Integer> r = new ArrayList<Integer>();
@@ -389,7 +385,7 @@ public class LeetCode {
             }
         }
         List<List<Integer>> result = new ArrayList<List<Integer>>();
-        for(List<Integer> s : set){
+        for (List<Integer> s : set) {
             result.add(s);
         }
         return result;
@@ -399,7 +395,6 @@ public class LeetCode {
     /**
      * https://oj.leetcode.com/problems/3sum-closest/
      * https://oj.leetcode.com/submissions/detail/9260441/
-     *
      */
     public static int threeSumClosest(int[] num, int target) {
         Arrays.sort(num);
@@ -474,14 +469,12 @@ public class LeetCode {
         Arrays.sort(num);
 
 
-
-
-        for(int i = 0; i <= num.length - 4; i++){
-            for(int j = i + 1; j <= num.length - 3; j++){
+        for (int i = 0; i <= num.length - 4; i++) {
+            for (int j = i + 1; j <= num.length - 3; j++) {
                 int m = j + 1;
                 int n = num.length - 1;
 
-                while(m < n) {
+                while (m < n) {
                     int sum = num[i] + num[j] + num[m] + num[n];
 
                     if (sum == target) {
@@ -502,7 +495,7 @@ public class LeetCode {
             }
         }
         List<List<Integer>> result = new ArrayList<List<Integer>>();
-        for(List<Integer> s : set){
+        for (List<Integer> s : set) {
             result.add(s);
         }
         return result;
@@ -512,7 +505,6 @@ public class LeetCode {
     /**
      * https://oj.leetcode.com/problems/remove-nth-node-from-end-of-list/
      * https://oj.leetcode.com/submissions/detail/9265681/
-     *
      */
     public ListNode removeNthFromEnd(ListNode head, int n) {
         if (head == null)
@@ -579,7 +571,7 @@ public class LeetCode {
      */
     public static List<String> generateParenthesis(int n) {
         List<String> parenthesis = new ArrayList<String>();
-        if(n==0) {
+        if (n == 0) {
             parenthesis.add("");
             return parenthesis;
         }
@@ -588,19 +580,20 @@ public class LeetCode {
         return parenthesis;
 
     }
-    private static void generateParenthesisHelper(List<String> parenthesis, int n, int left, int right, String s){
-        if(left == n){
-            for(int i = 0; i < n - right; i++)
+
+    private static void generateParenthesisHelper(List<String> parenthesis, int n, int left, int right, String s) {
+        if (left == n) {
+            for (int i = 0; i < n - right; i++)
                 s += ")";
 
             parenthesis.add(s);
 
 
-        } else if (left > right){
-            generateParenthesisHelper(parenthesis, n, left+1, right, s+"(");
-            generateParenthesisHelper(parenthesis, n, left, right + 1, s+")");
-        } else if(left == right){
-            generateParenthesisHelper(parenthesis, n, left+1, right, s+"(");
+        } else if (left > right) {
+            generateParenthesisHelper(parenthesis, n, left + 1, right, s + "(");
+            generateParenthesisHelper(parenthesis, n, left, right + 1, s + ")");
+        } else if (left == right) {
+            generateParenthesisHelper(parenthesis, n, left + 1, right, s + "(");
         }
     }
 
@@ -609,12 +602,12 @@ public class LeetCode {
      * https://oj.leetcode.com/submissions/detail/9271178/
      */
     public ListNode mergeKLists(List<ListNode> lists) {
-        if(lists == null)
+        if (lists == null)
             return null;
 
         PriorityQueue<Integer> pq = new PriorityQueue<Integer>();
-        for(ListNode node : lists){
-            while(node != null){
+        for (ListNode node : lists) {
+            while (node != null) {
                 pq.add(node.val);
                 node = node.next;
             }
@@ -624,7 +617,7 @@ public class LeetCode {
         ListNode res = new ListNode(0);
         ListNode tail = res;
 
-        while(!pq.isEmpty()){
+        while (!pq.isEmpty()) {
             tail.next = new ListNode(pq.poll());
             tail = tail.next;
         }
@@ -643,19 +636,19 @@ public class LeetCode {
 
         int count = 0;
         ListNode p = head;
-        while(count < k && p != null){
+        while (count < k && p != null) {
             count++;
             p = p.next;
         }
 
-        if(count < k)
+        if (count < k)
             return head;
 
         p = head;
         ListNode q = head;
         ListNode r = null;
 
-        for(int i = 0; i < k; i++){
+        for (int i = 0; i < k; i++) {
             p = p.next;
             q.next = r;
             r = q;
@@ -667,25 +660,23 @@ public class LeetCode {
     }
 
     /**
-     *
      * https://oj.leetcode.com/problems/remove-duplicates-from-sorted-array/
      * https://oj.leetcode.com/submissions/detail/9356997/
      */
     public static int removeDuplicates(int[] A) {
-        if(A.length <= 1)
+        if (A.length <= 1)
             return A.length;
 
         int k = 0;
         for (int i = 1; i < A.length; i++) {
 
-            if(A[i] != A[k])
+            if (A[i] != A[k])
                 A[++k] = A[i];
         }
         return k + 1;
     }
 
     /**
-     *
      * https://oj.leetcode.com/problems/remove-element/
      * https://oj.leetcode.com/submissions/detail/9357121/
      */
@@ -706,29 +697,28 @@ public class LeetCode {
     /**
      * https://oj.leetcode.com/problems/implement-strstr/
      * https://oj.leetcode.com/submissions/
-     *
      */
     public static String strStr(String haystack, String needle) {
 
-        if(haystack == null || needle == null)
+        if (haystack == null || needle == null)
             return null;
 
         int haystackLen = haystack.length();
         int needleLen = needle.length();
 
-        if(haystackLen < needleLen)
+        if (haystackLen < needleLen)
             return null;
 
-        if(needleLen == 0)
+        if (needleLen == 0)
             return haystack;
 
-        for(int i = 0; i <= haystackLen - needleLen; i++){
+        for (int i = 0; i <= haystackLen - needleLen; i++) {
             int j = 0;
-            while(j < needleLen && i + j < haystackLen
+            while (j < needleLen && i + j < haystackLen
                     && needle.charAt(j) == haystack.charAt(i + j))
                 j++;
 
-            if(j == needleLen)
+            if (j == needleLen)
                 return haystack.substring(i);
 
         }
@@ -770,7 +760,6 @@ public class LeetCode {
     /**
      * https://oj.leetcode.com/problems/divide-two-integers/
      * https://oj.leetcode.com/submissions/detail/9400097/
-     *
      */
     public static int divide(int dividend, int divisor) {
         int result = 0;
@@ -779,27 +768,27 @@ public class LeetCode {
         long lDividend = dividend;
         long lDivisor = divisor;
 
-        if(dividend == 0)
+        if (dividend == 0)
             return 0;
 
-        if(divisor == 1)
+        if (divisor == 1)
             return dividend;
 
-        if(dividend < 0){
+        if (dividend < 0) {
             sign = 0 - sign;
             lDividend = 0 - lDividend;
         }
 
-        if(divisor < 0){
+        if (divisor < 0) {
             sign = 0 - sign;
             lDivisor = 0 - lDivisor;
         }
 
-        while(lDividend >= lDivisor){
+        while (lDividend >= lDivisor) {
             long mDivisor = lDivisor;
 
             int factor = 0;
-            while(mDivisor <= lDividend  && mDivisor > 0){
+            while (mDivisor <= lDividend && mDivisor > 0) {
                 mDivisor = mDivisor << 1;
                 factor++;
             }
@@ -809,37 +798,34 @@ public class LeetCode {
 
         }
 
-        if(sign == -1)
+        if (sign == -1)
             result = 0 - result;
         return result;
 
     }
 
 
-
-
-
-    private static void permute(Set<String> result, String[] L, String p, int count, int total){
-        if(count == total)
+    private static void permute(Set<String> result, String[] L, String p, int count, int total) {
+        if (count == total)
             result.add(p);
 
-        if(L == null)
+        if (L == null)
             return;
 
         int l = L.length;
-        if(l == 0)
+        if (l == 0)
             return;
 
         else {
-            for(int i = 0; i < l; i++){
+            for (int i = 0; i < l; i++) {
                 String w = L[i];
-                String[] temp = new String[l-1];
-                for(int j = 0; j < i; j++)
+                String[] temp = new String[l - 1];
+                for (int j = 0; j < i; j++)
                     temp[j] = L[j];
 
-                for(int j = i; j < l -1; j++)
-                    temp[j] = L[j+1];
-                permute(result, temp, p+w, count+1, total);
+                for (int j = i; j < l - 1; j++)
+                    temp[j] = L[j + 1];
+                permute(result, temp, p + w, count + 1, total);
 
             }
         }
@@ -852,39 +838,38 @@ public class LeetCode {
      */
     public static List<Integer> findSubstring(String S, String[] L) {
         List<Integer> result = new ArrayList<Integer>();
-        if(S == null || L == null) return result;
+        if (S == null || L == null) return result;
 
         int n = L.length;
-        if(n == 0) return result;
+        if (n == 0) return result;
         int m = L[0].length();
         int l = S.length();
 
         Map<String, Integer> countMap = new HashMap<String, Integer>();
-        for(String w : L){
+        for (String w : L) {
             Integer count = countMap.get(w);
-            if(count == null)
+            if (count == null)
                 countMap.put(w, 1);
             else
-                countMap.put(w, count+1);
+                countMap.put(w, count + 1);
 
         }
 
-        for(int i = 0; i <= l - n*m; i++){
+        for (int i = 0; i <= l - n * m; i++) {
             Map<String, Integer> temp = new HashMap<String, Integer>(countMap);
             boolean isSubStr = true;
-            for(int j = 0; j < n; j++){
-                String w = S.substring(i+j*m, i+(j+1)*m);
+            for (int j = 0; j < n; j++) {
+                String w = S.substring(i + j * m, i + (j + 1) * m);
                 Integer count = temp.get(w);
-                if(count == null || count == 0) {
+                if (count == null || count == 0) {
                     isSubStr = false;
                     break;
-                }
-                else{
+                } else {
                     count--;
                     temp.put(w, count);
                 }
             }
-            if(isSubStr)
+            if (isSubStr)
                 result.add(i);
 
 
@@ -900,38 +885,38 @@ public class LeetCode {
      * https://oj.leetcode.com/submissions/detail/9469583/
      */
     public static void nextPermutation(int[] num) {
-        if(num == null) return;
+        if (num == null) return;
 
         int len = num.length;
-        if(len <= 1) return;
+        if (len <= 1) return;
 
-        for(int i = len - 2; i >= 0; i--){
-            int min = findMin(num, i, len -1);
-            if(i < min){
+        for (int i = len - 2; i >= 0; i--) {
+            int min = findMin(num, i, len - 1);
+            if (i < min) {
                 exch(num, i, min);
-                sort(num, i+1, len-1);
+                sort(num, i + 1, len - 1);
                 return;
             }
         }
-        sort(num, 0, len-1);
+        sort(num, 0, len - 1);
     }
 
-    private static int findMin(int[] num, int start, int end){
+    private static int findMin(int[] num, int start, int end) {
 
-        if(start == end)
+        if (start == end)
             return start;
 
         int min = start;
         int i = start;
 
-        while(i <= end && num[i] <= num[start])
+        while (i <= end && num[i] <= num[start])
             i++;
 
-        if(i <= end)
+        if (i <= end)
             min = i;
 
-        for(i = min+1; i <= end; i++){
-            if(num[i] <= num[min] && num[i] > num[start])
+        for (i = min + 1; i <= end; i++) {
+            if (num[i] <= num[min] && num[i] > num[start])
                 min = i;
         }
         return min;
@@ -944,12 +929,12 @@ public class LeetCode {
         a[j] = swap;
     }
 
-    private static void sort(int[] num, int start, int end){
-        if(start == end) return;
+    private static void sort(int[] num, int start, int end) {
+        if (start == end) return;
 
-        for(int i = start+1; i <= end; i++){
-            for(int j = i; j > start && num[j] < num[j-1]; j--){
-                exch(num, j-1, j);
+        for (int i = start + 1; i <= end; i++) {
+            for (int j = i; j > start && num[j] < num[j - 1]; j--) {
+                exch(num, j - 1, j);
             }
 
         }
@@ -962,21 +947,21 @@ public class LeetCode {
      */
     public static int longestValidParentheses1(String s) {
         int res = 0;
-        if(s == null || s.length() == 0)
+        if (s == null || s.length() == 0)
             return 0;
 
         int left = 0, right = 0;
 
-        for(int i = 0; i <= s.length() -1; i++){
-            if(s.charAt(i) == '('){
+        for (int i = 0; i <= s.length() - 1; i++) {
+            if (s.charAt(i) == '(') {
                 left++;
-            } else if (s.charAt(i) == ')'){
+            } else if (s.charAt(i) == ')') {
                 right++;
-                if(right == left){
-                    if(2*left > res){
-                        res = 2*left;
+                if (right == left) {
+                    if (2 * left > res) {
+                        res = 2 * left;
                     }
-                } else if(right > left){
+                } else if (right > left) {
                     left = 0;
                     right = 0;
                 }
@@ -986,16 +971,16 @@ public class LeetCode {
         left = 0;
         right = 0;
 
-        for(int i = s.length()-1; i >= 0; i--){
-            if(s.charAt(i) == ')'){
+        for (int i = s.length() - 1; i >= 0; i--) {
+            if (s.charAt(i) == ')') {
                 right++;
-            } else if (s.charAt(i) == '('){
+            } else if (s.charAt(i) == '(') {
                 left++;
-                if(left == right){
-                    if(2*left > res){
-                        res = 2*left;
+                if (left == right) {
+                    if (2 * left > res) {
+                        res = 2 * left;
                     }
-                } else if(left > right){
+                } else if (left > right) {
                     left = 0;
                     right = 0;
                 }
@@ -1008,6 +993,7 @@ public class LeetCode {
 
     /**
      * http://www.darrensunny.me/leetcode-longest-valid-parentheses/
+     *
      * @param s
      * @return
      */
@@ -1027,9 +1013,9 @@ public class LeetCode {
                 } else {
                     stack.pop();    // The index of the opening parenthesis matched by s[i]
                     if (stack.empty())  // s[start...i] is matched
-                        longestLength = Math.max(longestLength, i-start+1);
+                        longestLength = Math.max(longestLength, i - start + 1);
                     else    // s[stack.peek()] is unmatched; s[stack.peek()+1...i] is matched
-                        longestLength = Math.max(longestLength, i-stack.peek());
+                        longestLength = Math.max(longestLength, i - stack.peek());
                 }
             }
         }
@@ -1043,14 +1029,14 @@ public class LeetCode {
      * http://www.darrensunny.me/leetcode-search-in-rotated-sorted-array-ii/
      * https://oj.leetcode.com/submissions/detail/9551838/
      * https://oj.leetcode.com/submissions/detail/9552605/
-     *
      */
     public int search1(int[] A, int target) {
-        if(A == null || A.length == 0) return -1;
+        if (A == null || A.length == 0) return -1;
         return searchHelper(A, target, 0, A.length - 1);
 
     }
-    private int searchHelper(int[] A, int target, int start, int end){
+
+    private int searchHelper(int[] A, int target, int start, int end) {
         if (start > end)
             return -1;
 
@@ -1076,24 +1062,24 @@ public class LeetCode {
     }
 
 
-    public int search(int[] A, int target){
-        if(A == null || A.length == 0) return -1;
-        int left = 0,right = A.length -1;
+    public int search(int[] A, int target) {
+        if (A == null || A.length == 0) return -1;
+        int left = 0, right = A.length - 1;
 
-        while(left <= right){
+        while (left <= right) {
             int mid = (left + right) / 2;
-            if(A[mid] == target)
+            if (A[mid] == target)
                 return mid;
-            else if (A[mid] > A[left]){
-                if(target >= A[left] && target < A[mid])
-                    right = mid -1;
+            else if (A[mid] > A[left]) {
+                if (target >= A[left] && target < A[mid])
+                    right = mid - 1;
                 else
                     left = mid + 1;
-            } else if(A[mid] < A[left]){
-                if(target > A[mid] && target <= A[right])
+            } else if (A[mid] < A[left]) {
+                if (target > A[mid] && target <= A[right])
                     left = mid + 1;
                 else
-                    right = mid -1;
+                    right = mid - 1;
             } else {
                 left++;
             }
@@ -1106,45 +1092,44 @@ public class LeetCode {
      * https://oj.leetcode.com/problems/search-for-a-range/
      * http://www.darrensunny.me/leetcode-search-for-a-range/
      * https://oj.leetcode.com/submissions/detail/9556992/
-     *
      */
     public static int[] searchRange(int[] A, int target) {
-        if(A == null || A.length == 0)
+        if (A == null || A.length == 0)
             return new int[]{-1, -1};
 
-        int left = 0, right = A.length-1;
+        int left = 0, right = A.length - 1;
 
         //Find left matching index
-        while(left < right){
+        while (left < right) {
 
-            if(A[left] > target || A[right] < target)
-                return new int[] {-1, -1};
+            if (A[left] > target || A[right] < target)
+                return new int[]{-1, -1};
 
-            int mid = (left+right) / 2;
+            int mid = (left + right) / 2;
 
-            if(A[mid] < target)
-                left = mid+1;
+            if (A[mid] < target)
+                left = mid + 1;
             else
                 right = mid;
 
 
         }
 
-        if(A[left] != target)
-            return new int[] {-1, -1};
+        if (A[left] != target)
+            return new int[]{-1, -1};
 
         int index1 = left;
 
-        right = A.length-1;
-        while(left < right){
-            int mid = (left+right + 1)/2;
+        right = A.length - 1;
+        while (left < right) {
+            int mid = (left + right + 1) / 2;
 
-            if(A[mid] > target)
-                right = mid -1;
+            if (A[mid] > target)
+                right = mid - 1;
             else
                 left = mid;
         }
-        return new int[] {index1, right};
+        return new int[]{index1, right};
     }
 
 
@@ -1152,19 +1137,18 @@ public class LeetCode {
      * https://oj.leetcode.com/problems/search-insert-position/
      * http://www.programcreek.com/2013/01/leetcode-search-insert-position/
      * https://oj.leetcode.com/submissions/detail/9557823/
-     *
      */
     public int searchInsert(int[] A, int target) {
-        if(A==null || A.length == 0) return 0;
-        int left = 0, right = A.length -1;
-        while(left <= right){
-            if(target < A[left]) return left;
-            if(target > A[right]) return right+1;
+        if (A == null || A.length == 0) return 0;
+        int left = 0, right = A.length - 1;
+        while (left <= right) {
+            if (target < A[left]) return left;
+            if (target > A[right]) return right + 1;
 
-            int mid = (left+right)/2;
-            if(A[mid] == target) return mid;
-            else if(A[mid] < target) left = mid+1;
-            else right = mid -1;
+            int mid = (left + right) / 2;
+            if (A[mid] == target) return mid;
+            else if (A[mid] < target) left = mid + 1;
+            else right = mid - 1;
         }
         return left;
     }
@@ -1172,38 +1156,37 @@ public class LeetCode {
     /**
      * https://oj.leetcode.com/problems/valid-sudoku/
      * https://oj.leetcode.com/submissions/detail/9559909/
-     *
      */
     public static boolean isValidSudoku(char[][] board) {
-        for(int i = 0; i < 9; i++){
+        for (int i = 0; i < 9; i++) {
             char[] row = board[i];
-            if(!isValidSudoku(row))
+            if (!isValidSudoku(row))
                 return false;
         }
 
         char[] column = new char[9];
-        for(int i = 0; i < 9; i++){
-            for(int j = 0; j < 9; j++)
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++)
                 column[j] = board[j][i];
 
-            if(!isValidSudoku(column))
+            if (!isValidSudoku(column))
                 return false;
 
 
         }
 
-        for(int i = 0; i < 3; i++){
-            for(int j = 0; j < 3; j++ ){
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
 
                 char[] box = new char[9];
-                for(int m = 0; m < 3; m++){
-                    int ii = i*3 + m;
-                    for(int n = 0; n < 3; n++){
-                        int jj = j*3 + n;
-                        box[m*3 + n] = board[ii][jj];
+                for (int m = 0; m < 3; m++) {
+                    int ii = i * 3 + m;
+                    for (int n = 0; n < 3; n++) {
+                        int jj = j * 3 + n;
+                        box[m * 3 + n] = board[ii][jj];
                     }
                 }
-                if(!isValidSudoku(box))
+                if (!isValidSudoku(box))
                     return false;
 
             }
@@ -1213,13 +1196,13 @@ public class LeetCode {
 
     }
 
-    private static boolean isValidSudoku(char[] c){
+    private static boolean isValidSudoku(char[] c) {
         Map<Character, Integer> map = new HashMap<Character, Integer>();
-        for(int i= 0; i < c.length; i++){
-            if(c[i] == '.')
+        for (int i = 0; i < c.length; i++) {
+            if (c[i] == '.')
                 continue;
             else {
-                if(c[i] >= '1' && c[i] <= '9' && map.get(c[i]) == null)
+                if (c[i] >= '1' && c[i] <= '9' && map.get(c[i]) == null)
                     map.put(c[i], 1);
                 else
                     return false;
@@ -1233,10 +1216,9 @@ public class LeetCode {
      * https://oj.leetcode.com/problems/sudoku-solver/
      * http://rleetcode.blogspot.com/2014/01/sudoku-solver-java.html
      * https://oj.leetcode.com/submissions/detail/9560489/
-     *
      */
     public void solveSudoku(char[][] board) {
-        if (board==null||board.length==0){
+        if (board == null || board.length == 0) {
             return;
         }
 
@@ -1244,21 +1226,21 @@ public class LeetCode {
 
 
     }
-    private boolean solved(char[][] board){
-        for(int i=0; i<board.length; i++){
-            for (int j=0; j<board[0].length; j++){
-                if (board[i][j]=='.'){
-                    for (char num='1'; num<='9'; num++){
 
-                        if(isValid(board, i, j, num)){
+    private boolean solved(char[][] board) {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == '.') {
+                    for (char num = '1'; num <= '9'; num++) {
+
+                        if (isValid(board, i, j, num)) {
                             // no conflict
-                            board[i][j]=num;
+                            board[i][j] = num;
 
-                            if (solved(board)){
+                            if (solved(board)) {
                                 return true;
-                            }
-                            else{
-                                board[i][j]='.';
+                            } else {
+                                board[i][j] = '.';
                             }
 
                         }
@@ -1273,11 +1255,11 @@ public class LeetCode {
         return true;
     }
 
-    private boolean isValid(char[][] board, int i, int j, char c){
+    private boolean isValid(char[][] board, int i, int j, char c) {
 
         // check column
-        for (int row=0; row<9; row++){
-            if (board[row][j]==c){
+        for (int row = 0; row < 9; row++) {
+            if (board[row][j] == c) {
                 return false;
             }
 
@@ -1285,17 +1267,17 @@ public class LeetCode {
         }
 
         // check row
-        for (int col=0; col<9; col++){
-            if (board[i][col]==c){
+        for (int col = 0; col < 9; col++) {
+            if (board[i][col] == c) {
                 return false;
             }
 
         }
 
         // check block
-        for(int row=i/3*3; row<i/3*3+3; row++){
-            for (int col=j/3*3; col<j/3*3+3; col++){
-                if (board[row][col]==c){
+        for (int row = i / 3 * 3; row < i / 3 * 3 + 3; row++) {
+            for (int col = j / 3 * 3; col < j / 3 * 3 + 3; col++) {
+                if (board[row][col] == c) {
                     return false;
                 }
 
@@ -1309,26 +1291,25 @@ public class LeetCode {
     /**
      * https://oj.leetcode.com/problems/count-and-say/
      * https://oj.leetcode.com/submissions/detail/9651625/
-     *
      */
     public String countAndSay(int n) {
-        if(n <= 0) return null;
-        if(n == 1) return "1";
+        if (n <= 0) return null;
+        if (n == 1) return "1";
         StringBuilder sb = new StringBuilder("1");
-        for(int i = 2; i <=n; i++){
+        for (int i = 2; i <= n; i++) {
             String s = sb.toString();
             sb = new StringBuilder();
             int count = 1, j = 1;
-            for(j = 1; j < s.length(); j++){
-                if(s.charAt(j) == s.charAt(j-1)){
+            for (j = 1; j < s.length(); j++) {
+                if (s.charAt(j) == s.charAt(j - 1)) {
                     count++;
 
                 } else {
-                    sb.append(count).append(s.charAt(j-1));
+                    sb.append(count).append(s.charAt(j - 1));
                     count = 1;
                 }
             }
-            sb.append(count).append(s.charAt(j-1));
+            sb.append(count).append(s.charAt(j - 1));
         }
         return sb.toString();
 
@@ -1338,17 +1319,16 @@ public class LeetCode {
      * https://oj.leetcode.com/problems/combination-sum/
      * http://www.darrensunny.me/leetcode-combination-sum/
      * https://oj.leetcode.com/submissions/detail/9655670/
-     *
      */
     public static List<List<Integer>> combinationSum(int[] candidates, int target) {
         List<List<Integer>> r = new ArrayList<List<Integer>>();
 
-        if(candidates == null || candidates.length == 0)
+        if (candidates == null || candidates.length == 0)
             return r;
 
         Arrays.sort(candidates);
         int N = 0;
-        while(N <= candidates.length - 1 && candidates[N] <= target)
+        while (N <= candidates.length - 1 && candidates[N] <= target)
             N++;
 
         return combinationSum(candidates, N, target);
@@ -1358,10 +1338,10 @@ public class LeetCode {
     private static List<List<Integer>> combinationSum(int[] c, int N, int target) {
         List<List<Integer>> r = new ArrayList<List<Integer>>();
 
-        if(N == 0){
+        if (N == 0) {
 
-        }else if (N == 1) {
-            if(target % c[0] == 0) {
+        } else if (N == 1) {
+            if (target % c[0] == 0) {
                 List<Integer> l = new ArrayList<Integer>();
                 for (int n = 0; n < target / c[0]; n++)
                     l.add(c[0]);
@@ -1403,7 +1383,6 @@ public class LeetCode {
     /**
      * https://oj.leetcode.com/problems/combination-sum-ii/
      * https://oj.leetcode.com/submissions/detail/9701592/
-     *
      */
     public static List<List<Integer>> combinationSum2(int[] num, int target) {
         List<List<Integer>> result = new ArrayList<List<Integer>>();
@@ -1419,7 +1398,7 @@ public class LeetCode {
     }
 
     private static void recursiveAppend(int[] num, int target, int startIndex,
-        List<Integer> current, List<List<Integer>> result) {
+                                        List<Integer> current, List<List<Integer>> result) {
         if (target < 0)
             return;
         if (target == 0) {     // The current array is an solution
@@ -1444,16 +1423,15 @@ public class LeetCode {
     /**
      * https://oj.leetcode.com/problems/first-missing-positive/
      * https://oj.leetcode.com/submissions/detail/9702757/
-     *
      */
     public int firstMissingPositive(int[] A) {
-        if(A == null || A.length == 0) return 1;
+        if (A == null || A.length == 0) return 1;
         HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
-        for(int i = 0; i < A.length; i++)
+        for (int i = 0; i < A.length; i++)
             map.put(A[i], 1);
 
         int missing = 1;
-        while(map.get(missing) != null) missing++;
+        while (map.get(missing) != null) missing++;
         return missing;
 
     }
@@ -1461,10 +1439,9 @@ public class LeetCode {
     /**
      * https://oj.leetcode.com/problems/trapping-rain-water/
      * https://oj.leetcode.com/submissions/detail/9704165/
-     *
      */
     public int trap(int[] A) {
-        if(A == null || A.length <= 2)
+        if (A == null || A.length <= 2)
             return 0;
 
         int result = 0;
@@ -1474,39 +1451,39 @@ public class LeetCode {
         HashMap<Integer, LeftAndRight> map = new HashMap<Integer, LeftAndRight>();
         map.put(1, new LeftAndRight(A[0], 0));
 
-        for(int i = 2; i <= N -2; i++){
-            int left = map.get(i-1).left;
-            int a = Math.max(left, A[i-1]);
+        for (int i = 2; i <= N - 2; i++) {
+            int left = map.get(i - 1).left;
+            int a = Math.max(left, A[i - 1]);
             map.put(i, new LeftAndRight(a, 0));
         }
 
         LeftAndRight l = map.get(N - 2);
-        l.right = A[N-1];
-        map.put(N-2, l);
+        l.right = A[N - 1];
+        map.put(N - 2, l);
 
-        for(int i = A.length - 3; i >= 1; i--){
-            int right = map.get(i+1).right;
-            int b = Math.max(A[i+1], right);
+        for (int i = A.length - 3; i >= 1; i--) {
+            int right = map.get(i + 1).right;
+            int b = Math.max(A[i + 1], right);
             LeftAndRight r = map.get(i);
             r.right = b;
             map.put(i, r);
         }
 
-        for(int i = 1; i <= N -2; i++){
+        for (int i = 1; i <= N - 2; i++) {
             LeftAndRight m = map.get(i);
             int k = Math.min(m.left, m.right);
-            if(k > A[i]) result += (k - A[i]);
+            if (k > A[i]) result += (k - A[i]);
         }
 
         return result;
 
     }
 
-    private class LeftAndRight{
+    private class LeftAndRight {
         int left;
         int right;
 
-        LeftAndRight(int left, int right){
+        LeftAndRight(int left, int right) {
             this.left = left;
             this.right = right;
         }
@@ -1516,7 +1493,6 @@ public class LeetCode {
      * https://oj.leetcode.com/problems/multiply-strings/
      * http://www.darrensunny.me/leetcode-multiply-strings/
      * https://oj.leetcode.com/submissions/detail/9825634/
-     *
      */
     public String multiply1(String num1, String num2) {
         if (num1 == null || num1.length() == 0 ||
@@ -1526,16 +1502,16 @@ public class LeetCode {
             return "0";
         int m = num1.length(), n = num2.length();
         // Multiply single digit of each number and add up products at each position
-        int[] prods = new int[m+n];
-        for (int i = n-1; i >= 0; i--)
-            for (int j = m-1; j >= 0; j--)
-                prods[i+j+1] += (num2.charAt(i)-'0') * (num1.charAt(j)-'0');
+        int[] prods = new int[m + n];
+        for (int i = n - 1; i >= 0; i--)
+            for (int j = m - 1; j >= 0; j--)
+                prods[i + j + 1] += (num2.charAt(i) - '0') * (num1.charAt(j) - '0');
         // Keep a single digit at each position and add carry to a higher position
         StringBuilder result = new StringBuilder();
-        for (int i = n+m-1; i >= 0; i--) {
-            result.insert(0, prods[i]%10);
+        for (int i = n + m - 1; i >= 0; i--) {
+            result.insert(0, prods[i] % 10);
             if (i > 0)
-                prods[i-1] += prods[i] / 10;    // Carry
+                prods[i - 1] += prods[i] / 10;    // Carry
         }
         // Get rid of one leaing "0" (if any)
         if (result.charAt(0) == '0')
@@ -1545,38 +1521,38 @@ public class LeetCode {
     }
 
     public static String multiply(String num1, String num2) {
-        if(num1 == null && num2 == null ) return null;
-        if(num1 != null && num2 == null) return num1;
-        if(num1 == null && num2 != null) return num2;
-        if(num1.equals("0") || num2.equals("0")) return "0";
+        if (num1 == null && num2 == null) return null;
+        if (num1 != null && num2 == null) return num1;
+        if (num1 == null && num2 != null) return num2;
+        if (num1.equals("0") || num2.equals("0")) return "0";
 
         int N1 = num1.length();
         int N2 = num2.length();
 
         String result = "";
 
-        if(N1 > N2){
-            for(int i = 0; i < N2; i++){
+        if (N1 > N2) {
+            for (int i = 0; i < N2; i++) {
                 String s = "";
                 int c = num2.charAt(i) - '0';
 
-                for(int j = 0; j < c; j++){
+                for (int j = 0; j < c; j++) {
                     s = add(s, num1);
                 }
-                for(int j = 0; j < (N2 - 1 -i); j++)
+                for (int j = 0; j < (N2 - 1 - i); j++)
                     s += "0";
                 result = add(result, s);
 
             }
         } else {
-            for(int i = 0; i < N1; i++){
+            for (int i = 0; i < N1; i++) {
                 String s = "";
                 int c = num1.charAt(i) - '0';
 
-                for(int j = 0; j < c; j++){
+                for (int j = 0; j < c; j++) {
                     s = add(s, num2);
                 }
-                for(int j = 0; j < (N1 - 1 -i); j++)
+                for (int j = 0; j < (N1 - 1 - i); j++)
                     s += "0";
 
                 result = add(result, s);
@@ -1587,24 +1563,24 @@ public class LeetCode {
 
     }
 
-    private static String add(String num1, String num2){
-        if(num1 == null && num2 == null ) return null;
-        if(num1 != null && (num2 == null || num2.length() == 0 || num2.equals("0"))) return num1;
-        if((num1 == null || num1.length() == 0 || num1.equals("0")) && num2 != null) return num2;
+    private static String add(String num1, String num2) {
+        if (num1 == null && num2 == null) return null;
+        if (num1 != null && (num2 == null || num2.length() == 0 || num2.equals("0"))) return num1;
+        if ((num1 == null || num1.length() == 0 || num1.equals("0")) && num2 != null) return num2;
 
         Stack<Character> s1 = new Stack<Character>();
         Stack<Character> s2 = new Stack<Character>();
         Stack<Character> s3 = new Stack<Character>();
 
-        for(int i = 0; i < num1.length(); i++)
+        for (int i = 0; i < num1.length(); i++)
             s1.push(num1.charAt(i));
 
-        for(int i = 0; i < num2.length(); i++)
+        for (int i = 0; i < num2.length(); i++)
             s2.push(num2.charAt(i));
 
         int carryOver = 0;
 
-        while(!s1.isEmpty() || !s2.isEmpty()) {
+        while (!s1.isEmpty() || !s2.isEmpty()) {
             Character c1 = null;
             Character c2 = null;
 
@@ -1621,19 +1597,19 @@ public class LeetCode {
             s3.push(toCharacter(carryOver % 10));
             carryOver /= 10;
         }
-        if(carryOver == 1)
+        if (carryOver == 1)
             s3.push(toCharacter(carryOver));
 
         StringBuilder sb = new StringBuilder();
-        while(!s3.isEmpty())
+        while (!s3.isEmpty())
             sb.append(s3.pop());
         return sb.toString();
 
 
     }
 
-    private static Character toCharacter(int c){
-        if(c == 0) return '0';
+    private static Character toCharacter(int c) {
+        if (c == 0) return '0';
         else if (c == 1) return '1';
         else if (c == 2) return '2';
         else if (c == 3) return '3';
@@ -1651,28 +1627,27 @@ public class LeetCode {
      * http://www.darrensunny.me/leetcode-wildcard-matching-2/
      * http://www.programering.com/a/MTN0kzMwATU.html isMatch4 (working one)
      * https://oj.leetcode.com/submissions/detail/9830224/
-     *
      */
     public static boolean isMatch2(String s, String p) {
-        if(s == null) return p == null;
-        if(p == null) return s == null;
-        if(p.length() == 0) return s.length() == 0;
-        if(p.equals("*")) return true;
-        if(s.length() == 0) return p.length() == 0;
+        if (s == null) return p == null;
+        if (p == null) return s == null;
+        if (p.length() == 0) return s.length() == 0;
+        if (p.equals("*")) return true;
+        if (s.length() == 0) return p.length() == 0;
         char c = p.charAt(p.length() - 1);
-        if(c != '?' && c != '*'  && c != s.charAt(s.length() - 1)) return false;
-        if(p.charAt(0) == '?') return isMatch2(s.substring(1), p.substring(1));
-        if(p.charAt(0)  == '*'){
+        if (c != '?' && c != '*' && c != s.charAt(s.length() - 1)) return false;
+        if (p.charAt(0) == '?') return isMatch2(s.substring(1), p.substring(1));
+        if (p.charAt(0) == '*') {
             int j = 0;
-            while(j < p.length() && p.charAt(j)=='*')
+            while (j < p.length() && p.charAt(j) == '*')
                 j++;
 
-            if(j >= p.length())
+            if (j >= p.length())
                 return true;
 
             int i = 0;
-            while(i < s.length()){
-                if(isMatch2(s.substring(i), p.substring(j)))
+            while (i < s.length()) {
+                if (isMatch2(s.substring(i), p.substring(j)))
                     return true;
                 i++;
             }
@@ -1687,15 +1662,15 @@ public class LeetCode {
         if (s == null || p == null)
             return false;
         int m = s.length(), n = p.length();
-        boolean[] match = new boolean[m+1];     // Used for dynamic programming
+        boolean[] match = new boolean[m + 1];     // Used for dynamic programming
         match[0] = true;
         // After each round, the information whether p[0...i] matches s[0...m-1]
         // is updated in match[1...m]
         for (int i = 0; i < n; i++) {
             if (p.charAt(i) != '*') {   // Not wildcard
                 for (int j = m; j > 0; j--)     // Update match backwards
-                    match[j] = match[j-1] &&
-                            (p.charAt(i)=='?' || s.charAt(j-1) == p.charAt(i));
+                    match[j] = match[j - 1] &&
+                            (p.charAt(i) == '?' || s.charAt(j - 1) == p.charAt(i));
             } else {    // Wildcard
                 int j = 0;
                 // Find the minimum j with p[0...i-1] matching s[0...j]
@@ -1729,19 +1704,16 @@ public class LeetCode {
             if (posP < n && (s.charAt(posS) == p.charAt(posP) || p.charAt(posP) == '?')) {
                 ++posS;
                 ++posP;
-            }
-            else if (posP < n && p.charAt(posP) == '*') {
+            } else if (posP < n && p.charAt(posP) == '*') {
                 posStar = posP;
                 posOfS = posS;
                 ++posP;
                 continue;
-            }
-            else if (posStar != -1) {
+            } else if (posStar != -1) {
                 posS = posOfS;
                 posP = posStar + 1;
                 ++posOfS;
-            }
-            else {
+            } else {
                 return false;
             }
         }
@@ -1756,24 +1728,23 @@ public class LeetCode {
      * https://oj.leetcode.com/problems/jump-game-ii/
      * http://www.darrensunny.me/leetcode-jump-game-ii/
      * https://oj.leetcode.com/submissions/detail/9860022/
-     *
      */
     public int jump(int[] A) {
-        if(A == null || A.length == 1) return 0;
+        if (A == null || A.length == 1) return 0;
         int N = A.length;
-        if(N == 2 || A[0] >= N - 1) return 1;
+        if (N == 2 || A[0] >= N - 1) return 1;
 
         int[] B = new int[N];
-        B[N-1] = 0;
-        B[N-2] = 1;
+        B[N - 1] = 0;
+        B[N - 2] = 1;
 
-        for(int i = N - 3; i >= 0; i--){
-            if(A[i] >= N - 1 - i)
+        for (int i = N - 3; i >= 0; i--) {
+            if (A[i] >= N - 1 - i)
                 B[i] = 1;
             else {
                 int min = N;
-                for(int j = i + 1; j <= i + A[i]; j++){
-                    if(B[j] < min)
+                for (int j = i + 1; j <= i + A[i]; j++) {
+                    if (B[j] < min)
                         min = B[j];
                 }
                 B[i] = min + 1;
@@ -1800,8 +1771,8 @@ public class LeetCode {
             // The elements "jump+1" jumps away are approachable by the elements
             // that are "jump" jumps away
             for (int i = begin; i <= end; i++) {
-                temp = Math.max(temp, A[i]+i);
-                if (temp >= n-1)    // Once the largest index exceeds the array, we are done
+                temp = Math.max(temp, A[i] + i);
+                if (temp >= n - 1)    // Once the largest index exceeds the array, we are done
                     return jump;
             }
             // Update "begin" and "end" as the indices of the elements "jump" jumps away
@@ -1809,36 +1780,36 @@ public class LeetCode {
             end = temp;
         }
     }
+
     /**
      * https://oj.leetcode.com/problems/permutations/
      * http://www.programcreek.com/2013/02/leetcode-permutations-java/
      * http://www.darrensunny.me/leetcode-permutations/
      * https://oj.leetcode.com/submissions/detail/9861658/
-     *
      */
     public static List<List<Integer>> permute(int[] num) {
         List<List<Integer>> r = new ArrayList<List<Integer>>();
         Set<List<Integer>> set = new HashSet<List<Integer>>();
         List<Integer> list = new ArrayList<Integer>();
         permuteHelper(set, num, list, num.length);
-        for(List<Integer> l : set)
+        for (List<Integer> l : set)
             r.add(l);
         return r;
     }
 
-    private static void permuteHelper(Set<List<Integer>> set, int[] num, List<Integer> list, int total){
-        if(list.size() == total)
+    private static void permuteHelper(Set<List<Integer>> set, int[] num, List<Integer> list, int total) {
+        if (list.size() == total)
             set.add(list);
-        if(num == null || num.length == 0) return;
+        if (num == null || num.length == 0) return;
 
         int N = num.length;
-        for(int i = 0; i < N; i++){
+        for (int i = 0; i < N; i++) {
             int n = num[i];
             List<Integer> copyList = new ArrayList<Integer>(list);
             copyList.add(n);
-            int[] copyNum = new int[N-1];
-            for(int j = 0; j < i; j++) copyNum[j] = num[j];
-            for(int j = i; j < N -1; j++) copyNum[j] = num[j+1];
+            int[] copyNum = new int[N - 1];
+            for (int j = 0; j < i; j++) copyNum[j] = num[j];
+            for (int j = i; j < N - 1; j++) copyNum[j] = num[j + 1];
             permuteHelper(set, copyNum, copyList, total);
 
         }
@@ -1848,15 +1819,15 @@ public class LeetCode {
     /**
      * http://www.programcreek.com/2013/02/leetcode-permutations-java
      */
-    public static List<List<Integer>> permute1(int[] num){
+    public static List<List<Integer>> permute1(int[] num) {
         List<List<Integer>> result = new ArrayList<List<Integer>>();
         result.add(new ArrayList<Integer>());
 
-        for(int i = 0; i < num.length; i++){
+        for (int i = 0; i < num.length; i++) {
             List<List<Integer>> current = new ArrayList<List<Integer>>();
 
-            for(List<Integer> l : result){
-                for(int j = 0; j <= l.size(); j++){
+            for (List<Integer> l : result) {
+                for (int j = 0; j <= l.size(); j++) {
                     l.add(j, num[i]);
 
                     List<Integer> temp = new ArrayList<Integer>(l);
@@ -1874,7 +1845,7 @@ public class LeetCode {
     }
 
     /**
-     *  http://www.programcreek.com/2013/02/leetcode-permutations-java/
+     * http://www.programcreek.com/2013/02/leetcode-permutations-java/
      */
     public List<List<Integer>> permute2(int[] num) {
         List<List<Integer>> result = new ArrayList<List<Integer>>();
@@ -1926,7 +1897,7 @@ public class LeetCode {
                 // Recursively append next unused number
                 recursivePermute(num, used, current, result);
                 // Get back to original state, get ready for appending another unused number
-                current.remove(current.size()-1);
+                current.remove(current.size() - 1);
                 used[i] = false;
             }
         }
@@ -1935,7 +1906,6 @@ public class LeetCode {
     /**
      * https://oj.leetcode.com/problems/permutations-ii/
      * https://oj.leetcode.com/submissions/detail/9863455/
-     *
      */
 
     public static List<List<Integer>> permuteUnique(int[] num) {
@@ -1952,10 +1922,10 @@ public class LeetCode {
             return;
         }
 
-        permuteUnique(num, start+1, result);
+        permuteUnique(num, start + 1, result);
         Set<Integer> set = new HashSet<Integer>();
         for (int j = start + 1; j <= num.length - 1; j++) {
-            if(num[start] != num[j] && !set.contains(num[j])) {
+            if (num[start] != num[j] && !set.contains(num[j])) {
                 set.add(num[j]);
                 swap(num, start, j);
                 permuteUnique(num, start + 1, result);
@@ -1994,14 +1964,14 @@ public class LeetCode {
     // If "current" is already a permutation of "num", add it to "result";
     // otherwise, append each unused number to "current", and recursively try next unused number
     private static void recursivePermute(int[] num, boolean[] used, List<Integer> current,
-                                  List<List<Integer>> result) {
+                                         List<List<Integer>> result) {
         if (current.size() == num.length) {     // "current" is already a permutation of "num"
             result.add(new ArrayList<Integer>(current));
             return;
         }
         // Append each unused number to "current", and recursively try next unused number
         for (int i = 0; i < num.length; i++) {
-            if (i > 0 && !used[i-1] && num[i]==num[i-1])
+            if (i > 0 && !used[i - 1] && num[i] == num[i - 1])
                 // Do not consider a duplicate number if its earlier appearance has
                 // not been considered yet
                 continue;
@@ -2012,22 +1982,110 @@ public class LeetCode {
                 // Recursively append next unused number
                 recursivePermute(num, used, current, result);
                 // Get back to original state, get ready for appending another unused number
-                current.remove(current.size()-1);
+                current.remove(current.size() - 1);
                 used[i] = false;
             }
         }
     }
 
     /**
+     * https://oj.leetcode.com/problems/permutation-sequence/
+     * https://oj.leetcode.com/submissions/detail/10252180/
+     *
+     */
+    public static String getPermutation(int n, int k) {
+        int[] N = new int[n];
+        for(int i = 0; i < n; i++) {
+            N[i] = i + 1;
+        }
+
+        return getPermutation(N, k);
+
+    }
+
+    private static String getPermutation(int[] N, int k){
+
+        if(k == 1) {
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0; i < N.length; i++){
+                sb.append(N[i]);
+            }
+            return sb.toString();
+
+        }
+
+        int startIndex = (k - 1) / factorial(N.length -1);
+        String start = "" + N[startIndex];
+        k = k - startIndex * factorial(N.length - 1);
+
+        int[] M = new int[N.length - 1];
+        for(int i = 0; i < startIndex; i++){
+            M[i] = N[i];
+
+        }
+        for(int i = startIndex; i <= N.length - 2; i++){
+            M[i] = N[i+1];
+        }
+
+        return start + getPermutation(M, k);
+
+
+    }
+
+    private static int factorial(int n){
+        int result = 1;
+        for(int i = 1; i <= n; i++){
+            result *= i;
+        }
+        return result;
+    }
+
+
+    /**
+     * https://oj.leetcode.com/problems/rotate-list/
+     * https://oj.leetcode.com/submissions/detail/10253951/
+     */
+    public ListNode rotateRight(ListNode head, int n) {
+
+        if(n == 0 || head == null) return head;
+
+        //Get the length of the list
+        int len = 1;
+        ListNode node = head;
+        while(node.next != null){
+            node = node.next;
+            len++;
+        }
+
+        if(len == 1 || n % len == 0) return head;
+
+        int offset = len - n % len;
+        ListNode prev = head;
+        while(offset > 1){
+            prev = prev.next;
+            offset--;
+        }
+        ListNode newHead = prev.next;
+        prev.next = null;
+        node.next = head;
+        return newHead;
+
+
+    }
+
+
+
+
+    /**
      * https://oj.leetcode.com/problems/rotate-image/
      * https://oj.leetcode.com/submissions/detail/9903296/
      */
     public void rotate(int[][] matrix) {
-        if(matrix == null || matrix[0].length <= 1) return;
+        if (matrix == null || matrix[0].length <= 1) return;
         int N = matrix[0].length;
-        for(int layer = 0; layer < N/2; layer++){
+        for (int layer = 0; layer < N / 2; layer++) {
             int rowStart = layer;
-            int rowEnd = N-1-layer;
+            int rowEnd = N - 1 - layer;
             int colStart = layer;
             int colEnd = N - 1 - layer;
             rotate(matrix, rowStart, rowEnd, colStart, colEnd);
@@ -2035,37 +2093,36 @@ public class LeetCode {
 
     }
 
-    private static void rotate(int[][] matrix, int rowStart, int rowEnd, int colStart, int colEnd){
-        for(int i = 0; i <= colEnd - colStart - 1; i++){
-            int temp = matrix[rowStart][colStart+i];
-            matrix[rowStart][colStart+i] = matrix[rowEnd-i][colStart];
-            matrix[rowEnd-i][colStart] = matrix[rowEnd][colEnd-i];
-            matrix[rowEnd][colEnd-i] = matrix[rowStart+i][colEnd];
-            matrix[rowStart+i][colEnd] = temp;
+    private static void rotate(int[][] matrix, int rowStart, int rowEnd, int colStart, int colEnd) {
+        for (int i = 0; i <= colEnd - colStart - 1; i++) {
+            int temp = matrix[rowStart][colStart + i];
+            matrix[rowStart][colStart + i] = matrix[rowEnd - i][colStart];
+            matrix[rowEnd - i][colStart] = matrix[rowEnd][colEnd - i];
+            matrix[rowEnd][colEnd - i] = matrix[rowStart + i][colEnd];
+            matrix[rowStart + i][colEnd] = temp;
         }
     }
 
     /**
      * https://oj.leetcode.com/problems/anagrams/
      * https://oj.leetcode.com/submissions/detail/9905057/
-     *
      */
-    public static List<String> anagrams(String[] strs){
+    public static List<String> anagrams(String[] strs) {
         List<String> result = new ArrayList<String>();
-        if(strs == null || strs.length <= 1) return result;
+        if (strs == null || strs.length <= 1) return result;
 
         Map<String, List<String>> map = new HashMap<String, List<String>>();
-        for(int i = 0; i < strs.length; i++){
+        for (int i = 0; i < strs.length; i++) {
             String s = strs[i];
-            if(s !=  null){
+            if (s != null) {
                 String key = s;
-                if(s.trim().length() > 0) {
+                if (s.trim().length() > 0) {
                     char[] cArray = s.toCharArray();
                     Arrays.sort(cArray);
                     key = arrayToString(cArray);
                 }
 
-                if(!map.containsKey(key)){
+                if (!map.containsKey(key)) {
                     List<String> list = new ArrayList<String>();
                     list.add(s);
                     map.put(key, list);
@@ -2078,9 +2135,9 @@ public class LeetCode {
 
         }
 
-        for(String key : map.keySet()){
+        for (String key : map.keySet()) {
             List<String> list = map.get(key);
-            if(list != null && list.size() >=2){
+            if (list != null && list.size() >= 2) {
                 result.addAll(list);
             }
         }
@@ -2090,10 +2147,10 @@ public class LeetCode {
 
     }
 
-    private static String arrayToString(char[] cArray){
+    private static String arrayToString(char[] cArray) {
         StringBuilder sb = new StringBuilder();
 
-        for(char c : cArray)
+        for (char c : cArray)
             sb.append(c);
 
         return sb.toString();
@@ -2102,46 +2159,46 @@ public class LeetCode {
 
     public static List<String> anagrams2(String[] strs) {
         List<String> result = new ArrayList<String>();
-        if(strs == null || strs.length <= 1) return result;
+        if (strs == null || strs.length <= 1) return result;
         boolean[] isAnagram = new boolean[strs.length];
 
-        for(int i = 0; i <= strs.length-2; i++){
-            if(isAnagram[i]) continue;
+        for (int i = 0; i <= strs.length - 2; i++) {
+            if (isAnagram[i]) continue;
             String s = strs[i];
 
-            for(int j = i+1; j < strs.length; j++){
-                if(isAnagram[j]) continue;
-                if(isAnagram(s, strs[j])){
+            for (int j = i + 1; j < strs.length; j++) {
+                if (isAnagram[j]) continue;
+                if (isAnagram(s, strs[j])) {
                     isAnagram[i] = true;
                     isAnagram[j] = true;
                 }
             }
         }
 
-        for(int i = 0; i < strs.length; i++){
-            if(isAnagram[i]) result.add(strs[i]);
+        for (int i = 0; i < strs.length; i++) {
+            if (isAnagram[i]) result.add(strs[i]);
         }
         return result;
 
 
     }
 
-    private static boolean isAnagram(String s1, String s2){
-        if(s1 == null || s2 == null) return false;
-        if(s1.length() != s2.length()) return false;
-        if(s1.equals(s2)) return true;
+    private static boolean isAnagram(String s1, String s2) {
+        if (s1 == null || s2 == null) return false;
+        if (s1.length() != s2.length()) return false;
+        if (s1.equals(s2)) return true;
 
         Map<Character, Integer> countMap = new HashMap<Character, Integer>();
-        for(int i = 0; i < s1.length(); i++){
+        for (int i = 0; i < s1.length(); i++) {
             char c = s1.charAt(i);
-            if(countMap.get(c) == null) countMap.put(c, 1);
-            else countMap.put(c, countMap.get(c)+1);
+            if (countMap.get(c) == null) countMap.put(c, 1);
+            else countMap.put(c, countMap.get(c) + 1);
         }
 
-        for(int i = 0; i < s2.length(); i++){
+        for (int i = 0; i < s2.length(); i++) {
             char c = s2.charAt(i);
-            if(countMap.get(c) == null || countMap.get(c) == 0) return false;
-            else countMap.put(c, countMap.get(c)-1);
+            if (countMap.get(c) == null || countMap.get(c) == 0) return false;
+            else countMap.put(c, countMap.get(c) - 1);
         }
         return true;
     }
@@ -2150,32 +2207,63 @@ public class LeetCode {
     /**
      * https://oj.leetcode.com/problems/powx-n/
      * https://oj.leetcode.com/submissions/detail/9905406/
-     *
      */
     public double pow(double x, int n) {
-        if(n == 0) return 1;
-        if(n == 1) return x;
-        if(n == 2) return x*x;
+        if (n == 0) return 1;
+        if (n == 1) return x;
+        if (n == 2) return x * x;
 
         int m = Math.abs(n);
-        double y = pow(x, m/2);
+        double y = pow(x, m / 2);
 
-        if(m % 2 == 0) y = y * y;
+        if (m % 2 == 0) y = y * y;
         else y = y * y * x;
 
 
-        if(n < 0)
+        if (n < 0)
             return 1.0 / y;
         else
             return y;
 
     }
+
     /**
      * https://oj.leetcode.com/problems/n-queens/
      * http://www.darrensunny.me/leetcode-n-queens/
+     * https://oj.leetcode.com/problems/n-queens-ii/
      * https://oj.leetcode.com/submissions/detail/9980530/
-     *
+     * https://oj.leetcode.com/submissions/detail/10196846/
+     * https://oj.leetcode.com/submissions/detail/10197004/
      */
+    public static int totalNQueens(int n) {
+        int[] solutions = new int[1];
+        if (n <= 0) return solutions[0];
+        solved2(solutions, newBoard(n), 0);
+        return solutions[0];
+
+    }
+
+
+    private static void solved2(int[] solutions, char[][] board, int row) {
+        int N = board.length;
+
+        if (row == N)
+            solutions[0]++;
+        else {
+            for (int j = 0; j < N; j++) {
+                if (isValid(board, row, j)) {
+                    board[row][j] = 'Q';
+                    solved2(solutions, board, row + 1);
+                }
+                board[row][j] = '.';
+
+            }
+
+        }
+
+
+    }
+
     public static List<String[]> solveNQueens(int n) {
         List<String[]> result = new ArrayList<String[]>();
         if (n <= 0) return result;
@@ -2209,7 +2297,7 @@ public class LeetCode {
     private static void solved(List<String[]> result, char[][] board, int row) {
         int N = board.length;
 
-        if(row == N)
+        if (row == N)
             result.add(toStringArray(board));
         else {
             for (int j = 0; j < N; j++) {
@@ -2281,6 +2369,476 @@ public class LeetCode {
 
         return true;
     }
+
+
+    /**
+     * https://oj.leetcode.com/problems/maximum-subarray/
+     * http://www.darrensunny.me/leetcode-maximum-subarray/
+     * https://oj.leetcode.com/submissions/detail/10198030/
+     */
+    public static int maxSubArray(int[] A) {
+        return maxSubArray(A, 0, A.length - 1);
+    }
+
+    public static int maxSubArray(int[] A, int lo, int hi) {
+        if (A == null || A.length == 0 || lo > hi) return Integer.MIN_VALUE;
+        if (A.length == 1 || lo == hi) return A[lo];
+
+        int mid = (lo + hi) / 2;
+
+        int max1 = maxSubArray(A, lo, mid - 1);
+        int max2 = maxSubArray(A, mid + 1, hi);
+
+        int max3 = A[mid];
+        int max = max3;
+
+        for (int i = mid - 1; i >= lo; i--) {
+            max3 += A[i];
+            max = Math.max(max, max3);
+        }
+
+        max3 = max;
+
+        for (int i = mid + 1; i <= hi; i++) {
+            max3 += A[i];
+            max = Math.max(max, max3);
+        }
+
+        max = Math.max(max, max1);
+        max = Math.max(max, max2);
+
+        return max;
+    }
+
+    public static int maxSubArray2(int[] A) {
+        if (A == null || A.length == 0)
+            return 0;
+        int sum = 0, maxSum = Integer.MIN_VALUE;
+        // Find maximum sum of all subarrays with the properties:
+        // 1. Any prefix of it is non-negative;
+        // 2. Any suffix of its preceding numbers are non-positive
+        // 3. Any prefix of its following numbers are non-positive
+        for (int i = 0; i < A.length; i++) {
+            sum += A[i];
+            maxSum = Math.max(sum, maxSum);
+            if (sum < 0)
+                // Preceding numbers make negative contribution;
+                // no need to take them into consideration
+                sum = 0;
+        }
+
+        return maxSum;
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/spiral-matrix/
+     * https://oj.leetcode.com/submissions/detail/10200955/
+     */
+    public static List<Integer> spiralOrder(int[][] matrix) {
+        if (matrix == null) return null;
+
+        List<Integer> result = new ArrayList<Integer>();
+        int m = matrix.length;
+        if (m == 0)
+            return result;
+
+        int n = matrix[0].length;
+        if (n == 0)
+            return result;
+
+        int N = Math.min(m, n);
+
+        for (int offset = 0; offset <= (N + 1) / 2 - 1; offset++) {
+            int rowStart = offset, rowEnd = m - 1 - offset, colStart = offset, colEnd = n - 1 - offset;
+            spiral(result, matrix, rowStart, rowEnd, colStart, colEnd);
+        }
+
+        return result;
+
+    }
+
+    private static void spiral(List<Integer> result, int[][] matrix, int rowStart, int rowEnd, int colStart, int colEnd) {
+
+        if (rowStart == rowEnd)
+            for (int i = colStart; i <= colEnd; i++)
+                result.add(matrix[rowStart][i]);
+        else if (colStart == colEnd)
+            for (int i = rowStart; i <= rowEnd; i++)
+                result.add(matrix[i][colStart]);
+        else if (rowStart < rowEnd && colStart < colEnd) {
+
+            for (int i = colStart; i <= colEnd; i++)
+                result.add(matrix[rowStart][i]);
+
+            for (int i = rowStart + 1; i <= rowEnd; i++)
+                result.add(matrix[i][colEnd]);
+
+            for (int i = colEnd - 1; i >= colStart; i--)
+                result.add(matrix[rowEnd][i]);
+
+            for (int i = rowEnd - 1; i >= rowStart + 1; i--)
+                result.add(matrix[i][colStart]);
+        }
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/spiral-matrix-ii/
+     * https://oj.leetcode.com/submissions/detail/10248635/
+     *
+     */
+    public int[][] generateMatrix(int n) {
+        if(n < 0) return null;
+        int[][] matrix = new int[n][n];
+
+        if(n == 0) return matrix;
+
+        int[] count = new int[1];
+        count[0] = 1;
+
+        for (int offset = 0; offset <= (n + 1) / 2 - 1; offset++) {
+            int rowStart = offset, rowEnd = n - 1 - offset, colStart = offset, colEnd = n - 1 - offset;
+            spiralMatrix(matrix, rowStart, rowEnd, colStart, colEnd, count);
+        }
+
+        return matrix;
+
+
+
+    }
+
+    private static void spiralMatrix(int[][] matrix, int rowStart, int rowEnd, int colStart, int colEnd, int[] count) {
+
+        if (rowStart == rowEnd)
+            for (int i = colStart; i <= colEnd; i++) {
+                matrix[rowStart][i] = count[0];
+                count[0]++;
+            }
+        else if (colStart == colEnd)
+            for (int i = rowStart; i <= rowEnd; i++) {
+                matrix[i][colStart] = count[0];
+                count[0]++;
+            }
+        else if (rowStart < rowEnd && colStart < colEnd) {
+
+            for (int i = colStart; i <= colEnd; i++) {
+                matrix[rowStart][i] = count[0];
+                count[0]++;
+            }
+
+            for (int i = rowStart + 1; i <= rowEnd; i++) {
+                matrix[i][colEnd] = count[0];
+                count[0]++;
+            }
+
+            for (int i = colEnd - 1; i >= colStart; i--) {
+                matrix[rowEnd][i] = count[0];
+                count[0]++;
+            }
+
+            for (int i = rowEnd - 1; i >= rowStart + 1; i--) {
+                matrix[i][colStart] = count[0];
+                count[0]++;
+            }
+        }
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/jump-game/
+     * https://oj.leetcode.com/submissions/detail/10203444/
+     */
+    public static boolean canJump(int[] A) {
+        if (A == null || A.length == 0) return true;
+        int max = A[0];
+        if (max >= A.length - 1) return true;
+
+        while (true) {
+            for (int i = 1; i <= max; i++) {
+                if (i + A[i] >= A.length - 1) return true;
+                if (i + A[i] > max) max = i + A[i];
+
+            }
+
+            return false;
+
+        }
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/merge-intervals/
+     * http://www.programcreek.com/2012/12/leetcode-merge-intervals/
+     * http://www.darrensunny.me/leetcode-merge-intervals/
+     * https://oj.leetcode.com/submissions/detail/10215552/
+     */
+    public List<Interval> merge(List<Interval> intervals) {
+        if (intervals == null || intervals.size() <= 1) return intervals;
+
+        Interval[] items = intervals.toArray(new Interval[intervals.size()]);
+        Arrays.sort(items, new IntervalStartComparator());
+
+        List<Interval> result = new ArrayList<Interval>();
+
+        Interval item = items[0];
+        for (int i = 1; i < items.length; i++) {
+            if (items[i].start <= item.end) {
+                item.end = Math.max(item.end, items[i].end);
+            } else {
+                result.add(item);
+
+                item = items[i];
+            }
+        }
+
+        result.add(item);
+
+        return result;
+
+
+    }
+
+    static class IntervalStartComparator implements Comparator<Interval> {
+        @Override
+        public int compare(Interval a, Interval b) {
+            return new Integer(a.start).compareTo(new Integer(b.start));
+        }
+    }
+
+
+    public static class Interval {
+        int start;
+        int end;
+
+        Interval() {
+            start = 0;
+            end = 0;
+        }
+
+        Interval(int s, int e) {
+            start = s;
+            end = e;
+        }
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/insert-interval/
+     * http://www.programcreek.com/2012/12/leetcode-insert-interval/
+     * http://www.darrensunny.me/leetcode-insert-interval/
+     * https://oj.leetcode.com/submissions/detail/10217871/
+     *
+     */
+    public static List<Interval> insert(List<Interval> intervals, Interval newInterval) {
+        if(newInterval == null) return intervals;
+
+        if(intervals == null) {
+            intervals = new ArrayList<Interval>();
+        }
+        if(intervals.isEmpty()){
+            intervals.add(newInterval);
+            return intervals;
+
+        }
+
+        Collections.sort(intervals, new IntervalStartComparator());
+
+        int size = intervals.size();
+
+        if(newInterval.end < intervals.get(0).start){
+            intervals.add(0, newInterval);
+            return intervals;
+        }
+
+        if(newInterval.start > intervals.get(size - 1).end){
+            intervals.add(size, newInterval);
+            return intervals;
+        }
+
+        int i = 0, j = 0;
+
+        while(i <= size - 1 && intervals.get(i).end < newInterval.start){
+            i++;
+            j++;
+
+        }
+
+        while(j <= size - 1 && intervals.get(j).start <= newInterval.end){
+            j++;
+        }
+
+        for(int k = i; k <= j - 1; k++){
+            newInterval.start = Math.min(newInterval.start, intervals.get(i).start);
+            newInterval.end = Math.max(newInterval.end, intervals.get(i).end);
+            intervals.remove(i);
+        }
+
+        intervals.add(i, newInterval);
+
+        return intervals;
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/length-of-last-word/
+     * https://oj.leetcode.com/submissions/detail/10218507/
+     *
+     */
+    public int lengthOfLastWord(String s) {
+        int len = 0;
+
+        if(s == null || s.length() == 0)
+            return 0;
+
+        for(int i = s.length() - 1; i >= 0; i--){
+            if(s.charAt(i) != ' ')
+                len++;
+            else {
+                if(len > 0)
+                    return len;
+            }
+
+        }
+        return len;
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/merge-two-sorted-lists/
+     * https://oj.leetcode.com/submissions/detail/10316971/
+     */
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if (l1 == null) return l2;
+        if (l2 == null) return l1;
+
+        ListNode head = new ListNode(0);
+        ListNode n = head;
+
+        while (l1 != null || l2 != null) {
+            if (l1 == null) {
+                n.next = l2;
+                break;
+            } else if (l2 == null) {
+                n.next = l1;
+                break;
+            } else {
+                if (l1.val <= l2.val) {
+                    n.next = l1;
+                    l1 = l1.next;
+                } else {
+                    n.next = l2;
+                    l2 = l2.next;
+                }
+                n = n.next;
+                n.next = null;
+            }
+        }
+        return head.next;
+
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/add-binary/
+     * https://oj.leetcode.com/submissions/detail/10317701/
+     */
+    public String addBinary(String a, String b) {
+        if (a == null || a.length() == 0) return b;
+        if (b == null || b.length() == 0) return a;
+
+        String c = "";
+        int index1 = a.length() - 1;
+        int index2 = b.length() - 1;
+        int carryOver = 0;
+        while (index1 >= 0 || index2 >= 0) {
+            if (index1 >= 0) {
+                carryOver += a.charAt(index1) - '0';
+                index1--;
+            }
+            if (index2 >= 0) {
+                carryOver += b.charAt(index2) - '0';
+                index2--;
+            }
+            c = carryOver % 2 + c;
+            carryOver = carryOver / 2;
+        }
+
+        if(carryOver > 0){
+            c = carryOver + c;
+        }
+        return c;
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/valid-number/
+     * http://www.darrensunny.me/leetcode-valid-number/
+     * https://oj.leetcode.com/submissions/detail/10320818/
+     *
+     */
+    public static boolean isNumber(String s) {
+        if (s == null || s.trim().length() == 0) return false;
+        s = s.trim();
+        s = s.replaceAll(" ", "");
+        s = s.replaceAll("\t", "");
+        int signCount = 0;
+        int dotCount = 0;
+        int eCount = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if ('0' <= c && '9' >= c)
+                continue;
+            else if (c == '+' || c == '-') {
+                if (signCount >= 2) return false;
+
+                if (i == 0 || s.charAt(i - 1) == 'e' || s.charAt(i - 1) == 'E') {
+                    signCount++;
+                    continue;
+                } else
+                    return false;
+
+            } else if (c == '.') {
+                if (dotCount > 0 || i == s.length() - 1)
+                    return false;
+                else {
+                    dotCount++;
+                    continue;
+                }
+            } else if (c == 'e' || c == 'E') {
+                if (eCount > 0 || i == 0 || i == s.length() - 1)
+                    return false;
+                else if (i > 0 && s.charAt(i - 1) == '.') {
+                    return false;
+                } else {
+                    eCount++;
+                    continue;
+                }
+            } else {
+                return false;
+            }
+        }
+        return true;
+
+
+    }
+
+
+    /**
+     * https://oj.leetcode.com/problems/sqrtx/
+     * https://oj.leetcode.com/submissions/detail/10323137/
+     *
+     */
+    public static int sqrt(int x) {
+        double sRoot = 1.0;
+
+        while (Math.abs(x - sRoot * sRoot) >= 0.1) {
+            sRoot = (sRoot + x / sRoot) / 2.0;
+        }
+
+        return (int)sRoot;
+
+    }
+
+
+
 
 
 
@@ -3196,6 +3754,54 @@ public class LeetCode {
             }
             System.out.println("}\n");
         }
+
+        int numberOfSolution = totalNQueens(4);
+        System.out.println("numberOfSolution=" + numberOfSolution);
+
+        numberOfSolution = totalNQueens(5);
+        System.out.println("numberOfSolution=" + numberOfSolution);
+
+        System.out.println("Test maxSubArray");
+        System.out.println(maxSubArray2(new int[]{-2, 1, -3, 4, -1, 2, 1, -5, 4}));
+
+        System.out.println("Test sprial");
+        int[][] matrix =  new int[][] {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+        matrix = null;
+        matrix =  new int[][] {};
+        matrix =  new int[][] {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}};
+        List<Integer> list4 = spiralOrder(matrix);
+
+        for(int n : list4){
+            System.out.print(n + " ");
+        }
+
+
+        System.out.println("Test canJump");
+        System.out.println(canJump(new int[]{1,1,1,0}));
+
+
+        System.out.println("Test insert");
+        List<Interval> intervals = new ArrayList<Interval>();
+        intervals.add(new Interval(2, 4));
+        intervals.add(new Interval(5, 7));
+        intervals.add(new Interval(8, 10));
+        intervals.add(new Interval(11, 13));
+        Interval newInterval = new Interval(3, 8);
+
+        intervals = insert(intervals, newInterval);
+
+        System.out.println("Test getPermutation");
+//        System.out.println(getPermutation(3, 1));
+        System.out.println(getPermutation(9, factorial(7)));
+//        System.out.println(getPermutation(3, 3));
+//        System.out.println(getPermutation(3, 4));
+//        System.out.println(getPermutation(3, 5));
+//        System.out.println(getPermutation(3, 6));
+
+        System.out.println("Test isNumber");
+        System.out.println(isNumber("e9"));
+
+        System.out.println(sqrt(9));
 
         System.out.println("End");
     }
