@@ -2701,11 +2701,141 @@ public class LeetCode {
         return len;
     }
 
+    /**
+     * https://oj.leetcode.com/problems/merge-two-sorted-lists/
+     * https://oj.leetcode.com/submissions/detail/10316971/
+     */
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if (l1 == null) return l2;
+        if (l2 == null) return l1;
+
+        ListNode head = new ListNode(0);
+        ListNode n = head;
+
+        while (l1 != null || l2 != null) {
+            if (l1 == null) {
+                n.next = l2;
+                break;
+            } else if (l2 == null) {
+                n.next = l1;
+                break;
+            } else {
+                if (l1.val <= l2.val) {
+                    n.next = l1;
+                    l1 = l1.next;
+                } else {
+                    n.next = l2;
+                    l2 = l2.next;
+                }
+                n = n.next;
+                n.next = null;
+            }
+        }
+        return head.next;
 
 
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/add-binary/
+     * https://oj.leetcode.com/submissions/detail/10317701/
+     */
+    public String addBinary(String a, String b) {
+        if (a == null || a.length() == 0) return b;
+        if (b == null || b.length() == 0) return a;
+
+        String c = "";
+        int index1 = a.length() - 1;
+        int index2 = b.length() - 1;
+        int carryOver = 0;
+        while (index1 >= 0 || index2 >= 0) {
+            if (index1 >= 0) {
+                carryOver += a.charAt(index1) - '0';
+                index1--;
+            }
+            if (index2 >= 0) {
+                carryOver += b.charAt(index2) - '0';
+                index2--;
+            }
+            c = carryOver % 2 + c;
+            carryOver = carryOver / 2;
+        }
+
+        if(carryOver > 0){
+            c = carryOver + c;
+        }
+        return c;
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/valid-number/
+     * http://www.darrensunny.me/leetcode-valid-number/
+     * https://oj.leetcode.com/submissions/detail/10320818/
+     *
+     */
+    public static boolean isNumber(String s) {
+        if (s == null || s.trim().length() == 0) return false;
+        s = s.trim();
+        s = s.replaceAll(" ", "");
+        s = s.replaceAll("\t", "");
+        int signCount = 0;
+        int dotCount = 0;
+        int eCount = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if ('0' <= c && '9' >= c)
+                continue;
+            else if (c == '+' || c == '-') {
+                if (signCount >= 2) return false;
+
+                if (i == 0 || s.charAt(i - 1) == 'e' || s.charAt(i - 1) == 'E') {
+                    signCount++;
+                    continue;
+                } else
+                    return false;
+
+            } else if (c == '.') {
+                if (dotCount > 0 || i == s.length() - 1)
+                    return false;
+                else {
+                    dotCount++;
+                    continue;
+                }
+            } else if (c == 'e' || c == 'E') {
+                if (eCount > 0 || i == 0 || i == s.length() - 1)
+                    return false;
+                else if (i > 0 && s.charAt(i - 1) == '.') {
+                    return false;
+                } else {
+                    eCount++;
+                    continue;
+                }
+            } else {
+                return false;
+            }
+        }
+        return true;
 
 
+    }
 
+
+    /**
+     * https://oj.leetcode.com/problems/sqrtx/
+     * https://oj.leetcode.com/submissions/detail/10323137/
+     *
+     */
+    public static int sqrt(int x) {
+        double sRoot = 1.0;
+
+        while (Math.abs(x - sRoot * sRoot) >= 0.1) {
+            sRoot = (sRoot + x / sRoot) / 2.0;
+        }
+
+        return (int)sRoot;
+
+    }
 
 
 
@@ -3667,6 +3797,11 @@ public class LeetCode {
 //        System.out.println(getPermutation(3, 4));
 //        System.out.println(getPermutation(3, 5));
 //        System.out.println(getPermutation(3, 6));
+
+        System.out.println("Test isNumber");
+        System.out.println(isNumber("e9"));
+
+        System.out.println(sqrt(9));
 
         System.out.println("End");
     }
