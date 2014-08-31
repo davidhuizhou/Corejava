@@ -50,8 +50,8 @@ public class BST<Key extends Comparable<Key>, Value> {
 
     public void put(Key key, Value val) {
         if(val == null) {
-            delete(key);
-            return;
+//            delete(key);
+//            return;
         }
         put(root, key, val);
     }
@@ -72,6 +72,7 @@ public class BST<Key extends Comparable<Key>, Value> {
         int cmp = key.compareTo(x.key);
         if(cmp < 0) x.left = delete(x.left, key);
         else if(cmp > 0) x.right = delete(x.right, key);
+        return x;
 
     }
 

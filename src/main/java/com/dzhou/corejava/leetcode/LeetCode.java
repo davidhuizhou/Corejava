@@ -2838,10 +2838,225 @@ public class LeetCode {
     }
 
 
+    /**
+     * https://oj.leetcode.com/problems/climbing-stairs/
+     * http://www.darrensunny.me/leetcode-climbing-stairs/
+     * https://oj.leetcode.com/submissions/detail/10544378/
+     *
+     */
+    public static int climbStairs(int n) {
+        if(n <= 1) return 1;
+
+        int r0 = 1;
+        int r1 = 1;
+        int r2 = r0 + r1;
+
+        for(int i = 2; i <= n; i++){
+            r2 = r0 + r1;
+            r0 = r1;
+            r1 = r2;
+        }
+        return r2;
+
+    }
+
+    public static int climbStairs2(int n) {
+        if (n <= 1) return 1;
+
+        List<String> result = new ArrayList<String>();
+        climbStairs(n, "", result);
+        return result.size();
+    }
+
+
+    private static void climbStairs(int n, String steps, List<String> result) {
+        if (n == 0) {
+            result.add(steps);
+            return;
+        } else if (n == 1) {
+            result.add(steps + "1");
+            return;
+        } else {
+            climbStairs(n - 1, steps + "1", result);
+            climbStairs(n - 2, steps + "2", result);
+        }
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/simplify-path/
+     * http://www.darrensunny.me/leetcode-simplify-path/
+     * https://oj.leetcode.com/submissions/detail/10547086/
+     *
+     */
+    public static String simplifyPath(String path) {
+        if (path == null || path.trim().length() == 0)
+            return path;
+
+        path = path.trim();
+        Stack<String> stack = new Stack<String>();
+
+        String dir = "";
+        for (int i = 0; i < path.length(); i++) {
+            char c = path.charAt(i);
+
+            if (c == '/') {
+                if (dir.equals("..")) {
+                    if (!stack.isEmpty())
+                        stack.pop();
+
+                } else if (dir.length() > 0) {
+                    if (!dir.equals("."))
+                        stack.push(dir);
+                }
+                dir = "";
+
+            } else {
+                dir += c;
+            }
+        }
+
+        if (dir.equals("..")) {
+            if (!stack.isEmpty())
+                stack.pop();
+        } else if (dir.length() > 0) {
+            if (!dir.equals("."))
+                stack.push(dir);
+        }
+
+        String sPath = "";
+        while (!stack.isEmpty()) {
+            if (sPath.length() > 0) {
+                sPath = stack.pop() + "/" + sPath;
+            } else {
+                sPath = stack.pop();
+            }
+        }
+        sPath = "/" + sPath;
+
+        return sPath;
+
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/set-matrix-zeroes/
+     * http://www.programcreek.com/2012/12/leetcode-set-matrix-zeroes-java/
+     *
+     */
+    public static void setZeroes(int[][] matrix) {
+        boolean firstRowZero = false;
+        boolean firstColumnZero = false;
+
+        //set first row and column zero or not
+        for(int i=0; i<matrix.length; i++){
+            if(matrix[i][0] == 0){
+                firstColumnZero = true;
+                break;
+            }
+        }
+
+        for(int i=0; i<matrix[0].length; i++){
+            if(matrix[0][i] == 0){
+                firstRowZero = true;
+                break;
+            }
+        }
+
+        //mark zeros on first row and column
+        for(int i=1; i<matrix.length; i++){
+            for(int j=1; j<matrix[0].length; j++){
+                if(matrix[i][j] == 0){
+                    matrix[i][0] = 0;
+                    matrix[0][j] = 0;
+                }
+            }
+        }
+
+        //use mark to set elements
+        for(int i=1; i<matrix.length; i++){
+            for(int j=1; j<matrix[0].length; j++){
+                if(matrix[i][0] == 0 || matrix[0][j] == 0){
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+
+        //set first column and row
+        if(firstColumnZero){
+            for(int i=0; i<matrix.length; i++)
+                matrix[i][0] = 0;
+        }
+
+        if(firstRowZero){
+            for(int i=0; i<matrix[0].length; i++)
+                matrix[0][i] = 0;
+        }
 
 
 
+    }
 
+    /**
+    * https://oj.leetcode.com/problems/search-a-2d-matrix/
+     * http://www.programcreek.com/2013/01/leetcode-search-a-2d-matrix-java/
+     * https://oj.leetcode.com/submissions/detail/10560534/
+    */
+    public static boolean searchMatrix(int[][] matrix, int target) {
+        if(matrix==null || matrix.length==0 || matrix[0].length==0)
+            return false;
+
+        int m = matrix.length;
+        int n = matrix[0].length;
+
+        int start = 0;
+        int end = m*n-1;
+
+        while(start<=end){
+            int mid=(start+end)/2;
+            int midX=mid/n;
+            int midY=mid%n;
+
+            if(matrix[midX][midY]==target)
+                return true;
+
+            if(matrix[midX][midY]<target){
+                start=mid+1;
+            }else{
+                end=mid-1;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean searchMatrix2(int[][] matrix, int target) {
+        if(matrix == null || matrix.length == 0 || matrix[0].length == 0)
+            return false;
+
+        int m = matrix.length, n = matrix[0].length;
+        int lo = 0, hi = m - 1;
+
+        while(lo <= hi) {
+            if(target < matrix[lo][0] || target > matrix[hi][n-1])
+                return false;
+
+            int mid = lo + (hi - lo)/2;
+            if(target < matrix[mid][0]) hi = mid -1;
+            else if (target > matrix[mid][n-1]) lo = mid + 1;
+            else {
+                int clo = 0, chi = n - 1;
+                while(clo <= chi) {
+                    int cmid = clo + (chi - clo)/2;
+                    if(target < matrix[mid][cmid]) chi = cmid - 1;
+                    else if (target > matrix[mid][cmid]) clo = cmid + 1;
+                    else return true;
+                }
+                return false;
+            }
+        }
+        return false;
+    }
 
 
     /////////////////////////////////////////////
@@ -3802,6 +4017,33 @@ public class LeetCode {
         System.out.println(isNumber("e9"));
 
         System.out.println(sqrt(9));
+
+        System.out.println("Test climbSteps");
+        System.out.println(climbStairs(15));
+
+        System.out.println("Test simplifyPath");
+        System.out.println(simplifyPath("/home/"));
+        System.out.println(simplifyPath("/a/./b/../../c/"));
+        System.out.println(simplifyPath("/../"));
+        System.out.println(simplifyPath("/home//foo/"));
+        System.out.println(simplifyPath("/..."));
+        System.out.println(simplifyPath("/home/../../.."));
+        System.out.println(simplifyPath("/home/foo/./bar/"));
+
+
+        System.out.println("Test setZeroes");
+
+        //int[][] matrix1 = {{Integer.MAX_VALUE, Integer.MIN_VALUE, 160,16,488}};
+
+        int[][] matrix1 = {{Integer.MAX_VALUE, Integer.MIN_VALUE, 160,16,488, -1, 2, 3}};
+        StringUtils.printMatrix(matrix1);
+        setZeroes(matrix1);
+        StringUtils.printMatrix(matrix1);
+
+        System.out.println("Test searchMatrix");
+        int[][] matrix2 = {{1,3}};
+        System.out.println(searchMatrix(matrix2, 2));
+
 
         System.out.println("End");
     }
