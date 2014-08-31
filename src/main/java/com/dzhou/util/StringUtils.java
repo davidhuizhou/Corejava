@@ -666,7 +666,7 @@ public class StringUtils {
     public static void printArray(int[] A){
         System.out.println("\n");
         for(int i : A){
-            System.out.println("" +i + ", ");
+            System.out.print("" +i + ", ");
         }
         System.out.println("\n");
     }
@@ -674,7 +674,7 @@ public class StringUtils {
     public static void printList(List<Integer> A){
         System.out.println("\n");
         for(Integer i : A){
-            System.out.println("" +i + ", ");
+            System.out.print("" +i + ", ");
         }
         System.out.println("\n");
     }

@@ -3058,6 +3058,100 @@ public class LeetCode {
         return false;
     }
 
+    /**
+     * https://oj.leetcode.com/problems/sort-colors/
+     * http://www.darrensunny.me/leetcode-sort-colors/
+     * https://oj.leetcode.com/submissions/detail/10588033/
+     *
+     */
+    public static void sortColors(int[] A) {
+        if (A == null || A.length == 0) return;
+
+        int startZero = 0, startOne = 0, startTwo = 0, countZero = 0, countOne = 0, countThree = 0;
+        for (int i = 0; i < A.length; i++) {
+            if (A[i] == 0) {
+                int temp = A[i];
+                A[i] = A[startTwo];
+                A[startTwo] = A[startOne];
+                A[startOne] = temp;
+                countZero++;
+                startTwo++;
+                startOne++;
+            } else if (A[i] == 1) {
+                int temp = A[i];
+                A[i] = A[startTwo];
+                A[startTwo] = temp;
+                countOne++;
+                startTwo++;
+            } else {
+                countThree++;
+
+            }
+        }
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/combinations/
+     * http://www.darrensunny.me/leetcode-combinations/
+     * https://oj.leetcode.com/submissions/detail/10591173/
+     *
+     */
+    public static List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        List<Integer> list = new ArrayList<Integer>();
+        combine(result, list, 1, k, n);
+        return result;
+    }
+
+    private static void combine(List<List<Integer>> result, List<Integer> list, int start, int k, int n) {
+        if (k == 0) {
+            result.add(list);
+            return;
+        }
+
+        for (int i = start; i <= n - k + 1; i++) {
+            list.add(i);
+            combine(result, new ArrayList<Integer>(list), i + 1, k - 1, n);
+            list.remove(new Integer(i));
+        }
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/subsets/
+     * http://www.darrensunny.me/leetcode-subsets/
+     * https://oj.leetcode.com/submissions/detail/10592291/
+     */
+    public static List<List<Integer>> subsets(int[] S) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        List<Integer> list = new ArrayList<Integer>();
+        result.add(list);
+
+        if (S == null || S.length == 0) return result;
+
+        Arrays.sort(S);
+
+        for (int i = 1; i <= S.length; i++) {
+
+            combine(result, new ArrayList<Integer>(), S, 1, i, S.length);
+        }
+        return result;
+
+    }
+
+    private static void combine(List<List<Integer>> result, List<Integer> list, int[] S, int start, int k, int n) {
+        if (k == 0) {
+            result.add(list);
+            return;
+        }
+
+        for (int i = start; i <= n - k + 1; i++) {
+            list.add(S[i - 1]);
+            combine(result, new ArrayList<Integer>(list), S, i + 1, k - 1, n);
+            list.remove(new Integer(S[i - 1]));
+        }
+
+    }
 
     /////////////////////////////////////////////
 
@@ -4043,6 +4137,26 @@ public class LeetCode {
         System.out.println("Test searchMatrix");
         int[][] matrix2 = {{1,3}};
         System.out.println(searchMatrix(matrix2, 2));
+
+        System.out.println("Test sortColors");
+        //int[] B = {2,2,2};
+        int[] B = {0,1,2, 2,1,1,0, 2,1, 0, 2, 1, 0};
+        StringUtils.printArray(B);
+        sortColors(B);
+        StringUtils.printArray(B);
+//
+//        System.out.println("Test combine");
+//        List<List<Integer>> list5 = combine(4, 0);
+//        for(List<Integer> list55 : list5){
+//            StringUtils.printList(list55);
+//        }
+
+        System.out.println("Test subsets");
+        int[] S1 = {4, 1, 3};
+        List<List<Integer>>list5 = subsets(S1);
+        for(List<Integer> list55 : list5){
+            StringUtils.printList(list55);
+        }
 
 
         System.out.println("End");
