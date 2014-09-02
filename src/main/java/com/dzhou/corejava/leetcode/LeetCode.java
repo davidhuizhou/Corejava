@@ -2838,11 +2838,427 @@ public class LeetCode {
     }
 
 
+    /**
+     * https://oj.leetcode.com/problems/climbing-stairs/
+     * http://www.darrensunny.me/leetcode-climbing-stairs/
+     * https://oj.leetcode.com/submissions/detail/10544378/
+     *
+     */
+    public static int climbStairs(int n) {
+        if(n <= 1) return 1;
+
+        int r0 = 1;
+        int r1 = 1;
+        int r2 = r0 + r1;
+
+        for(int i = 2; i <= n; i++){
+            r2 = r0 + r1;
+            r0 = r1;
+            r1 = r2;
+        }
+        return r2;
+
+    }
+
+    public static int climbStairs2(int n) {
+        if (n <= 1) return 1;
+
+        List<String> result = new ArrayList<String>();
+        climbStairs(n, "", result);
+        return result.size();
+    }
+
+
+    private static void climbStairs(int n, String steps, List<String> result) {
+        if (n == 0) {
+            result.add(steps);
+            return;
+        } else if (n == 1) {
+            result.add(steps + "1");
+            return;
+        } else {
+            climbStairs(n - 1, steps + "1", result);
+            climbStairs(n - 2, steps + "2", result);
+        }
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/simplify-path/
+     * http://www.darrensunny.me/leetcode-simplify-path/
+     * https://oj.leetcode.com/submissions/detail/10547086/
+     *
+     */
+    public static String simplifyPath(String path) {
+        if (path == null || path.trim().length() == 0)
+            return path;
+
+        path = path.trim();
+        Stack<String> stack = new Stack<String>();
+
+        String dir = "";
+        for (int i = 0; i < path.length(); i++) {
+            char c = path.charAt(i);
+
+            if (c == '/') {
+                if (dir.equals("..")) {
+                    if (!stack.isEmpty())
+                        stack.pop();
+
+                } else if (dir.length() > 0) {
+                    if (!dir.equals("."))
+                        stack.push(dir);
+                }
+                dir = "";
+
+            } else {
+                dir += c;
+            }
+        }
+
+        if (dir.equals("..")) {
+            if (!stack.isEmpty())
+                stack.pop();
+        } else if (dir.length() > 0) {
+            if (!dir.equals("."))
+                stack.push(dir);
+        }
+
+        String sPath = "";
+        while (!stack.isEmpty()) {
+            if (sPath.length() > 0) {
+                sPath = stack.pop() + "/" + sPath;
+            } else {
+                sPath = stack.pop();
+            }
+        }
+        sPath = "/" + sPath;
+
+        return sPath;
+
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/set-matrix-zeroes/
+     * http://www.programcreek.com/2012/12/leetcode-set-matrix-zeroes-java/
+     *
+     */
+    public static void setZeroes(int[][] matrix) {
+        boolean firstRowZero = false;
+        boolean firstColumnZero = false;
+
+        //set first row and column zero or not
+        for(int i=0; i<matrix.length; i++){
+            if(matrix[i][0] == 0){
+                firstColumnZero = true;
+                break;
+            }
+        }
+
+        for(int i=0; i<matrix[0].length; i++){
+            if(matrix[0][i] == 0){
+                firstRowZero = true;
+                break;
+            }
+        }
+
+        //mark zeros on first row and column
+        for(int i=1; i<matrix.length; i++){
+            for(int j=1; j<matrix[0].length; j++){
+                if(matrix[i][j] == 0){
+                    matrix[i][0] = 0;
+                    matrix[0][j] = 0;
+                }
+            }
+        }
+
+        //use mark to set elements
+        for(int i=1; i<matrix.length; i++){
+            for(int j=1; j<matrix[0].length; j++){
+                if(matrix[i][0] == 0 || matrix[0][j] == 0){
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+
+        //set first column and row
+        if(firstColumnZero){
+            for(int i=0; i<matrix.length; i++)
+                matrix[i][0] = 0;
+        }
+
+        if(firstRowZero){
+            for(int i=0; i<matrix[0].length; i++)
+                matrix[0][i] = 0;
+        }
 
 
 
+    }
+
+    /**
+    * https://oj.leetcode.com/problems/search-a-2d-matrix/
+     * http://www.programcreek.com/2013/01/leetcode-search-a-2d-matrix-java/
+     * https://oj.leetcode.com/submissions/detail/10560534/
+    */
+    public static boolean searchMatrix(int[][] matrix, int target) {
+        if(matrix==null || matrix.length==0 || matrix[0].length==0)
+            return false;
+
+        int m = matrix.length;
+        int n = matrix[0].length;
+
+        int start = 0;
+        int end = m*n-1;
+
+        while(start<=end){
+            int mid=(start+end)/2;
+            int midX=mid/n;
+            int midY=mid%n;
+
+            if(matrix[midX][midY]==target)
+                return true;
+
+            if(matrix[midX][midY]<target){
+                start=mid+1;
+            }else{
+                end=mid-1;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean searchMatrix2(int[][] matrix, int target) {
+        if(matrix == null || matrix.length == 0 || matrix[0].length == 0)
+            return false;
+
+        int m = matrix.length, n = matrix[0].length;
+        int lo = 0, hi = m - 1;
+
+        while(lo <= hi) {
+            if(target < matrix[lo][0] || target > matrix[hi][n-1])
+                return false;
+
+            int mid = lo + (hi - lo)/2;
+            if(target < matrix[mid][0]) hi = mid -1;
+            else if (target > matrix[mid][n-1]) lo = mid + 1;
+            else {
+                int clo = 0, chi = n - 1;
+                while(clo <= chi) {
+                    int cmid = clo + (chi - clo)/2;
+                    if(target < matrix[mid][cmid]) chi = cmid - 1;
+                    else if (target > matrix[mid][cmid]) clo = cmid + 1;
+                    else return true;
+                }
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/sort-colors/
+     * http://www.darrensunny.me/leetcode-sort-colors/
+     * https://oj.leetcode.com/submissions/detail/10588033/
+     *
+     */
+    public static void sortColors(int[] A) {
+        if (A == null || A.length == 0) return;
+
+        int startZero = 0, startOne = 0, startTwo = 0, countZero = 0, countOne = 0, countThree = 0;
+        for (int i = 0; i < A.length; i++) {
+            if (A[i] == 0) {
+                int temp = A[i];
+                A[i] = A[startTwo];
+                A[startTwo] = A[startOne];
+                A[startOne] = temp;
+                countZero++;
+                startTwo++;
+                startOne++;
+            } else if (A[i] == 1) {
+                int temp = A[i];
+                A[i] = A[startTwo];
+                A[startTwo] = temp;
+                countOne++;
+                startTwo++;
+            } else {
+                countThree++;
+
+            }
+        }
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/combinations/
+     * http://www.darrensunny.me/leetcode-combinations/
+     * https://oj.leetcode.com/submissions/detail/10591173/
+     *
+     */
+    public static List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        List<Integer> list = new ArrayList<Integer>();
+        combine(result, list, 1, k, n);
+        return result;
+    }
+
+    private static void combine(List<List<Integer>> result, List<Integer> list, int start, int k, int n) {
+        if (k == 0) {
+            result.add(list);
+            return;
+        }
+
+        for (int i = start; i <= n - k + 1; i++) {
+            list.add(i);
+            combine(result, new ArrayList<Integer>(list), i + 1, k - 1, n);
+            list.remove(new Integer(i));
+        }
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/subsets/
+     * http://www.darrensunny.me/leetcode-subsets/
+     * https://oj.leetcode.com/submissions/detail/10592291/
+     */
+    public static List<List<Integer>> subsets(int[] S) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        List<Integer> list = new ArrayList<Integer>();
+        result.add(list);
+
+        if (S == null || S.length == 0) return result;
+
+        Arrays.sort(S);
+
+        for (int i = 1; i <= S.length; i++) {
+
+            combine(result, new ArrayList<Integer>(), S, 1, i, S.length);
+        }
+        return result;
+
+    }
+
+    private static void combine(List<List<Integer>> result, List<Integer> list, int[] S, int start, int k, int n) {
+        if (k == 0) {
+            result.add(list);
+            return;
+        }
+
+        for (int i = start; i <= n - k + 1; i++) {
+            list.add(S[i - 1]);
+            combine(result, new ArrayList<Integer>(list), S, i + 1, k - 1, n);
+            list.remove(new Integer(S[i - 1]));
+        }
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/minimum-window-substring/
+     * http://leetcode.com/2010/11/finding-minimum-window-in-s-which.html
+     * https://oj.leetcode.com/submissions/detail/10653929/
+     *
+     */
+    public static String minWindow(String S, String T) {
+        String result = "";
+        if (S == null || T == null || S.length() == 0 || T.length() == 0)
+            return "";
+        Map<Character, Integer> countMap = countMap(T);
+        Map<Character, Integer> map = new HashMap<Character, Integer>();
+        Map<Character, Integer> temp = new HashMap<Character, Integer>(countMap);
+
+        int i = 0, j = 0;
+
+        //Advanced i j to the first letter that is in the T
+        while (i < S.length() && j < S.length() && !countMap.containsKey(S.charAt(i))) {
+            i++;
+            j++;
+
+        }
+
+        // Advanced j to to the position that S.substring(i, j) contains T
+        while (!temp.isEmpty()) {
+            //If j reaches the end of S return
+            if (j == S.length()) return result;
+            char c = S.charAt(j);
+            if (countMap.containsKey(c)) {
+                if (map.containsKey(c))
+                    map.put(c, map.get(c) + 1);
+                else
+                    map.put(c, 1);
+
+                if (temp.containsKey(c)) {
+
+                    if (temp.get(c) > 1)
+                        temp.put(c, temp.get(c) - 1);
+                    else
+                        temp.remove(c);
+                }
+
+            }
+            j++;
+        }
+        result = S.substring(i, j);
 
 
+        while (true) {
+            //Advance i to the position that S.substring(i, j) still has all characters in T
+            //until count of S.charAt(i) is less than it is in countMap
+            while (i < j) {
+                char c = S.charAt(i);
+                if (map.containsKey(c)) {
+                    map.put(c, map.get(c) - 1);
+                    if (map.get(c) < countMap.get(c)) {
+                        if (j - i < result.length()) {
+                            result = S.substring(i, j);
+                        }
+                        break;
+                    }
+                }
+                i++;
+            }
+
+            char c = S.charAt(i);
+            i++;
+            while (i < j && !countMap.containsKey(S.charAt(i))) i++;
+
+            while (j < S.length() && S.charAt(j) != c) {
+                char b = S.charAt(j);
+                if (map.containsKey(b)) {
+                    map.put(b, map.get(b) + 1);
+                }
+                j++;
+            }
+
+            if (j < S.length()) {
+                map.put(c, map.get(c) + 1);
+                j++;
+                if (j - i < result.length()) {
+                    result = S.substring(i, j);
+                }
+            } else {
+                break;
+            }
+
+
+        }
+
+        return result;
+
+
+    }
+
+    private static Map<Character, Integer> countMap(String s) {
+        Map<Character, Integer> map = new HashMap<Character, Integer>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (map.containsKey(c))
+                map.put(c, map.get(c) + 1);
+            else
+                map.put(c, 1);
+        }
+        return map;
+    }
 
     /////////////////////////////////////////////
 
@@ -3802,6 +4218,56 @@ public class LeetCode {
         System.out.println(isNumber("e9"));
 
         System.out.println(sqrt(9));
+
+        System.out.println("Test climbSteps");
+        System.out.println(climbStairs(15));
+
+        System.out.println("Test simplifyPath");
+        System.out.println(simplifyPath("/home/"));
+        System.out.println(simplifyPath("/a/./b/../../c/"));
+        System.out.println(simplifyPath("/../"));
+        System.out.println(simplifyPath("/home//foo/"));
+        System.out.println(simplifyPath("/..."));
+        System.out.println(simplifyPath("/home/../../.."));
+        System.out.println(simplifyPath("/home/foo/./bar/"));
+
+
+        System.out.println("Test setZeroes");
+
+        //int[][] matrix1 = {{Integer.MAX_VALUE, Integer.MIN_VALUE, 160,16,488}};
+
+        int[][] matrix1 = {{Integer.MAX_VALUE, Integer.MIN_VALUE, 160,16,488, -1, 2, 3}};
+        StringUtils.printMatrix(matrix1);
+        setZeroes(matrix1);
+        StringUtils.printMatrix(matrix1);
+
+        System.out.println("Test searchMatrix");
+        int[][] matrix2 = {{1,3}};
+        System.out.println(searchMatrix(matrix2, 2));
+
+        System.out.println("Test sortColors");
+        //int[] B = {2,2,2};
+        int[] B = {0,1,2, 2,1,1,0, 2,1, 0, 2, 1, 0};
+        StringUtils.printArray(B);
+        sortColors(B);
+        StringUtils.printArray(B);
+//
+//        System.out.println("Test combine");
+//        List<List<Integer>> list5 = combine(4, 0);
+//        for(List<Integer> list55 : list5){
+//            StringUtils.printList(list55);
+//        }
+
+        System.out.println("Test subsets");
+        int[] S1 = {4, 1, 3};
+        List<List<Integer>>list5 = subsets(S1);
+        for(List<Integer> list55 : list5){
+            StringUtils.printList(list55);
+        }
+
+        System.out.println("Test minWindow");
+        System.out.println(minWindow("adobecodebancbbcaa", "abc"));
+
 
         System.out.println("End");
     }

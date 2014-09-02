@@ -345,6 +345,19 @@ public class StringUtils {
 
     }
 
+    public static void printMatrix(int[][] matrix){
+        int m = matrix.length;
+        int n = matrix[0].length;
+
+        for(int i = 0; i < m; i ++) {
+            for (int j = 0; j < n; j++)
+                System.out.print(matrix[i][j] + " ");
+            System.out.println("");
+
+        }
+
+    }
+
     public static void setZero(int n){
         int[][] N = generateMatrix(n);
         System.out.println("The original matrix is - ");
@@ -653,7 +666,7 @@ public class StringUtils {
     public static void printArray(int[] A){
         System.out.println("\n");
         for(int i : A){
-            System.out.println("" +i + ", ");
+            System.out.print("" +i + ", ");
         }
         System.out.println("\n");
     }
@@ -661,7 +674,7 @@ public class StringUtils {
     public static void printList(List<Integer> A){
         System.out.println("\n");
         for(Integer i : A){
-            System.out.println("" +i + ", ");
+            System.out.print("" +i + ", ");
         }
         System.out.println("\n");
     }
