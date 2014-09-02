@@ -3153,6 +3153,113 @@ public class LeetCode {
 
     }
 
+    /**
+     * https://oj.leetcode.com/problems/minimum-window-substring/
+     * http://leetcode.com/2010/11/finding-minimum-window-in-s-which.html
+     * https://oj.leetcode.com/submissions/detail/10653929/
+     *
+     */
+    public static String minWindow(String S, String T) {
+        String result = "";
+        if (S == null || T == null || S.length() == 0 || T.length() == 0)
+            return "";
+        Map<Character, Integer> countMap = countMap(T);
+        Map<Character, Integer> map = new HashMap<Character, Integer>();
+        Map<Character, Integer> temp = new HashMap<Character, Integer>(countMap);
+
+        int i = 0, j = 0;
+
+        //Advanced i j to the first letter that is in the T
+        while (i < S.length() && j < S.length() && !countMap.containsKey(S.charAt(i))) {
+            i++;
+            j++;
+
+        }
+
+        // Advanced j to to the position that S.substring(i, j) contains T
+        while (!temp.isEmpty()) {
+            //If j reaches the end of S return
+            if (j == S.length()) return result;
+            char c = S.charAt(j);
+            if (countMap.containsKey(c)) {
+                if (map.containsKey(c))
+                    map.put(c, map.get(c) + 1);
+                else
+                    map.put(c, 1);
+
+                if (temp.containsKey(c)) {
+
+                    if (temp.get(c) > 1)
+                        temp.put(c, temp.get(c) - 1);
+                    else
+                        temp.remove(c);
+                }
+
+            }
+            j++;
+        }
+        result = S.substring(i, j);
+
+
+        while (true) {
+            //Advance i to the position that S.substring(i, j) still has all characters in T
+            //until count of S.charAt(i) is less than it is in countMap
+            while (i < j) {
+                char c = S.charAt(i);
+                if (map.containsKey(c)) {
+                    map.put(c, map.get(c) - 1);
+                    if (map.get(c) < countMap.get(c)) {
+                        if (j - i < result.length()) {
+                            result = S.substring(i, j);
+                        }
+                        break;
+                    }
+                }
+                i++;
+            }
+
+            char c = S.charAt(i);
+            i++;
+            while (i < j && !countMap.containsKey(S.charAt(i))) i++;
+
+            while (j < S.length() && S.charAt(j) != c) {
+                char b = S.charAt(j);
+                if (map.containsKey(b)) {
+                    map.put(b, map.get(b) + 1);
+                }
+                j++;
+            }
+
+            if (j < S.length()) {
+                map.put(c, map.get(c) + 1);
+                j++;
+                if (j - i < result.length()) {
+                    result = S.substring(i, j);
+                }
+            } else {
+                break;
+            }
+
+
+        }
+
+        return result;
+
+
+    }
+
+    private static Map<Character, Integer> countMap(String s) {
+        Map<Character, Integer> map = new HashMap<Character, Integer>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (map.containsKey(c))
+                map.put(c, map.get(c) + 1);
+            else
+                map.put(c, 1);
+        }
+        return map;
+    }
+
     /////////////////////////////////////////////
 
     /////////////////////////////////////////////
@@ -4157,6 +4264,9 @@ public class LeetCode {
         for(List<Integer> list55 : list5){
             StringUtils.printList(list55);
         }
+
+        System.out.println("Test minWindow");
+        System.out.println(minWindow("adobecodebancbbcaa", "abc"));
 
 
         System.out.println("End");
