@@ -3260,6 +3260,111 @@ public class LeetCode {
         return map;
     }
 
+    /**
+     * https://oj.leetcode.com/problems/word-search/
+     * https://oj.leetcode.com/submissions/detail/10721616/
+     *
+     */
+    public static boolean exist(char[][] board, String word) {
+        if(board == null || word == null || board.length == 0 || board[0].length == 0 || word.length() == 0)
+            return false;
+
+        List<Position> startPositions = getStartPositions(board, word);
+        for(Position p : startPositions) {
+            Map<Position, Boolean> map = new HashMap<Position, Boolean>();
+            map.put(p, Boolean.TRUE);
+            if(exist(board, p, map, word.substring(1)))
+                return true;
+        }
+        return false;
+
+    }
+
+    private static boolean exist(char[][] board, Position p, Map<Position, Boolean> map, String word) {
+        if(word.length() == 0) return true;
+        char c = word.charAt(0);
+        int i = p.i, j = p.j;
+
+        Position nextP = new Position(i, j - 1);
+        if(isAvailable(board, nextP, map, c)) {
+            map.put(nextP, Boolean.TRUE);
+            if(exist(board, nextP, map, word.substring(1)))
+                return true;
+            map.remove(nextP);
+        }
+
+        nextP = new Position(i, j + 1);
+        if(isAvailable(board, nextP, map, c)) {
+            map.put(nextP, Boolean.TRUE);
+            if(exist(board, nextP, map, word.substring(1)))
+                return true;
+            map.remove(nextP);
+        }
+
+        nextP = new Position(i - 1, j);
+        if(isAvailable(board, nextP, map, c)) {
+            map.put(nextP, Boolean.TRUE);
+            if(exist(board, nextP, map, word.substring(1)))
+                return true;
+            map.remove(nextP);
+        }
+
+        nextP = new Position(i + 1, j);
+        if(isAvailable(board, nextP, map, c)) {
+            map.put(nextP, Boolean.TRUE);
+            if(exist(board, nextP, map, word.substring(1)))
+                return true;
+            map.remove(nextP);
+        }
+
+        return false;
+
+
+    }
+
+    private static boolean isAvailable(char[][] board, Position p, Map<Position, Boolean> map, char c){
+        return p.i >= 0 && p.i < board.length && p.j >= 0 && p.j < board[0].length
+                && !map.containsKey(p) && board[p.i][p.j] == c;
+    }
+
+    private static List<Position> getStartPositions(char[][] board, String word) {
+        List<Position> positions = new ArrayList<Position>();
+        char c = word.charAt(0);
+        for(int i = 0; i < board.length; i++)
+            for(int j = 0; j < board[0].length; j++)
+                if(board[i][j] == c)
+                    positions.add(new Position(i, j));
+        return positions;
+    }
+
+    private static class Position {
+        int i;
+        int j;
+
+        Position(int i, int j) {
+            this.i = i;
+            this.j = j;
+        }
+
+        public boolean equals(Object p) {
+            if(p instanceof Position)
+                return this.i == ((Position)p).i && this.j == ((Position)p).j;
+            else
+                return false;
+        }
+
+        public int hashCode()
+        {
+            return "row".hashCode() * i + "col".hashCode() * j;
+        }
+
+
+    }
+
+
+
+
+
     /////////////////////////////////////////////
 
     /////////////////////////////////////////////
@@ -4267,6 +4372,14 @@ public class LeetCode {
 
         System.out.println("Test minWindow");
         System.out.println(minWindow("adobecodebancbbcaa", "abc"));
+
+
+        System.out.println("Test exist");
+        char[][] board1 = { {'A', 'B', 'C', 'E'},
+                            {'S', 'F', 'C', 'S'},
+                            {'A', 'D', 'E', 'E'}};
+        String word = "ABCCED";
+        System.out.println(exist(board1, word));
 
 
         System.out.println("End");
