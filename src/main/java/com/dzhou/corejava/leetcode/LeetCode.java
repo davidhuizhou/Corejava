@@ -2618,7 +2618,6 @@ public class LeetCode {
     }
 
     static class IntervalStartComparator implements Comparator<Interval> {
-        @Override
         public int compare(Interval a, Interval b) {
             return new Integer(a.start).compareTo(new Integer(b.start));
         }
