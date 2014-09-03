@@ -18,6 +18,15 @@ public class Insertion {
         }
 
     }
+
+    public static void sort(Object[] a, Comparator c){
+        int N = a.length;
+        for(int i = 0; i < N; i++){
+            for(int j = i; j > 0 && less(c, a[j], a[j-1]); j--){
+                exch(a, j, j-1);
+            }
+        }
+    }
     // is v < w ?
     private static boolean less(Comparable v, Comparable w) {
         return (v.compareTo(w) < 0);
@@ -34,4 +43,6 @@ public class Insertion {
         a[i] = a[j];
         a[j] = swap;
     }
+
+
 }

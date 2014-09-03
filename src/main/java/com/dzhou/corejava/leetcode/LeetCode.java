@@ -677,6 +677,25 @@ public class LeetCode {
     }
 
     /**
+     * https://oj.leetcode.com/problems/remove-duplicates-from-sorted-array-ii/
+     * https://oj.leetcode.com/submissions/detail/10762488/
+     *
+     */
+    public static int removeDuplicates2(int[] A) {
+        if (A.length <= 2)
+            return A.length;
+
+        int k = 1;
+        for (int i = 2; i < A.length; i++) {
+
+            if (!(A[i] == A[k] && A[i] == A[k-1]))
+                A[++k] = A[i];
+        }
+        return k + 1;
+    }
+
+
+    /**
      * https://oj.leetcode.com/problems/remove-element/
      * https://oj.leetcode.com/submissions/detail/9357121/
      */
@@ -4380,6 +4399,10 @@ public class LeetCode {
                             {'A', 'D', 'E', 'E'}};
         String word = "ABCCED";
         System.out.println(exist(board1, word));
+
+
+        System.out.println("Test removeDuplicates2");
+        System.out.println(removeDuplicates2(new int[]{1,1,1,2,2,3}));
 
 
         System.out.println("End");

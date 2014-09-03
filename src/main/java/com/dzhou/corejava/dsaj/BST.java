@@ -72,12 +72,13 @@ public class BST<Key extends Comparable<Key>, Value> {
     }
 
 
-    private Node delete(Node x, Key key) {
-        if(x == null) return null;
-        int cmp = key.compareTo(x.key);
-        if(cmp < 0) x.left = delete(x.left, key);
-        else if(cmp > 0) x.right = delete(x.right, key);
-        return x;
+//    private Node delete(Node x, Key key) {
+//        if (x == null) return null;
+//        int cmp = key.compareTo(x.key);
+//        if (cmp < 0) x.left = delete(x.left, key);
+//        else if (cmp > 0) x.right = delete(x.right, key);
+//        return x;
+//    }
 
     public Key min() {
         if(isEmpty()) return null;
