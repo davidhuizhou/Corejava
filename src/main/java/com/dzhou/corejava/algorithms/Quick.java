@@ -38,27 +38,26 @@ public class Quick {
      * Rearranges the array in ascending order, using the natural order.
      * @param a the array to be sorted
      */
-    public static void sort(int[] a) {
+    public static void sort(Comparable[] a) {
 //        StdRandom.shuffle(a);
         shuffle(a);
         sort(a, 0, a.length - 1);
     }
 
-    private static void shuffle(int[] a){
+    private static void shuffle(Object[] a){
         int N = a.length;
+        Random random = new Random(System.currentTimeMillis());
+        for(int i = 0; i < N; i++){
 
-        for(int i = 0; i < a.length; i++){
             int r = random.nextInt(N - i);
             exch(a, i, i + r);
         }
 
-
-
     }
 
     // quicksort the subarray from a[lo] to a[hi]
-    private static void sort(int[] a, int lo, int hi) {
-        if (hi <= lo) return;
+    private static void sort(Comparable[] a, int lo, int hi) {
+        if(lo >= hi) return;
         int j = partition(a, lo, hi);
         sort(a, lo, j-1);
         sort(a, j+1, hi);
@@ -67,38 +66,32 @@ public class Quick {
 
     // partition the subarray a[lo..hi] so that a[lo..j-1] <= a[j] <= a[j+1..hi]
     // and return the index j.
-    private static int partition(int[] a, int lo, int hi) {
-        int key = a[lo];
-        int i = lo;
-        int j = hi +1;
-
+    private static int partition(Comparable[] a, int lo, int hi) {
+        int i = lo, j = hi + 1;
+        Comparable v = a[lo];
         while(true){
-            while(a[++i] < key)
-                if(i==hi) break;
+            while(less(a[++i], v)) if (i == hi) break;
+            while(less(v, a[--j])) if (j == lo) break;
 
-            while(a[--j] > key)
-                if(j == lo) break;
-
-            if(i >= j)
-                break;
-
+            if(i >= j) break;
             exch(a, i, j);
         }
         exch(a, lo, j);
         return j;
+
     }
 
-    private static void sortThree(int[] a, int lo, int hi){
-        if(hi <= lo) return;
+    private static void sortThreeWay(Comparable[] a, int lo, int hi){
+        if(lo >= hi) return;
         int lt = lo, i = lo + 1, gt = hi;
-        int key = a[lo];
-        while(i <= gt){
-            if(a[i] < key) exch(a, lt++, i++);
-            else if (a[i] > key) exch(a, i, gt--);
+        Comparable v = a[lo];
+        while(i <= gt) {
+            if(less(a[i], v)) exch(a, lt++, i++);
+            else if (less(v, a[i])) exch(a, i, gt--);
             else i++;
         }
-        sortThree(a, lo, lt-1);
-        sortThree(a, gt+1, hi);
+        sortThreeWay(a, lo, lt - 1);
+        sortThreeWay(a, gt + 1, hi);
 
     }
     /**
@@ -108,20 +101,20 @@ public class Quick {
      * @param a the array
      * @param k find the kth smallest
      */
-    public static Comparable select(int[] a, int k) {
-        if (k < 0 || k >= a.length) {
-            throw new IndexOutOfBoundsException("Selected element out of bounds");
-        }
-        StdRandom.shuffle(a);
-        int lo = 0, hi = a.length - 1;
-        while (hi > lo) {
-            int i = partition(a, lo, hi);
-            if      (i > k) hi = i - 1;
-            else if (i < k) lo = i + 1;
-            else return a[i];
-        }
-        return a[lo];
-    }
+//    public static Comparable select(int[] a, int k) {
+//        if (k < 0 || k >= a.length) {
+//            throw new IndexOutOfBoundsException("Selected element out of bounds");
+//        }
+//        StdRandom.shuffle(a);
+//        int lo = 0, hi = a.length - 1;
+//        while (hi > lo) {
+//            int i = partition(a, lo, hi);
+//            if      (i > k) hi = i - 1;
+//            else if (i < k) lo = i + 1;
+//            else return a[i];
+//        }
+//        return a[lo];
+//    }
 
 
 
@@ -135,8 +128,8 @@ public class Quick {
     }
 
     // exchange a[i] and a[j]
-    private static void exch(int[] a, int i, int j) {
-        int swap = a[i];
+    private static void exch(Object[] a, int i, int j) {
+        Object swap = a[i];
         a[i] = a[j];
         a[j] = swap;
     }
@@ -157,7 +150,7 @@ public class Quick {
 
 
     // print array to standard output
-    private static void show(int[] a) {
+    private static void show(Object[] a) {
         for (int i = 0; i < a.length; i++) {
             StdOut.print(a[i] + " ");
         }
@@ -173,7 +166,7 @@ public class Quick {
      * standard output, but this time, using the select method.
      */
     public static void main(String[] args) {
-        int[] a = {4, 10,10,8,9,9,5,4,4,4,4,8,9,10, 7, 3, 2, 1, 4, 4, 1, 6, 4, 4, 4, 12,3,2,2,2,1,1,3,3,3, 10};
+        Integer[] a = {4, 10,10,8,9,9,5,4,4,4,4,8,9,10, 7, 3, 2, 1, 4, 4, 1, 6, 4, 4, 4, 12,3,2,2,2,1,1,3,3,3, 10};
         shuffle(a);
         show(a);
         System.out.println("");
@@ -181,7 +174,7 @@ public class Quick {
         show(a);
         shuffle(a);
         show(a);
-        sortThree(a, 0, a.length -1);
+        sortThreeWay(a, 0, a.length -1);
         show(a);
 
         shuffle(a);
