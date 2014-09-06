@@ -1108,6 +1108,40 @@ public class LeetCode {
     }
 
     /**
+     * https://oj.leetcode.com/problems/search-in-rotated-sorted-array-ii/
+     * https://oj.leetcode.com/submissions/detail/10902114/
+     * @param A
+     * @param target
+     * @return
+     */
+    //Allow duplicated
+    public boolean search2(int[] A, int target) {
+        if (A == null || A.length == 0) return false;
+        int left = 0, right = A.length - 1;
+
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            if (A[mid] == target)
+                return true;
+            else if (A[mid] > A[left]) {
+                if (target >= A[left] && target < A[mid])
+                    right = mid - 1;
+                else
+                    left = mid + 1;
+            } else if (A[mid] < A[left]) {
+                if (target > A[mid] && target <= A[right])
+                    left = mid + 1;
+                else
+                    right = mid - 1;
+            } else {
+                left++;
+            }
+
+        }
+        return false;
+    }
+
+    /**
      * https://oj.leetcode.com/problems/search-for-a-range/
      * http://www.darrensunny.me/leetcode-search-for-a-range/
      * https://oj.leetcode.com/submissions/detail/9556992/
@@ -3379,7 +3413,122 @@ public class LeetCode {
 
     }
 
+    /**
+     * https://oj.leetcode.com/problems/remove-duplicates-from-sorted-list/
+     * https://oj.leetcode.com/submissions/detail/10902450/
+     *
+     */
+    public ListNode deleteDuplicates(ListNode head) {
+        if(head == null || head.next == null) return head;
+        ListNode n = head;
+        while(n != null) {
+            while(n.next != null && n.next.val == n.val)
+                n.next = n.next.next;
+            n = n.next;
 
+        }
+        return head;
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/remove-duplicates-from-sorted-list-ii/
+     * https://oj.leetcode.com/submissions/detail/10903116/
+     *
+     */
+    public ListNode deleteDuplicates2(ListNode head) {
+        if(head == null || head.next == null) return head;
+
+        ListNode s = new ListNode(0);
+        ListNode p = s;
+        ListNode n = head;
+        while(n != null) {
+            int count = 1;
+            while(n.next != null && n.next.val == n.val){
+                n.next = n.next.next;
+                count++;
+            }
+            if(count == 1){
+                p.next = n;
+                p = n;
+                n = n.next;
+                p.next = null;
+            } else {
+                n = n.next;
+            }
+
+        }
+        return s.next;
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/largest-rectangle-in-histogram/
+     * http://www.geeksforgeeks.org/largest-rectangle-under-histogram/
+     * https://oj.leetcode.com/submissions/detail/10906717/
+     *
+     */
+    public static int largestRectangleArea(int[] height) {
+        if(height == null || height.length == 0)
+            return 0;
+        if(height.length == 1)
+            return height[0];
+
+        Rectangle[] rectangles = new Rectangle[height.length];
+        rectangles[0] = new Rectangle(height[0]);
+        rectangles[0].left = -1;
+
+        for(int i = 1; i < height.length; i++){
+            rectangles[i] = new Rectangle(height[i]);
+            if(height[i] == 0)
+                rectangles[i].left = i - 1;
+
+            int j = i - 1;
+            while(j>= 0 && height[j] > height[i])
+                j--;
+
+            if(j == -1 || height[j] != height[i])
+                rectangles[i].left = j;
+            else
+                rectangles[i].left = rectangles[j].left;
+
+        }
+
+        rectangles[height.length-1].right = height.length;
+        for(int i = height.length-2; i>=0; i--){
+            if(height[i] == 0)
+                rectangles[i].right = i;
+
+            int j = i + 1;
+            while(j <= height.length -1 && height[j] > height[i])
+                j++;
+
+            if(j == height.length || height[j] != height[i])
+                rectangles[i].right = j;
+            else
+                rectangles[i].right = rectangles[j].right;
+
+        }
+
+        int max = 0;
+        for(int i = 0; i < height.length; i++){
+            int area = rectangles[i].height * (rectangles[i].right - rectangles[i].left - 1);
+            if(area > max)
+                max = area;
+        }
+        return max;
+
+
+    }
+
+    private static class Rectangle {
+        private int left;
+        private int right;
+        private int height;
+
+        Rectangle(int height) {
+            this.height = height;
+        }
+    }
 
 
 
@@ -4402,6 +4551,10 @@ public class LeetCode {
 
         System.out.println("Test removeDuplicates2");
         System.out.println(removeDuplicates2(new int[]{1,1,1,2,2,3}));
+
+
+        System.out.println("Test largestRectangleArea");
+        System.out.println(largestRectangleArea(new int[]{4,2,0,3,2,4,3,4}));
 
 
         System.out.println("End");
