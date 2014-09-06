@@ -101,20 +101,19 @@ public class Quick {
      * @param a the array
      * @param k find the kth smallest
      */
-//    public static Comparable select(int[] a, int k) {
-//        if (k < 0 || k >= a.length) {
-//            throw new IndexOutOfBoundsException("Selected element out of bounds");
-//        }
-//        StdRandom.shuffle(a);
-//        int lo = 0, hi = a.length - 1;
-//        while (hi > lo) {
-//            int i = partition(a, lo, hi);
-//            if      (i > k) hi = i - 1;
-//            else if (i < k) lo = i + 1;
-//            else return a[i];
-//        }
-//        return a[lo];
-//    }
+    public static Comparable select(Comparable[] a, int k) {
+        if(k < 0 || k >= a.length)
+            throw new IndexOutOfBoundsException("Selected element out of bounds");
+        shuffle(a);
+        int lo = 0, hi = a.length - 1;
+        while(lo < hi) {
+            int i = partition(a, lo, hi);
+            if(i > k) hi = i - 1;
+            else if(i < k) lo = i + 1;
+            else return a[i];
+        }
+        return a[lo];
+    }
 
 
 
