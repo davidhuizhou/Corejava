@@ -3530,6 +3530,215 @@ public class LeetCode {
         }
     }
 
+    /**
+     * https://oj.leetcode.com/problems/maximal-rectangle/
+     * https://oj.leetcode.com/submissions/detail/10961591/
+     *
+     *
+     */
+    public static int maximalRectangle(char[][] matrix) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0)
+            return 0;
+
+        return maxRect(matrix, 0);
+    }
+
+    private static void populateOnes(char[][] matrix, boolean[] a, int nextRow) {
+        for (int i = 0; i < a.length; i++) {
+            if (!(a[i] && matrix[nextRow][i] == '1'))
+                a[i] = false;
+
+        }
+    }
+
+    private static int longestOnes(boolean[] a) {
+        int width = 0, max = 0;
+        boolean IN = false;
+
+        for (int i = 0; i < a.length; i++) {
+            if (a[i]) {
+                if (!IN) {
+                    IN = true;
+                    width = 1;
+
+                } else {
+                    width++;
+                }
+
+                if (width > max)
+                    max = width;
+
+            } else {
+                if (IN) {
+                    IN = false;
+                    if (width > max)
+                        max = width;
+
+                }
+                width = 0;
+
+            }
+
+        }
+        return max;
+
+    }
+
+    private static int maxRect(char[][] matrix, int startRow) {
+        if (startRow == matrix.length) return 0;
+
+        boolean[] a = new boolean[matrix[0].length];
+        for (int i = 0; i < a.length; i++)
+            a[i] = true;
+
+        int max = 0;
+        for (int j = startRow; j < matrix.length; j++) {
+            populateOnes(matrix, a, j);
+            int width = longestOnes(a);
+            int area = width * (j - startRow + 1);
+            max = Math.max(max, area);
+        }
+        return Math.max(max, maxRect(matrix, startRow + 1));
+    }
+
+
+    /**
+     * https://oj.leetcode.com/problems/partition-list/
+     * https://oj.leetcode.com/submissions/detail/10963337/
+     *
+     */
+    public ListNode partition(ListNode head, int x) {
+        if(head == null || head.next == null)
+            return head;
+
+        ListNode l1 = new ListNode(0);
+        ListNode l2 = new ListNode(0);
+        ListNode t1 = l1;
+        ListNode t2 = l2;
+        ListNode p = head;
+        ListNode q = head;
+        while(p != null) {
+            if(p.val < x) {
+                while(q.next != null && q.next.val < x){
+                    q = q.next;
+                }
+                t1.next = p;
+                t1 = q;
+                q = q.next;
+                t1.next = null;
+
+            } else {
+                while(q.next != null && q.next.val >= x) {
+                    q = q.next;
+                }
+                t2.next = p;
+                t2 = q;
+                q = q.next;
+                t2.next = null;
+            }
+            p = q;
+        }
+        t1.next = l2.next;
+        return l1.next;
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/scramble-string/
+     * https://oj.leetcode.com/submissions/detail/10967982/
+     */
+    public static boolean isScramble(String s1, String s2) {
+        if (s1 == null || s2 == null)
+            return false;
+
+        if (s1.length() != s2.length())
+            return false;
+
+        if (s1.equals(s2))
+            return true;
+
+
+        if(!isAnagram2(s1, s2))
+            return false;
+
+        for (int i = 1; i < s1.length(); i++) {
+
+            String s1Left=s1.substring(0, i);
+            String s1Right=s1.substring(i);
+
+            String s2Left=s2.substring(0,i);
+            String s2Right=s2.substring(i);
+
+            if (isScramble(s1Left, s2Left)&&isScramble(s1Right,s2Right)){
+                return true;
+            }
+
+            s2Left=s2.substring(s2.length()-i);
+            s2Right=s2.substring(0, s2.length()-i);
+
+            if (isScramble(s1Left, s2Left)&&isScramble(s1Right,s2Right)){
+                return true;
+            }
+
+
+        }
+        return false;
+
+    }
+
+    private static boolean isAnagram2(String s1, String s2) {
+        char[] a1 = s1.toCharArray();
+        Arrays.sort(a1);
+        char[] a2 = s2.toCharArray();
+        Arrays.sort(a2);
+        for (int i = 0; i < a1.length; i++) {
+            if (a1[i] != a2[i])
+                return false;
+        }
+        return true;
+    }
+
+
+
+    public static boolean isScramble3(String s1, String s2) {
+        if( s1==null||s2==null){
+            return false;
+        }
+
+        if (s1.length()==0){
+            return s2.length()==0;
+        }
+        if (s1.length()!=s2.length()){
+            return false;
+        }
+        if (s1.equals(s2)){
+            return true;
+        }
+
+
+        if(!isAnagram2(s1, s2))
+            return false;
+
+        for (int i =1; i<s1.length(); i++){
+            String s1Left=s1.substring(0, i);
+            String s1Right=s1.substring(i);
+
+            String s2Left=s2.substring(0,i);
+            String s2Right=s2.substring(i);
+
+            if (isScramble3(s1Left, s2Left)&&isScramble3(s1Right,s2Right)){
+                return true;
+            }
+
+            s2Left=s2.substring(s2.length()-i);
+            s2Right=s2.substring(0, s2.length()-i);
+
+            if (isScramble3(s1Left, s2Left)&&isScramble3(s1Right,s2Right)){
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 
     /////////////////////////////////////////////
@@ -4555,6 +4764,23 @@ public class LeetCode {
 
         System.out.println("Test largestRectangleArea");
         System.out.println(largestRectangleArea(new int[]{4,2,0,3,2,4,3,4}));
+
+
+        System.out.println("Test maximalRectangle");
+        char[][] matrix3 = {{'1'}};
+        System.out.println(maximalRectangle(matrix3));
+
+        System.out.println("Test isScramble");
+        t1 = System.currentTimeMillis();
+//        System.out.println(isScramble("tqxpxeknttgwoppemjkivrulaflayn", "afaylnlurvikjmeppowgttnkexpxqt"));
+//        System.out.println(isScramble("abcd", "bdac"));
+        System.out.println(isScramble("tqxpxeknttgwoppemjkivrulaflayn", "afaylnlurvikjmeppowgttnkexpxqt"));
+        System.out.println(isScramble3("a", "b"));
+//        t2 = System.currentTimeMillis();
+
+        System.out.println("t2 - t1=" + (t2 - t1));
+
+
 
 
         System.out.println("End");
