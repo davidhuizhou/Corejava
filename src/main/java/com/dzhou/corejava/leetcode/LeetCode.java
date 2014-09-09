@@ -3740,6 +3740,65 @@ public class LeetCode {
         return false;
     }
 
+    /**
+     * https://oj.leetcode.com/problems/merge-sorted-array/
+     * https://oj.leetcode.com/submissions/detail/11054578/
+     */
+    public void merge(int A[], int m, int B[], int n) {
+        if(A == null || B == null || n == 0) return;
+
+        for(int k = m + n -1; k >= n; k--)
+            A[k] = A[k - n];
+
+        int i = n, j = 0;
+        for(int k = 0; k < m + n; k++){
+            if(i > m + n -1) A[k] = B[j++];
+            else if(j > n - 1) A[k] = A[i++];
+            else if (A[i] <= B[j]) A[k] = A[i++];
+            else A[k] = B[j++];
+        }
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/gray-code/
+     * https://oj.leetcode.com/submissions/detail/11056385/
+     */
+    public static List<Integer> grayCode(int n) {
+        List<Integer> result = new ArrayList<Integer>();
+        if(n < 0) return result;
+
+        if(n == 0){
+            result.add(0);
+            return result;
+        } else if(n == 1){
+            result.add(0);
+            result.add(1);
+            return result;
+        } else {
+
+            result = grayCode(n - 1);
+            Stack<Integer> stack = new Stack<Integer>();
+            for (Integer x : result)
+                stack.push(x);
+;
+            int mask = 1 << (n-1);
+            while (!stack.isEmpty())
+                result.add(mask | stack.pop());
+
+            return result;
+        }
+
+    }
+
+    private static int numberOfBits(int n){
+        int r = 1, x = 1;
+        while(x < n){
+            x <<= 1;
+            r++;
+        }
+        return r;
+    }
+
 
     /////////////////////////////////////////////
 
@@ -4779,6 +4838,14 @@ public class LeetCode {
 //        t2 = System.currentTimeMillis();
 
         System.out.println("t2 - t1=" + (t2 - t1));
+
+
+        System.out.println("Test grayCode");
+        System.out.println(numberOfBits(5));
+        List<Integer> result2 = grayCode(5);
+        for(Integer x : result2){
+            System.out.print(x + " ");
+        }
 
 
 
