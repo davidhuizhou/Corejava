@@ -3799,6 +3799,56 @@ public class LeetCode {
         return r;
     }
 
+    /**
+     * https://oj.leetcode.com/problems/decode-ways/
+     * https://oj.leetcode.com/submissions/detail/11121184/
+     * https://oj.leetcode.com/submissions/detail/11122075/
+     *
+     */
+    public static int numDecodings(String s) {
+        if (s == null || s.length() == 0)
+            return 0;
+
+        int r1 = 0, r2 = 0, r = 0;
+        r1 = checkOne(s.charAt(0));
+
+        if (r1 == 0 || s.length() == 1)
+            return r1;
+
+        char c1 = s.charAt(0), c2 = s.charAt(1);
+        r2 = checkOne(c1) * checkOne(c2) + checkTwo(c1, c2);
+
+        if (r2 == 0 || s.length() == 2)
+            return r2;
+
+        for (int i = 3; i <= s.length(); i++) {
+
+            int num1 = checkTwo(s.charAt(i - 2), s.charAt(i - 1));
+            int num2 = checkOne(s.charAt(i - 1));
+
+            r = num1 * r1 + num2 * r2;
+            //            System.out.println(
+            //                    "decoding i=" + i + ", " + s.substring(i - 2, i) + ", " + s.substring(i - 1, i) + ",num1=" + num1
+            //                            + ",num2=" + num2 + ",r1=" + r1 + ",r2=" + r2 + ",r=" + r);
+
+            r1 = r2;
+            r2 = r;
+
+        }
+
+        return r;
+
+    }
+
+    private static int checkOne(char c) {
+        return (c >= '1' && c <= '9') ? 1 : 0;
+    }
+
+    private static int checkTwo(char c1, char c2) {
+        return (c1 == '1' || (c1 == '2' && c2 <= '6')) ? 1 : 0;
+    }
+
+
 
     /////////////////////////////////////////////
 
@@ -4847,8 +4897,18 @@ public class LeetCode {
             System.out.print(x + " ");
         }
 
+        System.out.println("\nTest numDecodings");
+        t1 = System.currentTimeMillis();
+        System.out.println(numDecodings("101"));
+//        System.out.println(numDecodings("9371597631128776948387197132267188677349946742344217846154932859125134924241649584251978418763151253"));
+//        System.out.println(numDecodings("0"));
+//        System.out.println(numDecodings("3"));
+//        System.out.println(numDecodings("20"));
+//        System.out.println(numDecodings("30"));
+//        System.out.println(numDecodings("12"));
+        t2 = System.currentTimeMillis();
 
-
+        System.out.println("t2 - t1=" + (t2 - t1));
 
         System.out.println("End");
     }
