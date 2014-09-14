@@ -3191,12 +3191,15 @@ public class LeetCode {
 
     }
 
+    //Create the set by choose k (1 to S.length) out of n numbers.
     private static void combine(List<List<Integer>> result, List<Integer> list, int[] S, int start, int k, int n) {
         if (k == 0) {
             result.add(list);
             return;
         }
 
+        //For a certain k, the first number can only go up to index n - k, because there need to be k number ascending order
+        // and (n-1) - (n-k+1) + 1 = k numbers, if you start after n - k, there will not be enough numbers.
         for (int i = start; i <= n - k + 1; i++) {
             list.add(S[i - 1]);
             combine(result, new ArrayList<Integer>(list), S, i + 1, k - 1, n);
@@ -3204,6 +3207,49 @@ public class LeetCode {
         }
 
     }
+
+    /**
+     * https://oj.leetcode.com/problems/subsets-ii/
+     * https://oj.leetcode.com/submissions/detail/11293407/
+     *
+     */
+    public static List<List<Integer>> subsetsWithDup(int[] num) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        List<Integer> list = new ArrayList<Integer>();
+        result.add(list);
+
+        if(num == null || num.length == 0)
+            return result;
+
+        Arrays.sort(num);
+        for(int i = 1; i <= num.length; i++){
+            combineWithDup(result, list, num, 1, i, num.length);
+        }
+        return result;
+
+    }
+
+
+
+    private static void combineWithDup(List<List<Integer>> result, List<Integer> list, int[] S, int start, int k, int n) {
+        if (k == 0) {
+            result.add(list);
+            return;
+        }
+
+        //if i > start, S[i-1] == S[i-2] continue
+        for (int i = start; i <= n - k + 1; i++) {
+            if(i > start && S[i- 1] == S[i - 2])
+                continue;
+            else {
+                list.add(S[i - 1]);
+                combineWithDup(result, new ArrayList<Integer>(list), S, i + 1, k - 1, n);
+                list.remove(new Integer(S[i - 1]));
+            }
+        }
+
+    }
+
 
     /**
      * https://oj.leetcode.com/problems/minimum-window-substring/
@@ -3849,6 +3895,213 @@ public class LeetCode {
     }
 
 
+    /**
+     * https://oj.leetcode.com/problems/reverse-linked-list-ii/
+     * https://oj.leetcode.com/submissions/detail/11297124/
+     *
+     */
+    public static ListNode reverseBetween(ListNode head, int m, int n) {
+        if(head == null || m == n) return head;
+
+        if(m == 1) {
+            return reverseBetweenHelper(head, 1, n);
+        } else {
+            ListNode oldHead = head;
+            ListNode last = head;
+            head = head.next;
+            int i = 2;
+            while(i < m){
+                last = last.next;
+                head = head.next;
+                i++;
+            }
+            last.next = reverseBetweenHelper(head, m, n);
+            return oldHead;
+        }
+    }
+
+    private static ListNode reverseBetweenHelper(ListNode head, int i, int n) {
+        ListNode r = null;
+        ListNode last = head;
+        while(i <= n){
+            ListNode p = head;
+            head = head.next;
+            p.next = r;
+            r = p;
+            i++;
+        }
+        last.next = head;
+        return r;
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/restore-ip-addresses/
+     * https://oj.leetcode.com/submissions/detail/11300516/
+     * validate ip 0, 0 - 255, can not have digits starts with 0 unless it is single digit 0
+     *
+     */
+
+    public static List<String> restoreIpAddresses(String s) {
+        List<String> result = new ArrayList<String>();
+        if(s == null || s.length() < 4)
+            return result;
+        restoreIp(result, "", s, 3);
+        return result;
+
+    }
+
+    private static void restoreIp(List<String> result, String ip, String s, int n){
+        if(s.length() == 0 || s.length() > (n+1) * 3) return;
+        if(n == 0) {
+            if(s.length() > 1 && s.charAt(0) == '0')
+                return;
+            else if(Integer.parseInt(s) >= 0 && Integer.parseInt(s) <= 255)
+                result.add(ip + "." + s);
+
+            return;
+        }
+
+        for(int i = 1; i <=3; i++){
+            if(i > 1 && s.charAt(0) == '0'){
+                return;
+            } else if(s.length() >= i + 1 && Integer.parseInt(s.substring(0, i)) >= 0 && Integer.parseInt(s.substring(0, i)) <= 255) {
+                if(ip.length() > 0)
+                    restoreIp(result, ip + "." + s.substring(0, i), s.substring(i), n - 1);
+                else
+                    restoreIp(result, s.substring(0, i), s.substring(i), n - 1);
+            }
+        }
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/binary-tree-inorder-traversal/
+     * http://www.programcreek.com/2012/12/leetcode-solution-of-binary-tree-inorder-traversal-in-java/
+     * https://oj.leetcode.com/submissions/detail/11302672/
+     *
+     */
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> list = new ArrayList<Integer>();
+        inorder(root, list);
+        return list;
+
+    }
+
+    private static void printTreeNode(TreeNode root) {
+        if(root == null) return;
+        System.out.print(root.val + " ");
+        printTreeNode(root.left);
+        printTreeNode(root.right);
+    }
+
+    private static void inorder(TreeNode root, List<Integer> list){
+        if(root == null) return;
+        inorder(root.left, list);
+        list.add(root.val);
+        inorder(root.right, list);
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/unique-binary-search-trees/
+     * http://www.lifeincode.net/programming/leetcode-unique-binary-search-trees-i-and-ii-java/
+     * https://oj.leetcode.com/submissions/detail/11304512/
+     *
+     */
+    public static int numTrees(int n) {
+        if (n <= 0) return 0;
+        if (n == 1) return 1;
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+
+        map.put(0, 1);
+        map.put(1, 1);
+        for (int i = 2; i <= n; i++) {
+            int num = 0;
+
+            for (int j = 1; j <= i; j++) {
+                int left = map.get(j - 1);
+                int right = map.get(i - j);
+                num += left * right;
+            }
+            map.put(i, num);
+
+        }
+        return map.get(n);
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/unique-binary-search-trees-ii/
+     * http://www.lifeincode.net/programming/leetcode-unique-binary-search-trees-i-and-ii-java/
+     * https://oj.leetcode.com/submissions/detail/11313452/
+     * https://oj.leetcode.com/submissions/detail/11313492/
+     *
+     */
+    public static List<TreeNode> generateTrees(int n) {
+        List<TreeNode> result = new ArrayList<TreeNode>();
+
+        if (n <= 0) {
+            result.add(null);
+            return result;
+        }
+        ;
+
+        result.add(new TreeNode(1));
+        if (n == 1) return result;
+
+        Map<Integer, List<TreeNode>> map = new HashMap<Integer, List<TreeNode>>();
+        map.put(1, result);
+
+        for (int i = 2; i <= n; i++) {
+            List<TreeNode> list = new ArrayList<TreeNode>();
+            for (int j = 1; j <= i; j++) {
+                List<TreeNode> temp = map.get(j - 1);
+                List<TreeNode> left = new ArrayList<TreeNode>();
+                if (temp != null) {
+                    left.addAll(temp);
+                } else {
+                    left.add(null);
+                }
+
+                temp = map.get(i - j);
+
+                List<TreeNode> right = new ArrayList<TreeNode>();
+
+                if (temp != null) {
+                    for (TreeNode t : temp) {
+                        right.add(adjustTreeNode(t, j));
+                    }
+                } else {
+                    right.add(null);
+                }
+
+                for (TreeNode l : left) {
+                    for (TreeNode r : right) {
+                        TreeNode node = new TreeNode(j);
+                        node.left = l;
+                        node.right = r;
+                        list.add(node);
+
+                    }
+                }
+
+            }
+            map.put(i, list);
+        }
+
+        return map.get(n);
+
+    }
+
+
+    private static TreeNode adjustTreeNode(TreeNode n, int x) {
+        if (n == null) return n;
+        TreeNode root = new TreeNode(n.val + x);
+        root.left = adjustTreeNode(n.left, x);
+        root.right = adjustTreeNode(n.right, x);
+        return root;
+    }
 
     /////////////////////////////////////////////
 
@@ -4909,6 +5162,54 @@ public class LeetCode {
         t2 = System.currentTimeMillis();
 
         System.out.println("t2 - t1=" + (t2 - t1));
+
+
+        System.out.println("Test subsetsWithDup");
+        int[] S2 = {2, 1, 2};
+        List<List<Integer>>list6 = subsetsWithDup(S2);
+        for(List<Integer> list66 : list6){
+            StringUtils.printList(list66);
+        }
+
+
+        System.out.println("Test reverseBetween");
+        //1->2->3->4->5->NULL
+
+        ListNode head = new ListNode(5);
+
+
+        for(int i = 4; i >= 1; i--) {
+            ListNode h1 = new ListNode(i);
+            h1.next = head;
+            head = h1;
+        }
+        head = reverseBetween(head, 2, 2);
+        while(head != null){
+            System.out.print(head.val + " ");
+            head = head.next;
+        }
+
+
+        System.out.println("Test restoreIpAddresses");
+        List<String> ips = restoreIpAddresses("010010");
+        for(String ip : ips){
+            System.out.print(ip + " ");
+        }
+
+
+        System.out.println("Test numTrees");
+        System.out.println(numTrees(10));
+
+        List<TreeNode> trees = generateTrees(0);
+        System.out.println(trees.size());
+
+
+        for(TreeNode n : trees){
+            printTreeNode(n);
+            System.out.println("");
+        }
+
+
 
         System.out.println("End");
     }
