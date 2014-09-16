@@ -4103,6 +4103,79 @@ public class LeetCode {
         return root;
     }
 
+    /**
+     * https://oj.leetcode.com/problems/interleaving-string/
+     * http://yucoding.blogspot.com/2013/01/leetcode-question-27-interleaving-string.html
+     * https://oj.leetcode.com/submissions/detail/11435610/
+     *
+     */
+    public static boolean isInterleave(String s1, String s2, String s3) {
+        if (s1 == null || s2 == null || s3 == null)
+            return false;
+
+        int len1 = s1.length();
+        int len2 = s2.length();
+        int len3 = s3.length();
+
+        if (len1 + len2 != len3)
+            return false;
+
+        if (s1.length() == 0)
+            return s2.equals(s3);
+
+        if (s2.length() == 0)
+            return s1.equals(s3);
+
+        if (s1.charAt(len1 - 1) != s3.charAt(len3 - 1) && s2.charAt(len2 - 1) != s3.charAt(len3 - 1))
+            return false;
+
+        Map<String, Boolean> map = new HashMap<String, Boolean>();
+        return isInterleave(map, s1, s2, s3);
+
+    }
+
+    public static boolean isInterleave(Map<String, Boolean> map, String s1, String s2, String s3) {
+        int len1 = s1.length();
+        int len2 = s2.length();
+
+        Boolean b = false;
+
+        if (s1.length() == 0)
+            return s2.equals(s3);
+
+        if (s2.length() == 0)
+            return s1.equals(s3);
+
+        if (s1.charAt(0) == s3.charAt(0)) {
+            String key = (len1 - 1) + "_" + len2;
+            b = map.get(key);
+            if (b == null) {
+                b = isInterleave(map, s1.substring(1), s2, s3.substring(1));
+                map.put(key, b);
+            }
+            if (b)
+                return true;
+        }
+
+        if (s2.charAt(0) == s3.charAt(0)) {
+            String key = len1 + "_" + (len2 - 1);
+            b = map.get(key);
+            if (b == null) {
+                b = isInterleave(map, s1, s2.substring(1), s3.substring(1));
+                map.put(key, b);
+            }
+            if (b)
+                return true;
+        }
+
+        map.put(len1 + "_" + len2, false);
+        return false;
+    }
+
+
+
+
+
     /////////////////////////////////////////////
 
     /////////////////////////////////////////////
@@ -5208,6 +5281,27 @@ public class LeetCode {
             printTreeNode(n);
             System.out.println("");
         }
+
+
+        String s11 = "bbbbbabbbbabaababaaaabbababbaaabbabbaaabaaaaababbbababbbbbabbbbababbabaabababbbaabababababbbaaababaa";
+        String s22 = "babaaaabbababbbabbbbaabaabbaabbbbaabaaabaababaaaabaaabbaaabaaaabaabaabbbbbbbbbbbabaaabbababbabbabaab";
+        String s33 = "babbbabbbaaabbababbbbababaabbabaabaaabbbbabbbaaabbbaaaaabbbbaabbaaabababbaaaaaabababbababaababbababbbababbbbaaaabaabbabbaaaaabbabbaaaabbbaabaaabaababaababbaaabbbbbabbbbaabbabaabbbbabaaabbababbabbabbab";
+
+
+//        String s11 = "aabcc";
+//        String s22 = "dbbca";
+//        String s33 = "aadbbcbcac";
+//        s33 = "aadbbbaccc";
+//
+//        s11 = "aabcc";
+//        s22 = "dbbca";
+//        s33 = "aadbbcbacc";
+
+        System.out.println("Test isInterleave");
+        t1 = System.currentTimeMillis();
+        System.out.println(isInterleave(s11, s22, s33));
+        t2 = System.currentTimeMillis();
+        System.out.println("t2 - t1=" + (t2 - t1));
 
 
 
