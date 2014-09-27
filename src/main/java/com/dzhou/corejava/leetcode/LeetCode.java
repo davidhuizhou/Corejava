@@ -4172,6 +4172,313 @@ public class LeetCode {
         return false;
     }
 
+    /**
+     * https://oj.leetcode.com/problems/validate-binary-search-tree/
+     * http://www.programcreek.com/2012/12/leetcode-validate-binary-search-tree-java/
+     * https://oj.leetcode.com/submissions/detail/11691349/
+     *
+     */
+    public boolean isValidBST(TreeNode root) {
+        if (root == null)
+            return true;
+
+        if (root.left != null) {
+            if (root.left.val >= root.val)
+                return false;
+            if (max(root.left) >= root.val)
+                return false;
+            if (!isValidBST(root.left))
+                return false;
+        }
+
+        if (root.right != null) {
+            if (root.right.val <= root.val)
+                return false;
+            if (min(root.right) <= root.val)
+                return false;
+            if (!isValidBST(root.right))
+                return false;
+        }
+        return true;
+    }
+
+    private int max(TreeNode root) {
+        int max = root.val;
+        while (root.right != null) {
+            max = Math.max(root.right.val, max);
+            root = root.right;
+        }
+        return max;
+    }
+
+    private int min(TreeNode root) {
+        int min = root.val;
+        while (root.left != null) {
+            min = Math.min(root.left.val, min);
+            root = root.left;
+        }
+        return min;
+    }
+
+
+    /**
+     * https://oj.leetcode.com/problems/recover-binary-search-tree/
+     * https://oj.leetcode.com/submissions/detail/11718530/
+     *
+     */
+    public static void recoverTree(TreeNode root) {
+        if (root == null)
+            return;
+
+        TreeNode[] nodes = new TreeNode[4];
+        recoverTree(root, nodes);
+        swap(nodes[2], nodes[3]);
+
+    }
+
+    /*
+    *   nodes nodes[0] prev, nodes[1] next
+    *   nodes[2] first bad node (prev > next)
+    *   nodes[3] second bad node (prev > next)
+    */
+    private static void recoverTree(TreeNode root, TreeNode[] nodes) {
+        if (root == null)
+            return;
+
+        recoverTree(root.left, nodes);
+
+        nodes[0] = nodes[1];
+        nodes[1] = root;
+
+        if (nodes[2] == null) {
+            if (nodes[0] != null && nodes[1] != null && nodes[0].val > nodes[1].val) {
+                nodes[2] = nodes[0];
+                nodes[3] = nodes[1];
+            }
+        } else {
+            if (nodes[0] != null && nodes[1] != null && nodes[0].val > nodes[1].val)
+                nodes[3] = nodes[1];
+        }
+
+        recoverTree(root.right, nodes);
+
+    }
+
+    private static void swap(TreeNode n1, TreeNode n2) {
+        if (n1 != null && n2 != null) {
+            int temp = n1.val;
+            n1.val = n2.val;
+            n2.val = temp;
+        }
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/same-tree/
+     * https://oj.leetcode.com/submissions/detail/12095539/
+     *
+     */
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        if(p == q)
+            return true;
+        if(p == null && q == null)
+            return true;
+        if(p == null && q != null)
+            return false;
+        if(p != null && q == null)
+            return false;
+        if(p.val != q.val)
+            return false;
+
+        if(!isSameTree(p.left, q.left))
+            return false;
+        if(!isSameTree(p.right, q.right))
+            return false;
+
+        return true;
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/symmetric-tree/
+     * https://oj.leetcode.com/submissions/detail/12096090/
+     */
+    public boolean isSymmetric(TreeNode root) {
+        if(root == null)
+            return true;
+        return isSymmetric(root.left, root.right);
+
+    }
+
+    private boolean isSymmetric(TreeNode p, TreeNode q) {
+        if (p == null && q == null)
+            return true;
+
+        if (!equals(p, q))
+            return false;
+
+        if (!isSymmetric(p.left, q.right))
+            return false;
+        if (!isSymmetric(p.right, q.left))
+            return false;
+
+        return true;
+
+    }
+    private boolean equals(TreeNode p, TreeNode q){
+        if (p == null && q == null)
+            return true;
+        if ((p == null && q != null) || (p != null && q == null))
+            return false;
+        return (p.val == q.val);
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/binary-tree-level-order-traversal/
+     * https://oj.leetcode.com/submissions/detail/12096507/
+     */
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        if (root == null)
+            return result;
+
+        List<TreeNode> parents = new ArrayList<TreeNode>();
+        parents.add(root);
+        levelOrder(result, parents);
+        return result;
+
+    }
+
+    private void levelOrder(List<List<Integer>> result, List<TreeNode> parents) {
+        if (parents.size() == 0)
+            return;
+
+        List<Integer> list = new ArrayList<Integer>();
+        List<TreeNode> children = new ArrayList<TreeNode>();
+        for (TreeNode p : parents) {
+            list.add(p.val);
+            if (p.left != null)
+                children.add(p.left);
+            if (p.right != null)
+                children.add(p.right);
+        }
+        result.add(list);
+        levelOrder(result, children);
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/binary-tree-zigzag-level-order-traversal/
+     * https://oj.leetcode.com/submissions/detail/12097056/
+     */
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        if (root == null)
+            return result;
+
+        List<TreeNode> parents = new ArrayList<TreeNode>();
+        parents.add(root);
+        zigzagLevelOrder(result, parents, true);
+        return result;
+
+    }
+
+    private void zigzagLevelOrder(List<List<Integer>> result, List<TreeNode> parents, boolean leftToRight) {
+        if (parents.isEmpty())
+            return;
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        List<TreeNode> children = new ArrayList<TreeNode>();
+
+        for (TreeNode p : parents) {
+            list.add(p.val);
+            if (p.left != null)
+                children.add(p.left);
+            if (p.right != null)
+                children.add(p.right);
+        }
+        if (!leftToRight)
+            reverseList(list);
+        result.add(list);
+        zigzagLevelOrder(result, children, !leftToRight);
+
+
+    }
+
+    private void reverseList(ArrayList<Integer> list) {
+        if (list.isEmpty())
+            return;
+
+        int i = 0, j = list.size() - 1;
+        while (i < j) {
+            int temp = list.get(i);
+            list.set(i, list.get(j));
+            list.set(j, temp);
+            i++;
+            j--;
+        }
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/maximum-depth-of-binary-tree/
+     * https://oj.leetcode.com/submissions/detail/12097436/
+     */
+    public int maxDepth(TreeNode root) {
+        if(root == null)
+            return 0;
+
+        return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+     * https://oj.leetcode.com/submissions/detail/12099693/
+     */
+    public static TreeNode buildTree(int[] preorder, int[] inorder) {
+        if (preorder.length == 0 || inorder.length == 0)
+            return null;
+
+        if(preorder.length != inorder.length)
+            return null;
+
+        int val = preorder[0];
+        TreeNode root = new TreeNode(val);
+
+        int index = rootIndex(val, inorder);
+        if (index >= 0) {
+            int[] leftPreorder = new int[index];
+            int[] leftInorder = new int[index];
+
+            for (int i = 0; i <= index - 1; i++) {
+                leftPreorder[i] = preorder[i + 1];
+                leftInorder[i] = inorder[i];
+            }
+
+            int[] rightPreorder = new int[preorder.length - index - 1];
+            int[] rightInorder = new int[preorder.length - index - 1];
+
+            for (int i = index + 1; i <= preorder.length - 1; i++) {
+                rightPreorder[i - index - 1] = preorder[i];
+                rightInorder[i - index - 1] = inorder[i];
+            }
+
+            root.left = buildTree(leftPreorder, leftInorder);
+            root.right = buildTree(rightPreorder, rightInorder);
+
+        }
+
+        return root;
+    }
+
+    private static int rootIndex(int val, int[] inorder) {
+        int index = 0;
+        for (int i = 0; i <= inorder.length - 1; i++) {
+            if (inorder[i] == val)
+                return i;
+
+        }
+        return -1;
+    }
+
 
 
 
@@ -5304,6 +5611,36 @@ public class LeetCode {
         System.out.println("t2 - t1=" + (t2 - t1));
 
 
+//        TreeNode root = new TreeNode(146);
+//        root.left = new TreeNode(71);
+//        root.left.left = new TreeNode(55);
+//        root.left.left.left = new TreeNode(321);
+//        root.left.left.left.left = new TreeNode(-33);
+//
+//        root.right = new TreeNode(-13);
+//        root.right.left = new TreeNode(231);
+//        root.right.right = new TreeNode(399);
+
+//        TreeNode root = new TreeNode(1);
+//        root.left = new TreeNode(3);
+//        root.left.left = new TreeNode(2);
+//        root.left.left.left = new TreeNode(4);
+
+        TreeNode root = new TreeNode(0);
+        root.left = new TreeNode(1);
+
+
+        recoverTree(root);
+
+
+
+        System.out.println("Test buildTree");
+//        int[] preorder = {-77,24,-74,84,93,28,83,6,95,58,59,66,22,-3,-66,-68,-22,3,-80,-79,-85,17,32,9,-88,-99,14,-60,13,-93,-63,91,82,21,26,-11,-32,-16,-100,-94,-31,-62,-89,49,-9,-8,87,-33,-81,80,0,69,-7,52,67,-5,-65,31,-30,37,-57,27,23,38,-28,7,-82,-42,11,-55,-36,-58,-24,89,56,73,41,18,-87,-70,4,-64,20,-52,-39,79,19,30,65,25,-71,-76,-1,62,-69,98,39,-25,-73,70,88,-17,-20,-75,55,34,57,81,-10,94,48,-35,5,-23,-44,40,-51,-61,-13,-86,63,71,-97,45,43,51,75,33,-34,92,47,-78,85,-26,97,-29,-92,-83,-59,74,96,68,77,16,-4,10,60,64,-21,-2,1,-91,86,46,76,-37,-19,-96,36,-98,29,-72,61,50,15,-95,-40,-43,-53,90,-15,-48,-27,-90,-54,72,-50,-49,-18,78,54,35,-38,99,44,-67,53,-12,-41,2,8,-14,-84,-56,-6,12,-45,42,-47,-46};
+//        int[] inorder =  {93,28,84,83,-74,59,58,66,-66,-3,-79,-80,3,-22,-68,22,-85,-99,14,-88,9,32,17,-60,95,-93,82,21,91,-63,26,13,-16,-32,-11,-100,6,-62,49,-89,-31,87,-8,69,0,80,-7,-81,-65,-5,67,-30,31,52,-33,37,-57,-9,7,-28,-42,-82,38,-55,11,23,-36,27,56,89,73,-24,41,-58,-70,-87,20,-64,-52,4,18,-94,19,30,-76,-1,-71,62,-69,25,-73,-25,70,39,88,98,-20,-17,65,55,-75,79,34,-39,48,94,-23,5,-44,-35,40,-10,-61,-51,-13,81,63,-97,71,-86,57,45,24,-34,85,97,-26,-78,-83,-92,74,-59,96,-29,68,47,77,92,10,-4,16,60,33,-21,1,86,76,46,-37,-91,-2,64,75,51,-19,-96,43,-98,29,61,-72,50,36,-95,-40,-43,15,90,-15,-53,-77,-54,-90,-49,-50,72,-27,35,54,-38,78,-67,44,53,99,-41,-12,-18,8,2,-48,-56,-84,-14,-45,12,42,-6,-46,-47};
+
+        int[] preorder = {1, 2};
+        int[] inorder =  {2, 1};
+        TreeNode root1 = buildTree(preorder, inorder);
 
         System.out.println("End");
     }
