@@ -4433,7 +4433,7 @@ public class LeetCode {
      * https://oj.leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
      * https://oj.leetcode.com/submissions/detail/12099693/
      */
-    public static TreeNode buildTree(int[] preorder, int[] inorder) {
+    public static TreeNode buildTree1(int[] preorder, int[] inorder) {
         if (preorder.length == 0 || inorder.length == 0)
             return null;
 
@@ -4461,8 +4461,8 @@ public class LeetCode {
                 rightInorder[i - index - 1] = inorder[i];
             }
 
-            root.left = buildTree(leftPreorder, leftInorder);
-            root.right = buildTree(rightPreorder, rightInorder);
+            root.left = buildTree1(leftPreorder, leftInorder);
+            root.right = buildTree1(rightPreorder, rightInorder);
 
         }
 
@@ -4480,6 +4480,178 @@ public class LeetCode {
     }
 
 
+    /**
+     * https://oj.leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
+     * https://oj.leetcode.com/submissions/detail/12101977/
+     */
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        if (inorder == null || postorder == null)
+            return null;
+        if (inorder.length == 0 || postorder.length == 0)
+            return null;
+        if (inorder.length != postorder.length)
+            return null;
+
+        int size = postorder.length;
+        int val = postorder[size - 1];
+        TreeNode root = new TreeNode(val);
+
+        int index = rootIndex(val, inorder);
+
+        if (index >= 0) {
+            int[] leftInorder = new int[index];
+            int[] leftPostorder = new int[index];
+
+            for (int i = 0; i <= index - 1; i++) {
+                leftInorder[i] = inorder[i];
+                leftPostorder[i] = postorder[i];
+            }
+
+            int[] rightInorder = new int[size - index - 1];
+            int[] rightPostorder = new int[size - index - 1];
+
+            for (int i = index + 1; i <= size - 1; i++) {
+                rightInorder[i - index - 1] = inorder[i];
+                rightPostorder[i - index - 1] = postorder[i - 1];
+            }
+
+            root.left = buildTree(leftInorder, leftPostorder);
+            root.right = buildTree(rightInorder, rightPostorder);
+        }
+
+        return root;
+
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/binary-tree-level-order-traversal-ii/
+     * https://oj.leetcode.com/submissions/detail/12102902/
+     */
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+
+        if (root == null)
+            return result;
+
+        Stack<List<Integer>> stack = new Stack<List<Integer>>();
+        List<TreeNode> parents = new ArrayList<TreeNode>();
+        parents.add(root);
+        levelOrderBottom(stack, parents);
+
+        while (!stack.isEmpty()) {
+            result.add(stack.pop());
+        }
+        return result;
+
+    }
+
+    private void levelOrderBottom(Stack<List<Integer>> stack, List<TreeNode> parents) {
+        if (parents == null || parents.isEmpty())
+            return;
+
+        List<Integer> list = new ArrayList<Integer>();
+        List<TreeNode> children = new ArrayList<TreeNode>();
+
+        for (TreeNode p : parents) {
+            list.add(p.val);
+            if (p.left != null)
+                children.add(p.left);
+
+            if (p.right != null)
+                children.add(p.right);
+        }
+        stack.push(list);
+        levelOrderBottom(stack, children);
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/convert-sorted-array-to-binary-search-tree/
+     * https://oj.leetcode.com/submissions/detail/12119843/
+     */
+    public TreeNode sortedArrayToBST(int[] num) {
+        if(num == null || num.length == 0)
+            return null;
+        return sortedArrayToBST(num, 0, num.length - 1);
+
+    }
+
+    private TreeNode sortedArrayToBST(int[] num, int start, int end) {
+        if (start > end)
+            return null;
+
+        if (start < 0 || start >= num.length)
+            return null;
+
+        if (end < 0 || end >= num.length)
+            return null;
+
+        if (start == end)
+            return new TreeNode(num[start]);
+
+        int mid = start + (end - start) / 2;
+        TreeNode root = new TreeNode(num[mid]);
+
+        int leftStart = start;
+        int leftEnd = mid - 1;
+        int rightStart = mid + 1;
+        int rightEnd = end;
+
+
+        root.left = sortedArrayToBST(num, leftStart, leftEnd);
+        root.right = sortedArrayToBST(num, rightStart, rightEnd);
+        return root;
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/convert-sorted-list-to-binary-search-tree/
+     * https://oj.leetcode.com/submissions/detail/12120843/
+     */
+    public TreeNode sortedListToBST(ListNode head) {
+        if (head == null)
+            return null;
+
+        int length = 0;
+        ListNode n = head;
+
+        while (n != null) {
+            n = n.next;
+            length++;
+        }
+        return sortedListToBST(head, length);
+
+
+    }
+
+    private TreeNode sortedListToBST(ListNode head, int length) {
+        if (head == null)
+            return null;
+
+        if (length <= 0)
+            return null;
+
+        if (length == 1)
+            return new TreeNode(head.val);
+
+        int mid = length / 2;
+
+        ListNode p = head;
+        ListNode q = head.next;
+
+        for (int i = 0; i < mid - 1; i++) {
+            p = q;
+            q = q.next;
+        }
+
+        p.next = null;
+        TreeNode root = new TreeNode(q.val);
+        root.left = sortedListToBST(head, mid);
+        root.right = sortedListToBST(q.next, length - mid - 1);
+        return root;
+
+    }
 
 
 
@@ -5640,7 +5812,7 @@ public class LeetCode {
 
         int[] preorder = {1, 2};
         int[] inorder =  {2, 1};
-        TreeNode root1 = buildTree(preorder, inorder);
+        TreeNode root1 = buildTree1(preorder, inorder);
 
         System.out.println("End");
     }
