@@ -4274,33 +4274,29 @@ public class LeetCode {
 
     /**
      * https://oj.leetcode.com/problems/same-tree/
-     * https://oj.leetcode.com/submissions/detail/12095539/
+     * http://www.programcreek.com/2012/12/check-if-two-trees-are-same-or-not/
+     * https://oj.leetcode.com/submissions/detail/12151092/
      *
      */
     public boolean isSameTree(TreeNode p, TreeNode q) {
         if(p == q)
             return true;
+
         if(p == null && q == null)
             return true;
-        if(p == null && q != null)
+        else if (p != null && q != null) {
+            if (p.val != q.val)
+                return false;
+            else
+                return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+        } else
             return false;
-        if(p != null && q == null)
-            return false;
-        if(p.val != q.val)
-            return false;
-
-        if(!isSameTree(p.left, q.left))
-            return false;
-        if(!isSameTree(p.right, q.right))
-            return false;
-
-        return true;
 
     }
 
     /**
      * https://oj.leetcode.com/problems/symmetric-tree/
-     * https://oj.leetcode.com/submissions/detail/12096090/
+     * https://oj.leetcode.com/submissions/detail/12151355/
      */
     public boolean isSymmetric(TreeNode root) {
         if(root == null)
@@ -4309,28 +4305,21 @@ public class LeetCode {
 
     }
 
+
     private boolean isSymmetric(TreeNode p, TreeNode q) {
         if (p == null && q == null)
             return true;
-
-        if (!equals(p, q))
+        else if (p != null && q != null) {
+            if (p.val != q.val)
+                return false;
+            else
+                return isSymmetric(p.left, q.right) && isSymmetric(p.right, q.left);
+        } else
             return false;
-
-        if (!isSymmetric(p.left, q.right))
-            return false;
-        if (!isSymmetric(p.right, q.left))
-            return false;
-
-        return true;
-
     }
-    private boolean equals(TreeNode p, TreeNode q){
-        if (p == null && q == null)
-            return true;
-        if ((p == null && q != null) || (p != null && q == null))
-            return false;
-        return (p.val == q.val);
-    }
+
+
+
 
     /**
      * https://oj.leetcode.com/problems/binary-tree-level-order-traversal/
@@ -4653,6 +4642,157 @@ public class LeetCode {
 
     }
 
+    /**
+     * https://oj.leetcode.com/problems/balanced-binary-tree/
+     * http://www.programcreek.com/2013/02/leetcode-balanced-binary-tree-java/
+     * https://oj.leetcode.com/submissions/detail/12150340/
+     */
+    public boolean isBalanced(TreeNode root) {
+        if (root == null)
+            return true;
+        int depthLeft = depth(root.left);
+        int depthRight = depth(root.right);
+
+        if (Math.abs(depthLeft - depthRight) > 1)
+            return false;
+        return isBalanced(root.left) && isBalanced(root.right);
+
+    }
+
+    private int depth(TreeNode root) {
+        if (root == null)
+            return 0;
+        return Math.max(1 + depth(root.left), 1 + depth(root.right));
+    }
+
+    public boolean isBalanced2(TreeNode root) {
+        if (root == null)
+            return true;
+
+        if (getHeight(root) == -1)
+            return false;
+
+        return true;
+    }
+
+    public int getHeight(TreeNode root) {
+        if (root == null)
+            return 0;
+
+        int left = getHeight(root.left);
+        int right = getHeight(root.right);
+
+        if (left == -1 || right == -1)
+            return -1;
+
+        if (Math.abs(left - right) > 1) {
+            return -1;
+        }
+
+        return Math.max(left, right) + 1;
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/minimum-depth-of-binary-tree/
+     * http://www.programcreek.com/2013/02/leetcode-minimum-depth-of-binary-tree-java/
+     * https://oj.leetcode.com/submissions/detail/12150692/
+     */
+    public int minDepth(TreeNode root) {
+        if (root == null)
+            return 0;
+
+        if (root.left == null && root.right == null)
+            return 1;
+
+        else if (root.left != null && root.right == null)
+            return 1 + minDepth(root.left);
+
+        else if (root.left == null && root.right != null)
+            return 1 + minDepth(root.right);
+
+        else
+            return Math.min(1 + minDepth(root.left), 1 + minDepth(root.right));
+    }
+
+    public int minDepth2(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        LinkedList<TreeNode> nodes = new LinkedList<TreeNode>();
+        LinkedList<Integer> counts = new LinkedList<Integer>();
+
+        nodes.add(root);
+        counts.add(1);
+
+        while (!nodes.isEmpty()) {
+            TreeNode curr = nodes.remove();
+            int count = counts.remove();
+
+            if (curr.left != null) {
+                nodes.add(curr.left);
+                counts.add(count + 1);
+            }
+
+            if (curr.right != null) {
+                nodes.add(curr.right);
+                counts.add(count + 1);
+            }
+
+            if (curr.left == null && curr.right == null) {
+                return count;
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/path-sum/
+     * https://oj.leetcode.com/submissions/detail/12152755/
+     */
+    public boolean hasPathSum(TreeNode root, int sum) {
+        if (root == null)
+            return false;
+        if (root.val == sum && root.left == null && root.right == null)
+            return true;
+        else
+            return hasPathSum(root.left, sum - root.val) || hasPathSum(root.right, sum - root.val);
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/path-sum-ii/
+     * https://oj.leetcode.com/submissions/detail/12153401/
+     */
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        List<Integer> list = new ArrayList<Integer>();
+        pathSum(result, list, root, sum);
+        return result;
+    }
+
+    private void pathSum(List<List<Integer>> result, List<Integer> list, TreeNode root, int sum) {
+        if (root == null)
+            return;
+
+        list.add(root.val);
+
+        if (root.val == sum && root.left == null && root.right == null) {
+            result.add(list);
+            return;
+        }
+
+        if (root.left != null) {
+            List<Integer> l1 = new ArrayList<Integer>(list);
+            pathSum(result, l1, root.left, sum - root.val);
+        }
+
+        if (root.right != null) {
+            List<Integer> l2 = new ArrayList<Integer>(list);
+            pathSum(result, l2, root.right, sum - root.val);
+        }
+    }
 
 
     /////////////////////////////////////////////
