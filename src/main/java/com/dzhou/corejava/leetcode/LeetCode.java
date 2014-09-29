@@ -4794,6 +4794,132 @@ public class LeetCode {
         }
     }
 
+    /**
+     * https://oj.leetcode.com/problems/flatten-binary-tree-to-linked-list/
+     * https://oj.leetcode.com/submissions/detail/12210357/
+     */
+    public void flatten(TreeNode root) {
+        if (root == null)
+            return;
+
+        flatten(root.right);
+
+        if (root.left != null) {
+            TreeNode p = root;
+            TreeNode q = root.right;
+
+            flatten(root.left);
+            root.right = root.left;
+            root.left = null;
+            while (p.right != null)
+                p = p.right;
+            p.right = q;
+
+        }
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/distinct-subsequences/
+     * http://www.programcreek.com/2013/01/leetcode-distinct-subsequences-total-java/
+     * https://oj.leetcode.com/submissions/detail/12214198/
+     */
+
+    /**
+     *
+     * Let W(i, j) stand for the number of subsequences of S(0, i) in T(0, j).
+     * If S.charAt(i) == T.charAt(j), W(i, j) = W(i-1, j-1) + W(i-1,j); Otherwise, W(i, j) = W(i-1,j).
+     */
+    public static int numDistinct(String S, String T) {
+        int[][] table = new int[S.length()][T.length()];
+
+
+        for (int i = 0; i < S.length(); i++) {
+            if (S.charAt(i) == T.charAt(0)) {
+                if (i == 0)
+                    table[i][0] = 1;
+                else
+                    table[i][0] = table[i - 1][0] + 1;
+            } else {
+                if (i == 0)
+                    table[i][0] = 0;
+                else
+                    table[i][0] = table[i - 1][0];
+            }
+        }
+
+        for (int i = 1; i <= S.length() - 1; i++) {
+            for (int j = 1; j <= T.length() - 1; j++) {
+                if (S.charAt(i) == T.charAt(j)) {
+                    table[i][j] += table[i - 1][j] + table[i - 1][j - 1];
+                } else {
+                    table[i][j] += table[i - 1][j];
+                }
+            }
+        }
+
+        return table[S.length() - 1][T.length() - 1];
+    }
+
+
+    public static int numDistinct2(String S, String T) {
+        int[][] table = new int[S.length() + 1][T.length() + 1];
+
+        for (int i = 0; i < S.length(); i++)
+            table[i][0] = 1;
+
+        for (int i = 1; i <= S.length(); i++) {
+            for (int j = 1; j <= T.length(); j++) {
+                if (S.charAt(i - 1) == T.charAt(j - 1)) {
+                    table[i][j] += table[i - 1][j] + table[i - 1][j - 1];
+                } else {
+                    table[i][j] += table[i - 1][j];
+                }
+            }
+        }
+
+        return table[S.length()][T.length()];
+    }
+
+//    public static int numDistinct(String S, String T) {
+//        Map<String, Integer> countMap = new HashMap<String, Integer>();
+//        if (S == null || T == null || S.length() < T.length())
+//            return 0;
+//
+//        return numDistinct(S, T, S.length(), T.length(), 0, 0, countMap);
+//    }
+//
+//    public static int numDistinct(String S, String T, int sLen, int tLen, int s, int t, Map<String, Integer> countMap) {
+//        if (s >= sLen || t >= tLen)
+//            return 0;
+//
+//        String key = s + "_" + t;
+//
+//        Integer count = countMap.get(key);
+//        if (count != null) {
+//            return count;
+//        } else {
+//            char c = T.charAt(t);
+//            count = 0;
+//            if (t == tLen - 1) {
+//                for (int i = s; i <= sLen - 1; i++) {
+//                    if (S.charAt(i) == c)
+//                        count++;
+//                }
+//
+//            } else {
+//                for (int i = s; i <= sLen - 1; i++) {
+//                    if (S.charAt(i) == c) {
+//                        count += numDistinct(S, T, sLen, tLen, i + 1, t + 1, countMap);
+//                    }
+//
+//                }
+//            }
+//            countMap.put(key, count);
+//            return count;
+//        }
+//
+//    }
 
     /////////////////////////////////////////////
 
@@ -5953,6 +6079,16 @@ public class LeetCode {
         int[] preorder = {1, 2};
         int[] inorder =  {2, 1};
         TreeNode root1 = buildTree1(preorder, inorder);
+
+        System.out.println("Test numDistinct");
+        String S3 = "rabbbit";
+        String T3 = "rabbit";
+        S3 = "daacaedaceacabbaabdccdaaeaebacddadcaeaacadbceaecddecdeedcebcdacdaebccdeebcbdeaccabcecbeeaadbccbaeccbbdaeadecabbbedceaddcdeabbcdaeadcddedddcececbeeabcbecaeadddeddccbdbcdcbceabcacddbbcedebbcaccac";
+        T3 = "ceadbaa";
+        t1 = System.currentTimeMillis();
+        System.out.println(numDistinct(S3, T3));
+        t2 = System.currentTimeMillis();
+        System.out.println("t2 - t1 = " + (t2 - t1));
 
         System.out.println("End");
     }
