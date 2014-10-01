@@ -4921,6 +4921,138 @@ public class LeetCode {
 //
 //    }
 
+    /**
+     * https://oj.leetcode.com/problems/populating-next-right-pointers-in-each-node/
+     * https://oj.leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/
+     * https://oj.leetcode.com/submissions/detail/12269971/
+     * https://oj.leetcode.com/submissions/detail/12270020/
+     */
+    public void connect(TreeLinkNode root) {
+
+        if (root == null)
+            return;
+
+        Queue<TreeLinkNode> parents = new LinkedList<TreeLinkNode>();
+        Queue<TreeLinkNode> children = new LinkedList<TreeLinkNode>();
+
+        parents.add(root);
+        while (!parents.isEmpty()) {
+            TreeLinkNode p = parents.poll();
+            if (p.left != null) {
+                children.add(p.left);
+            }
+            if (p.right != null) {
+                children.add(p.right);
+            }
+            while (!parents.isEmpty()) {
+                TreeLinkNode q = parents.poll();
+                p.next = q;
+                p = q;
+                if (p.left != null) {
+                    children.add(p.left);
+                }
+                if (p.right != null) {
+                    children.add(p.right);
+                }
+            }
+
+            while (!children.isEmpty()) {
+                parents.add(children.poll());
+            }
+
+        }
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/pascals-triangle/
+     * https://oj.leetcode.com/submissions/detail/12270979/
+     */
+    public List<List<Integer>> generate(int numRows) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        List<Integer> list = new ArrayList<Integer>();
+        List<Integer> last = new ArrayList<Integer>();
+
+        if(numRows == 0)
+            return result;
+
+        list.add(1);
+        result.add(list);
+
+        if (numRows == 1)
+            return result;
+
+        for (int i = 2; i <= numRows; i++) {
+            last = list;
+            list = new ArrayList<Integer>();
+            list.add(1);
+            for (int j = 0; j <= last.size() - 2; j++) {
+                list.add(last.get(j) + last.get(j + 1));
+            }
+            list.add(1);
+            result.add(list);
+        }
+        return result;
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/pascals-triangle-ii/
+     * https://oj.leetcode.com/submissions/detail/12271303/
+     */
+    public List<Integer> getRow(int rowIndex) {
+        List<Integer> result = new ArrayList<Integer>();
+
+        if (rowIndex < 0)
+            return result;
+
+        result.add(1);
+
+        if (rowIndex == 0)
+            return result;
+
+        List<Integer> last = new ArrayList<Integer>();
+        for (int i = 1; i <= rowIndex; i++) {
+            last = result;
+            result = new ArrayList<Integer>();
+            result.add(1);
+            for (int j = 0; j <= last.size() - 2; j++) {
+                result.add(last.get(j) + last.get(j + 1));
+            }
+            result.add(1);
+        }
+        return result;
+    }
+
+
+    /**
+     * https://oj.leetcode.com/problems/triangle/
+     * https://oj.leetcode.com/submissions/detail/12272520/
+     */
+    public int minimumTotal(List<List<Integer>> triangle) {
+        if (triangle == null || triangle.size() == 0)
+            return 0;
+
+        int numRows = triangle.size();
+        if (numRows == 1)
+            return triangle.get(0).get(0);
+
+        int[] row = new int[numRows];
+        List<Integer> lastRow = triangle.get(numRows - 1);
+        for (int i = 0; i <= numRows - 1; i++)
+            row[i] = lastRow.get(i);
+
+        for (int i = numRows - 2; i >= 0; i--) {
+            lastRow = triangle.get(i);
+            for (int j = 0; j <= i; j++)
+                row[j] = lastRow.get(j) + Math.min(row[j], row[j + 1]);
+
+        }
+        return row[0];
+    }
+
+
+
     /////////////////////////////////////////////
 
     /////////////////////////////////////////////
@@ -6089,6 +6221,8 @@ public class LeetCode {
         System.out.println(numDistinct(S3, T3));
         t2 = System.currentTimeMillis();
         System.out.println("t2 - t1 = " + (t2 - t1));
+
+
 
         System.out.println("End");
     }
