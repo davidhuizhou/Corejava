@@ -290,7 +290,7 @@ public class LeetCode1 {
 
     /**
      * https://oj.leetcode.com/problems/word-ladder-ii/
-     * https://oj.leetcode.com/submissions/detail/12414060/
+     * https://oj.leetcode.com/submissions/detail/12414899/
      *
      */
     public static List<List<String>> findLadders(String start, String end, Set<String> dict) {
@@ -307,13 +307,11 @@ public class LeetCode1 {
         wordQueue.add(words);
 
         boolean reachEnd = false;
-
         LinkedList<List<String>> children = new LinkedList<List<String>>();
         Set<String> removeWords = new HashSet<String>();
+        HashMap<String, Set<String>> map = new HashMap<String, Set<String>>();
 
-        while (!wordQueue.isEmpty()) {
-
-            HashMap<String, Set<String>> map = new HashMap<String, Set<String>>();
+        while (true) {
 
             while (!wordQueue.isEmpty()) {
                 LinkedList<String> currWords = (LinkedList<String>) wordQueue.poll();
@@ -357,20 +355,18 @@ public class LeetCode1 {
                 }
             }
 
-
-            if (reachEnd)
-                return result;
-
-            else if (children.size() > 0) {
-                dict.removeAll(removeWords);
+            if (!reachEnd && children.size() > 0) {
                 wordQueue.addAll(children);
+                dict.removeAll(removeWords);
                 removeWords.clear();
                 children.clear();
+                map.clear();
+            } else {
+                return result;
             }
 
         }
 
-        return result;
     }
 
 
