@@ -594,6 +594,66 @@ public class LeetCode1 {
 
     }
 
+
+    /**
+     * https://oj.leetcode.com/problems/palindrome-partitioning/
+     * http://www.programcreek.com/2013/03/leetcode-palindrome-partitioning-java/
+     * https://oj.leetcode.com/submissions/detail/12916079/
+     *
+     */
+    public static List<List<String>> partition(String s) {
+        List<List<String>> results = new ArrayList<List<String>>();
+
+        if (s == null)
+            return results;
+
+        if(s.length() == 0){
+            List<String> list = new ArrayList<String>();
+            results.add(list);
+            return results;
+        }
+
+        if (s.length() == 1) {
+            List<String> list = new ArrayList<String>();
+            list.add(s);
+            results.add(list);
+            return results;
+        }
+
+        for (int i = 1; i <= s.length(); i++) {
+            if (isPalindrome2(s.substring(0, i))) {
+                List<List<String>> r = partition(s.substring(i));
+                for (List<String> l : r) {
+                    l.add(0, s.substring(0, i));
+                    results.add(l);
+                }
+            }
+        }
+        return results;
+
+
+    }
+
+
+
+
+    private static boolean isPalindrome2(String s) {
+        int i = 0, j = s.length() - 1;
+        while (i < j && s.charAt(i) == s.charAt(j)) {
+            i++;
+            j--;
+        }
+        return i >= j;
+    }
+
+
+    /**
+     * https://oj.leetcode.com/problems/palindrome-partitioning-ii/
+     */
+    public int minCut(String s) {
+        return 0;
+    }
+
     private static void printBoard(char[][] board){
         System.out.println("\n\n");
         for(int i = 0; i < board.length; i++) {
@@ -602,6 +662,94 @@ public class LeetCode1 {
 
             System.out.println("");
         }
+    }
+
+    /**
+     * Recursive top-down implementation
+     * @param prices
+     * @param n
+     * @return
+     */
+    public static int cutRod(int[] prices, int n) {
+        if (n == 0)
+            return 0;
+        int q = Integer.MIN_VALUE;
+        for (int i = 1; i <= n; i++)
+            q = Math.max(q, prices[i] + cutRod(prices, n - i));
+        return q;
+
+    }
+
+
+    public static int memorizedCutRod(int[] p, int n) {
+        int[] r = new int[n + 1];
+        r[0] = 0;
+
+        for (int i = 1; i <= n; i++)
+            r[i] = Integer.MIN_VALUE;
+
+        return memorizedCutRodAux(p, n, r);
+
+    }
+
+    private static int memorizedCutRodAux(int[] p, int n, int[] r) {
+        int q = Integer.MIN_VALUE;
+
+        if (r[n] >= 0)
+            return r[n];
+
+        else {
+            for (int i = 1; i <= n; i++) {
+                q = Math.max(q, p[i] + memorizedCutRodAux(p, n - i, r));
+            }
+        }
+        r[n] = q;
+        return q;
+
+    }
+
+
+    public static int bottomUpCutRod(int[] p, int n){
+        int[] r = new int[n + 1];
+        r[0] = 0;
+        for(int j = 1; j <= n; j++){
+            int q = Integer.MIN_VALUE;
+            for(int i = 1; i <= j; i++){
+                q = Math.max(q, p[i] + r[j - i]);
+            }
+            r[j] = q;
+        }
+        return r[n];
+    }
+
+    public static int[] extendedBottomUpCutRod(int[] p, int n) {
+        int[] r = new int[n+1];
+        int[] s = new int[n + 1];
+        r[0] = 0;
+        s[0] = 0;
+
+        for(int j = 1; j <= n; j++){
+            int q = Integer.MIN_VALUE;
+            for(int i = 0; i <=j; i++){
+                if(q < p[i] + r[j-i]){
+                    q = p[i] + r[j - i];
+                    s[j] = i;
+                }
+            }
+            r[j] = q;
+
+        }
+        return s;
+    }
+
+    public static void printCutRodSolution(int[] p, int n) {
+        int[] s = extendedBottomUpCutRod(p, n);
+        while (n > 0) {
+            System.out.print(s[n] + " ");
+            n = n - s[n];
+        }
+        System.out.println();
+
     }
 
     public static void main(String[] args){
@@ -686,7 +834,7 @@ public class LeetCode1 {
         String[] bbb = {"OOO","OXO","OOO"};
 
 
-        bbb = new String[] {"OOXOOXOOOOOOOOXXOXOO","OXOOOOXXOOOXOOXXOOOO","XOXXOOOOOXOOOXOXXXXO","XXOOOOOOOOXOOXXXXXXX","OOOOOXOOOXXXXOXOOOOO","OXXXOOOXOXOXOOXOXXOO","OOOOOOOOXXXOOXXOOOOO","OXXOOOOOXOXXOXXOOXOO","OOXXXOOXOOOOOOOXXXOX","XXOOOXOXOOOXXOOXOXXO","OOOOOOXOXXOOXOXXXXOX","OOXXOOXOXOOXOOXOOXOX","OXOOOOOXOOOOOOXXXOOO","OOXOXOOXXOXXXOOXXOOX","XOXOXOXOOOOOOOXOOXXO","XOXXXOXOOOOOOXOOOOXX","XOOOOXOOOOOOXOOOOOXX","OOOOOOXOOOXOXOXXOXOX","XOOXOOOOOOXOOOOOXXXX","OOOXXOOOOOOOOXOOOXOO"};
+//        bbb = new String[] {"OOXOOXOOOOOOOOXXOXOO","OXOOOOXXOOOXOOXXOOOO","XOXXOOOOOXOOOXOXXXXO","XXOOOOOOOOXOOXXXXXXX","OOOOOXOOOXXXXOXOOOOO","OXXXOOOXOXOXOOXOXXOO","OOOOOOOOXXXOOXXOOOOO","OXXOOOOOXOXXOXXOOXOO","OOXXXOOXOOOOOOOXXXOX","XXOOOXOXOOOXXOOXOXXO","OOOOOOXOXXOOXOXXXXOX","OOXXOOXOXOOXOOXOOXOX","OXOOOOOXOOOOOOXXXOOO","OOXOXOOXXOXXXOOXXOOX","XOXOXOXOOOOOOOXOOXXO","XOXXXOXOOOOOOXOOOOXX","XOOOOXOOOOOOXOOOOOXX","OOOOOOXOOOXOXOXXOXOX","XOOXOOOOOOXOOOOOXXXX","OOOXXOOOOOOOOXOOOXOO"};
         char[][] board = new char[bbb.length][bbb[0].length()];
         for(int i = 0; i < bbb.length; i++){
             String s = bbb[i];
@@ -709,6 +857,32 @@ public class LeetCode1 {
                 System.out.print(board[i][j] + " ");
 
             System.out.println();
+        }
+
+
+        String s = "aab";
+        List<List<String>> results = partition(s);
+        for(List<String> list : results){
+            for(String ss : list)
+                System.out.print(ss + " ");
+            System.out.println();
+        }
+
+        int[] p = {0, 1, 5, 8, 9, 10, 17, 17, 20, 24, 30};
+        for(int i = 1; i <=10; i++){
+            System.out.println("r" + i + ": " + cutRod(p, i));
+        }
+
+        for(int i = 1; i <=10; i++){
+            System.out.println("r" + i + ": " + memorizedCutRod(p, i));
+        }
+
+        for(int i = 1; i <=10; i++){
+            System.out.println("r" + i + ": " + bottomUpCutRod(p, i));
+        }
+
+        for(int i = 1; i <=10; i++){
+            printCutRodSolution(p, i);
         }
 
 
