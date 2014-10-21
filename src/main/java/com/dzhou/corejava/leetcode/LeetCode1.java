@@ -844,10 +844,10 @@ public class LeetCode1 {
      * @param n
      * @return
      */
-    public static int cutRod(int[] prices, int n) {
+    public static double cutRod(double[] prices, int n) {
         if (n == 0)
-            return 0;
-        int q = Integer.MIN_VALUE;
+            return 0d;
+        double q = Double.NEGATIVE_INFINITY;
         for (int i = 1; i <= n; i++)
             q = Math.max(q, prices[i] + cutRod(prices, n - i));
         return q;
@@ -855,21 +855,21 @@ public class LeetCode1 {
     }
 
 
-    public static int memorizedCutRod(int[] p, int n) {
-        int[] r = new int[n + 1];
-        r[0] = 0;
+    public static double memorizedCutRod(double[] p, int n) {
+        double[] r = new double[n + 1];
+        r[0] = 0d;
 
         for (int i = 1; i <= n; i++)
-            r[i] = Integer.MIN_VALUE;
+            r[i] = Double.NEGATIVE_INFINITY;
 
         return memorizedCutRodAux(p, n, r);
 
     }
 
-    private static int memorizedCutRodAux(int[] p, int n, int[] r) {
-        int q = Integer.MIN_VALUE;
+    private static double memorizedCutRodAux(double[] p, int n, double[] r) {
+        double q = Double.NEGATIVE_INFINITY;
 
-        if (r[n] >= 0)
+        if (r[n] >= 0d)
             return r[n];
 
         else {
@@ -883,11 +883,11 @@ public class LeetCode1 {
     }
 
 
-    public static int bottomUpCutRod(int[] p, int n){
-        int[] r = new int[n + 1];
-        r[0] = 0;
+    public static double bottomUpCutRod(double[] p, int n){
+        double[] r = new double[n + 1];
+        r[0] = 0d;
         for(int j = 1; j <= n; j++){
-            int q = Integer.MIN_VALUE;
+            double q = Double.NEGATIVE_INFINITY;
             for(int i = 1; i <= j; i++){
                 q = Math.max(q, p[i] + r[j - i]);
             }
@@ -896,14 +896,14 @@ public class LeetCode1 {
         return r[n];
     }
 
-    public static int[] extendedBottomUpCutRod(int[] p, int n) {
-        int[] r = new int[n+1];
+    public static int[] extendedBottomUpCutRod(double[] p, int n) {
+        double[] r = new double[n+1];
         int[] s = new int[n + 1];
         r[0] = 0;
         s[0] = 0;
 
         for(int j = 1; j <= n; j++){
-            int q = Integer.MIN_VALUE;
+            double q = Double.NEGATIVE_INFINITY;
             for(int i = 0; i <=j; i++){
                 if(q < p[i] + r[j-i]){
                     q = p[i] + r[j - i];
@@ -916,7 +916,7 @@ public class LeetCode1 {
         return s;
     }
 
-    public static void printCutRodSolution(int[] p, int n) {
+    public static void printCutRodSolution(double[] p, int n) {
         int[] s = extendedBottomUpCutRod(p, n);
         while (n > 0) {
             System.out.print(s[n] + " ");
@@ -955,6 +955,59 @@ public class LeetCode1 {
             printOptimalParense(s, s[i][j] + 1, j);
             System.out.print(")");
         }
+    }
+
+    public static void LCS(char[] X, char[] Y) {
+        int m = X.length;
+        int n = Y.length;
+
+        int[][] c = new int[m + 1][n + 1];
+        char[][] b = new char[m + 1][n + 1];
+
+        for (int i = 1; i <= m; i++)
+            c[i][0] = 0;
+
+        for (int j = 0; j <= n; j++)
+            c[0][j] = 0;
+
+        LCS(X, Y, c, b);
+
+        printLCS(b, X, 7, 6);
+
+
+    }
+
+    public static void LCS(char[] X, char[] Y, int[][] c, char[][] b) {
+        int m = X.length;
+        int n = Y.length;
+
+        for (int i = 1; i <= m; i++)
+            for (int j = 1; j <= n; j++) {
+                if (X[i - 1] == Y[j - 1]) {
+                    c[i][j] = c[i - 1][j - 1] + 1;
+                    b[i][j] = '\\';
+                } else if (c[i - 1][j] >= c[i][j - 1]) {
+                    c[i][j] = c[i - 1][j];
+                    b[i][j] = '|';
+                } else {
+                    c[i][j] = c[i][j - 1];
+                    b[i][j] = '-';
+                }
+            }
+    }
+
+    private static void printLCS(char[][] b, char[] X, int i, int j) {
+        if (i == 0 || j == 0)
+            return;
+        if (b[i][j] == '\\') {
+            printLCS(b, X, i - 1, j - 1);
+            System.out.print(X[i - 1]);
+        } else if (b[i][j] == '|') {
+            printLCS(b, X, i - 1, j);
+        } else {
+            printLCS(b, X, i, j - 1);
+        }
+
     }
 
     public static void main(String[] args){
@@ -1080,7 +1133,7 @@ public class LeetCode1 {
         long l2 = System.currentTimeMillis();
         System.out.println("l2 - l1 = " + (l2 - l1));
 
-        int[] p = {0, 1, 5, 8, 9, 10, 17, 17, 20, 24, 30};
+        double[] p = {0, 1, 5, 8, 9, 10, 17, 17, 20, 24, 30};
         for(int i = 1; i <=10; i++){
             System.out.println("r" + i + ": " + cutRod(p, i));
         }
@@ -1112,6 +1165,8 @@ public class LeetCode1 {
         int[] cost = {2, 1};
 
         System.out.println(canCompleteCircuit(gas, cost));
+
+        LCS("ABCBDAB".toCharArray(), "BDCABA".toCharArray());
 
 
 
