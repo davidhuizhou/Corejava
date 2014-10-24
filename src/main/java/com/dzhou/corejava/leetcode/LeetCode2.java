@@ -109,6 +109,155 @@ public class LeetCode2 {
 
     }
 
+    /**
+     * https://oj.leetcode.com/problems/copy-list-with-random-pointer/
+     * http://yucoding.blogspot.com/2013/12/leetcode-question-copy-list-with-random.html
+     * https://oj.leetcode.com/submissions/detail/13753091/
+     */
+    public RandomListNode copyRandomList(RandomListNode head) {
+
+        Map<Integer, RandomListNode> map = new HashMap<Integer, RandomListNode>();
+        return copyRandomList(head, map);
+
+    }
+
+    public RandomListNode copyRandomList(RandomListNode node, Map<Integer, RandomListNode> map) {
+        if (node == null)
+            return null;
+
+        RandomListNode newNode = new RandomListNode(node.label);
+        map.put(newNode.label, newNode);
+
+        if (node.next == null) {
+            newNode.next = null;
+        } else if (map.containsKey(node.next.label)) {
+            newNode.next = map.get(node.next.label);
+        } else {
+            newNode.next = copyRandomList(node.next, map);
+        }
+
+        if (node.random == null) {
+            newNode.random = null;
+        } else if (map.containsKey(node.random.label)) {
+            newNode.random = map.get(node.random.label);
+        } else {
+            newNode.random = copyRandomList(node.random, map);
+        }
+
+        return newNode;
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/word-break/
+     * http://www.programcreek.com/2012/12/leetcode-solution-word-break/
+     * https://oj.leetcode.com/submissions/detail/13755384/
+     */
+    public static boolean wordBreak1(String s, Set<String> dict) {
+        if (s == null || dict == null)
+            return false;
+        if (dict.contains(s))
+            return true;
+
+        int n = s.length();
+        boolean[] c = new boolean[n];
+
+        c[0] = dict.contains(s.substring(0, 1));
+
+        for (int i = 1; i < n; i++) {
+            if (dict.contains(s.substring(0, i + 1)))
+                c[i] = true;
+            else {
+                for (int k = 0; k < i; k++) {
+                    if (c[k] && dict.contains(s.substring(k + 1, i + 1))) {
+                        c[i] = true;
+                        break;
+                    }
+
+                }
+            }
+        }
+
+        return c[n - 1];
+
+    }
+
+    /**
+     * https://oj.leetcode.com/problems/word-break-ii/
+     * http://yucoding.blogspot.com/2014/01/leetcode-question-word-break-ii.html
+     * https://oj.leetcode.com/submissions/detail/13760046/
+     * https://oj.leetcode.com/submissions/detail/13760300/
+     */
+    public static List<String> wordBreak(String s, Set<String> dict) {
+        List<String> r = new ArrayList<String>();
+        if (s == null || dict == null || s.length() == 0 || !shouldProceed(s, dict))
+            return r;
+
+        if (dict.contains(s))
+            r.add(s);
+
+        List<String> words = findFirstWords(s, dict);
+        for (String w : words) {
+            List<String> l = wordBreak(s.substring(w.length()), dict);
+            for (String str : l) {
+                r.add(w + " " + str);
+            }
+        }
+        return r;
+    }
+
+    private static List<String> findFirstWords(String s, Set<String> dict) {
+        List<String> words = new ArrayList<String>();
+        for (int i = 0; i < s.length(); i++) {
+            if (dict.contains(s.substring(0, i)))
+                words.add(s.substring(0, i));
+        }
+        return words;
+    }
+
+    public static List<String> wordBreak2(String s, Set<String> dict) {
+        if (s == null || dict == null || !shouldProceed(s, dict))
+            return new ArrayList<String>();
+
+        int n = s.length();
+        HashMap<Integer, List<String>> map = new HashMap<Integer, List<String>>();
+        map.put(0, new ArrayList<String>());
+
+        for (int i = 1; i <= n; i++) {
+            List<String> newList = new ArrayList<String>();
+            if (dict.contains(s.substring(0, i)))
+                newList.add(s.substring(0, i));
+
+            for (int k = 1; k < i; k++) {
+                String t = s.substring(k, i);
+                if (dict.contains(t)) {
+                    List<String> list = map.get(k);
+                    for (String ll : list) {
+                        newList.add(ll + " " + t);
+                    }
+
+                }
+
+            }
+            map.put(i, newList);
+        }
+
+        return map.get(n);
+
+    }
+
+    private static boolean shouldProceed(String s, Set<String> dict) {
+        boolean r = false;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            if (dict.contains(s.substring(i)))
+                return true;
+        }
+        return false;
+    }
+
+
+
+
 
     public static void main(String[] args){
       int[] ratings = new int[12000];
@@ -125,6 +274,35 @@ public class LeetCode2 {
 
 
         int[] numbers = {11, 11, 11, 12};
+
+        String s = "leetcode";
+        Set<String> dict = new HashSet<String>();
+        dict.add("leet");
+        dict.add("code");
+
+        System.out.println(wordBreak1(s, dict));
+
+        dict.add("cat");
+        dict.add ("cats");
+        dict.add ("and");
+        dict.add ("sand");
+        dict.add("dog");
+//        dict.clear();
+        s = "catsanddog";
+
+//        s = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab";
+//        Collections.addAll(dict, new String[]{"a","aa","aaa","aaaa","aaaaa","aaaaaa","aaaaaaa","aaaaaaaa","aaaaaaaaa","aaaaaaaaaa"});
+
+
+
+        l1 = System.currentTimeMillis();
+        List<String> list = wordBreak(s, dict);
+        l2 = System.currentTimeMillis();
+        System.out.println("l2 - l1=" + (l2 - l1));
+
+        for(String ss : list)
+            System.out.println(ss);
+
 
     }
 }
