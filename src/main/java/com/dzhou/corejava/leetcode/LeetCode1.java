@@ -1010,6 +1010,57 @@ public class LeetCode1 {
 
     }
 
+    public static Set<Integer> recursiveActivitySelector(int[] s, int[] f, int k, int n) {
+        int m = k + 1;
+        Set<Integer> result = new HashSet<Integer>();
+        while (m <= n && s[m] < f[k])
+            m++;
+        if (m <= n) {
+            result.add(m);
+            result.addAll(recursiveActivitySelector(s, f, m, n));
+        }
+        return result;
+    }
+
+    public static Set<Integer> greedyActivitySelector(int[] s, int[] f) {
+        int n = s.length - 1;
+        Set<Integer> set = new HashSet<Integer>();
+        set.add(1);
+        int k = 1;
+        for (int m = 2; m <= n; m++) {
+            if (s[m] >= f[k]) {
+                set.add(m);
+                k = m;
+            }
+        }
+        return set;
+
+    }
+
+    public static int dynamic01Knapsack(int[] v, int[] w, int n, int W) {
+        int[][] c = new int[n + 1][W + 1];
+        for (int weight = 0; weight <= W; weight++)
+            c[0][weight] = 0;
+
+        for (int i = 1; i <= n; i++) {
+            c[i][0] = 0;
+            for (int weight = 1; weight <= W; weight++) {
+                if (w[i] <= weight) {
+                    if (v[i] + c[i - 1][weight - w[i]] > c[i - 1][weight]) {
+                        c[i][weight] = v[i] + c[i - 1][weight - w[i]];
+
+                    } else {
+                        c[i][weight] = c[i - 1][weight];
+                    }
+                } else {
+                    c[i][weight] = c[i - 1][weight];
+                }
+            }
+        }
+        return c[n][W];
+
+    }
+
     public static void main(String[] args){
 
         System.out.println("Test maxProfit3");
@@ -1168,6 +1219,21 @@ public class LeetCode1 {
 
         LCS("ABCBDAB".toCharArray(), "BDCABA".toCharArray());
 
+        System.out.println();
+
+        int[] st = {0, 1, 3, 0, 5, 3, 5, 6, 8, 8, 2, 12};
+        int[] f = {0, 4, 5, 6, 7, 9, 9, 10, 11, 12, 14, 16};
+
+        Set<Integer> set = recursiveActivitySelector(st, f, 0, st.length - 1);
+        set = greedyActivitySelector(st, f);
+        for(Integer sst : set){
+            System.out.print("a" + sst + " ");
+        }
+        System.out.println();
+
+        int[] v = {0, 60, 100, 120};
+        int[] w = {0, 10, 20, 30};
+        System.out.println(dynamic01Knapsack(v, w, 3, 50));
 
 
     }
