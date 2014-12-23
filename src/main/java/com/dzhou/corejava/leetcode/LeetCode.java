@@ -824,6 +824,8 @@ public class LeetCode {
     }
 
 
+
+
     private static void permute(Set<String> result, String[] L, String p, int count, int total) {
         if (count == total)
             result.add(p);
@@ -2280,6 +2282,8 @@ public class LeetCode {
 
     }
 
+
+
     /**
      * https://oj.leetcode.com/problems/n-queens/
      * http://www.darrensunny.me/leetcode-n-queens/
@@ -2889,6 +2893,8 @@ public class LeetCode {
 
     }
 
+    
+
 
     /**
      * https://oj.leetcode.com/problems/climbing-stairs/
@@ -3001,24 +3007,24 @@ public class LeetCode {
         boolean firstColumnZero = false;
 
         //set first row and column zero or not
-        for(int i=0; i<matrix.length; i++){
-            if(matrix[i][0] == 0){
+        for (int i = 0; i < matrix.length; i++) {
+            if (matrix[i][0] == 0) {
                 firstColumnZero = true;
                 break;
             }
         }
 
-        for(int i=0; i<matrix[0].length; i++){
-            if(matrix[0][i] == 0){
+        for (int i = 0; i < matrix[0].length; i++) {
+            if (matrix[0][i] == 0) {
                 firstRowZero = true;
                 break;
             }
         }
 
         //mark zeros on first row and column
-        for(int i=1; i<matrix.length; i++){
-            for(int j=1; j<matrix[0].length; j++){
-                if(matrix[i][j] == 0){
+        for (int i = 1; i < matrix.length; i++) {
+            for (int j = 1; j < matrix[0].length; j++) {
+                if (matrix[i][j] == 0) {
                     matrix[i][0] = 0;
                     matrix[0][j] = 0;
                 }
@@ -3026,26 +3032,24 @@ public class LeetCode {
         }
 
         //use mark to set elements
-        for(int i=1; i<matrix.length; i++){
-            for(int j=1; j<matrix[0].length; j++){
-                if(matrix[i][0] == 0 || matrix[0][j] == 0){
+        for (int i = 1; i < matrix.length; i++) {
+            for (int j = 1; j < matrix[0].length; j++) {
+                if (matrix[i][0] == 0 || matrix[0][j] == 0) {
                     matrix[i][j] = 0;
                 }
             }
         }
 
         //set first column and row
-        if(firstColumnZero){
-            for(int i=0; i<matrix.length; i++)
+        if (firstColumnZero) {
+            for (int i = 0; i < matrix.length; i++)
                 matrix[i][0] = 0;
         }
 
-        if(firstRowZero){
-            for(int i=0; i<matrix[0].length; i++)
+        if (firstRowZero) {
+            for (int i = 0; i < matrix[0].length; i++)
                 matrix[0][i] = 0;
         }
-
-
 
     }
 
@@ -3081,6 +3085,8 @@ public class LeetCode {
 
         return false;
     }
+
+
 
     public static boolean searchMatrix2(int[][] matrix, int target) {
         if(matrix == null || matrix.length == 0 || matrix[0].length == 0)
@@ -3141,6 +3147,10 @@ public class LeetCode {
             }
         }
     }
+
+
+
+
 
     /**
      * https://oj.leetcode.com/problems/combinations/
@@ -3207,6 +3217,8 @@ public class LeetCode {
         }
 
     }
+
+
 
     /**
      * https://oj.leetcode.com/problems/subsets-ii/
@@ -3420,6 +3432,8 @@ public class LeetCode {
 
     }
 
+
+
     private static boolean isAvailable(char[][] board, Position p, Map<Position, Boolean> map, char c){
         return p.i >= 0 && p.i < board.length && p.j >= 0 && p.j < board[0].length
                 && !map.containsKey(p) && board[p.i][p.j] == c;
@@ -3476,24 +3490,40 @@ public class LeetCode {
         return head;
     }
 
+    public ListNode deleteDuplicates(ListNode head) {
+        if (head == null)
+            return head;
+        ListNode pre = head;
+        ListNode cur = head.next;
+        while (cur != null) {
+            if (cur.val == pre.val)
+                pre.next = cur.next;
+            else
+                pre = cur;
+            cur = cur.next;
+        }
+        return head;
+    }
+
     /**
      * https://oj.leetcode.com/problems/remove-duplicates-from-sorted-list-ii/
      * https://oj.leetcode.com/submissions/detail/10903116/
      *
      */
     public ListNode deleteDuplicates2(ListNode head) {
-        if(head == null || head.next == null) return head;
+        if (head == null || head.next == null)
+            return head;
 
         ListNode s = new ListNode(0);
         ListNode p = s;
         ListNode n = head;
-        while(n != null) {
+        while (n != null) {
             int count = 1;
-            while(n.next != null && n.next.val == n.val){
+            while (n.next != null && n.next.val == n.val) {
                 n.next = n.next.next;
                 count++;
             }
-            if(count == 1){
+            if (count == 1) {
                 p.next = n;
                 p = n;
                 n = n.next;
@@ -3506,6 +3536,8 @@ public class LeetCode {
         return s.next;
 
     }
+
+
 
     /**
      * https://oj.leetcode.com/problems/largest-rectangle-in-histogram/
@@ -3646,6 +3678,7 @@ public class LeetCode {
         }
         return Math.max(max, maxRect(matrix, startRow + 1));
     }
+
 
 
     /**
@@ -3988,6 +4021,7 @@ public class LeetCode {
 
     }
 
+
     private static void printTreeNode(TreeNode root) {
         if(root == null) return;
         System.out.print(root.val + " ");
@@ -4002,6 +4036,11 @@ public class LeetCode {
         inorder(root.right, list);
 
     }
+
+
+
+
+
 
     /**
      * https://oj.leetcode.com/problems/unique-binary-search-trees/
@@ -4426,7 +4465,7 @@ public class LeetCode {
         if (preorder.length == 0 || inorder.length == 0)
             return null;
 
-        if(preorder.length != inorder.length)
+        if (preorder.length != inorder.length)
             return null;
 
         int val = preorder[0];
@@ -4469,6 +4508,28 @@ public class LeetCode {
     }
 
 
+
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if (preorder == null || inorder == null)
+            return null;
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        for (int i = 0; i < inorder.length; i++) {
+            map.put(inorder[i], i);
+        }
+        return helper(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1, map);
+    }
+
+    private TreeNode helper(int[] preorder, int preL, int preR, int[] inorder, int inL, int inR,
+            HashMap<Integer, Integer> map) {
+        if (preL > preR || inL > inR)
+            return null;
+        TreeNode root = new TreeNode(preorder[preL]);
+        int index = map.get(root.val);
+        root.left = helper(preorder, preL + 1, index - inL + preL, inorder, inL, index - 1, map);
+        root.right = helper(preorder, preL + index - inL + 1, preR, inorder, index + 1, inR, map);
+        return root;
+    }
+
     /**
      * https://oj.leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
      * https://oj.leetcode.com/submissions/detail/12101977/
@@ -4509,7 +4570,6 @@ public class LeetCode {
         }
 
         return root;
-
 
     }
 
