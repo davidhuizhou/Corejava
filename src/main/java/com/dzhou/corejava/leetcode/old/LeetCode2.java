@@ -1,10 +1,14 @@
-package com.dzhou.corejava.leetcode;
+package com.dzhou.corejava.leetcode.old;
 
 /**
  * Created by huizhou on 10/18/14.
  */
 
-import java.math.BigDecimal;
+import com.dzhou.corejava.leetcode.ListNode;
+import com.dzhou.corejava.leetcode.Point;
+import com.dzhou.corejava.leetcode.RandomListNode;
+import com.dzhou.corejava.leetcode.TreeNode;
+
 import java.util.*;
 
 public class LeetCode2 {

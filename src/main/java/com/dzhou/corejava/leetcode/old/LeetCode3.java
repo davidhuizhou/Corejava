@@ -1,4 +1,6 @@
-package com.dzhou.corejava.leetcode;
+package com.dzhou.corejava.leetcode.old;
+
+import com.dzhou.corejava.leetcode.ListNode;
 
 import java.util.HashSet;
 import java.util.LinkedList;

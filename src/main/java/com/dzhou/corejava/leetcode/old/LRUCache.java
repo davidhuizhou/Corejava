@@ -1,4 +1,4 @@
-package com.dzhou.corejava.leetcode;
+package com.dzhou.corejava.leetcode.old;
 
 import java.util.*;
 
