@@ -3493,20 +3493,20 @@ public class LeetCode {
         return head;
     }
 
-    public ListNode deleteDuplicates(ListNode head) {
-        if (head == null)
-            return head;
-        ListNode pre = head;
-        ListNode cur = head.next;
-        while (cur != null) {
-            if (cur.val == pre.val)
-                pre.next = cur.next;
-            else
-                pre = cur;
-            cur = cur.next;
-        }
-        return head;
-    }
+//    public ListNode deleteDuplicates(ListNode head) {
+//        if (head == null)
+//            return head;
+//        ListNode pre = head;
+//        ListNode cur = head.next;
+//        while (cur != null) {
+//            if (cur.val == pre.val)
+//                pre.next = cur.next;
+//            else
+//                pre = cur;
+//            cur = cur.next;
+//        }
+//        return head;
+//    }
 
     /**
      * https://oj.leetcode.com/problems/remove-duplicates-from-sorted-list-ii/
@@ -4537,44 +4537,44 @@ public class LeetCode {
      * https://oj.leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
      * https://oj.leetcode.com/submissions/detail/12101977/
      */
-    public TreeNode buildTree(int[] inorder, int[] postorder) {
-        if (inorder == null || postorder == null)
-            return null;
-        if (inorder.length == 0 || postorder.length == 0)
-            return null;
-        if (inorder.length != postorder.length)
-            return null;
-
-        int size = postorder.length;
-        int val = postorder[size - 1];
-        TreeNode root = new TreeNode(val);
-
-        int index = rootIndex(val, inorder);
-
-        if (index >= 0) {
-            int[] leftInorder = new int[index];
-            int[] leftPostorder = new int[index];
-
-            for (int i = 0; i <= index - 1; i++) {
-                leftInorder[i] = inorder[i];
-                leftPostorder[i] = postorder[i];
-            }
-
-            int[] rightInorder = new int[size - index - 1];
-            int[] rightPostorder = new int[size - index - 1];
-
-            for (int i = index + 1; i <= size - 1; i++) {
-                rightInorder[i - index - 1] = inorder[i];
-                rightPostorder[i - index - 1] = postorder[i - 1];
-            }
-
-            root.left = buildTree(leftInorder, leftPostorder);
-            root.right = buildTree(rightInorder, rightPostorder);
-        }
-
-        return root;
-
-    }
+//    public TreeNode buildTree(int[] inorder, int[] postorder) {
+//        if (inorder == null || postorder == null)
+//            return null;
+//        if (inorder.length == 0 || postorder.length == 0)
+//            return null;
+//        if (inorder.length != postorder.length)
+//            return null;
+//
+//        int size = postorder.length;
+//        int val = postorder[size - 1];
+//        TreeNode root = new TreeNode(val);
+//
+//        int index = rootIndex(val, inorder);
+//
+//        if (index >= 0) {
+//            int[] leftInorder = new int[index];
+//            int[] leftPostorder = new int[index];
+//
+//            for (int i = 0; i <= index - 1; i++) {
+//                leftInorder[i] = inorder[i];
+//                leftPostorder[i] = postorder[i];
+//            }
+//
+//            int[] rightInorder = new int[size - index - 1];
+//            int[] rightPostorder = new int[size - index - 1];
+//
+//            for (int i = index + 1; i <= size - 1; i++) {
+//                rightInorder[i - index - 1] = inorder[i];
+//                rightPostorder[i - index - 1] = postorder[i - 1];
+//            }
+//
+//            root.left = buildTree(leftInorder, leftPostorder);
+//            root.right = buildTree(rightInorder, rightPostorder);
+//        }
+//
+//        return root;
+//
+//    }
 
     /**
      * https://oj.leetcode.com/problems/binary-tree-level-order-traversal-ii/
@@ -4704,6 +4704,7 @@ public class LeetCode {
         return root;
 
     }
+
 
     /**
      * https://oj.leetcode.com/problems/balanced-binary-tree/
@@ -4990,74 +4991,74 @@ public class LeetCode {
      * https://oj.leetcode.com/submissions/detail/12269971/
      * https://oj.leetcode.com/submissions/detail/12270020/
      */
-    public void connect(TreeLinkNode root) {
-
-        if (root == null)
-            return;
-
-        Queue<TreeLinkNode> parents = new LinkedList<TreeLinkNode>();
-        Queue<TreeLinkNode> children = new LinkedList<TreeLinkNode>();
-
-        parents.add(root);
-        while (!parents.isEmpty()) {
-            TreeLinkNode p = parents.poll();
-            if (p.left != null) {
-                children.add(p.left);
-            }
-            if (p.right != null) {
-                children.add(p.right);
-            }
-            while (!parents.isEmpty()) {
-                TreeLinkNode q = parents.poll();
-                p.next = q;
-                p = q;
-                if (p.left != null) {
-                    children.add(p.left);
-                }
-                if (p.right != null) {
-                    children.add(p.right);
-                }
-            }
-
-            while (!children.isEmpty()) {
-                parents.add(children.poll());
-            }
-
-        }
-
-    }
+//    public void connect(TreeLinkNode root) {
+//
+//        if (root == null)
+//            return;
+//
+//        Queue<TreeLinkNode> parents = new LinkedList<TreeLinkNode>();
+//        Queue<TreeLinkNode> children = new LinkedList<TreeLinkNode>();
+//
+//        parents.add(root);
+//        while (!parents.isEmpty()) {
+//            TreeLinkNode p = parents.poll();
+//            if (p.left != null) {
+//                children.add(p.left);
+//            }
+//            if (p.right != null) {
+//                children.add(p.right);
+//            }
+//            while (!parents.isEmpty()) {
+//                TreeLinkNode q = parents.poll();
+//                p.next = q;
+//                p = q;
+//                if (p.left != null) {
+//                    children.add(p.left);
+//                }
+//                if (p.right != null) {
+//                    children.add(p.right);
+//                }
+//            }
+//
+//            while (!children.isEmpty()) {
+//                parents.add(children.poll());
+//            }
+//
+//        }
+//
+//    }
 
     /**
      * https://oj.leetcode.com/problems/pascals-triangle/
      * https://oj.leetcode.com/submissions/detail/12270979/
      */
-    public List<List<Integer>> generate(int numRows) {
-        List<List<Integer>> result = new ArrayList<List<Integer>>();
-        List<Integer> list = new ArrayList<Integer>();
-        List<Integer> last = new ArrayList<Integer>();
-
-        if(numRows == 0)
-            return result;
-
-        list.add(1);
-        result.add(list);
-
-        if (numRows == 1)
-            return result;
-
-        for (int i = 2; i <= numRows; i++) {
-            last = list;
-            list = new ArrayList<Integer>();
-            list.add(1);
-            for (int j = 0; j <= last.size() - 2; j++) {
-                list.add(last.get(j) + last.get(j + 1));
-            }
-            list.add(1);
-            result.add(list);
-        }
-        return result;
-
-    }
+//    public List<List<Integer>> generate(int numRows) {
+//        List<List<Integer>> result = new ArrayList<List<Integer>>();
+//        List<Integer> list = new ArrayList<Integer>();
+//        List<Integer> last = new ArrayList<Integer>();
+//
+//        if(numRows == 0)
+//            return result;
+//
+//        list.add(1);
+//        result.add(list);
+//
+//        if (numRows == 1)
+//            return result;
+//
+//        for (int i = 2; i <= numRows; i++) {
+//            last = list;
+//            list = new ArrayList<Integer>();
+//            list.add(1);
+//            for (int j = 0; j <= last.size() - 2; j++) {
+//                list.add(last.get(j) + last.get(j + 1));
+//            }
+//            list.add(1);
+//            result.add(list);
+//        }
+//        return result;
+//
+//    }
 
     /**
      * https://oj.leetcode.com/problems/pascals-triangle-ii/
