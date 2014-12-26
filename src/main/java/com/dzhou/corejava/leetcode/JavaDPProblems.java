@@ -1,5 +1,8 @@
 package com.dzhou.corejava.leetcode;
 
+import java.util.ArrayList;
+import java.util.Set;
+
 /**
  * Created by davidzhou on 12/24/14.
  */
@@ -110,5 +113,259 @@ public class JavaDPProblems {
         return match[m];
 
     }
+
+    /**
+     * Unique Paths -- LeetCode
+     * https://oj.leetcode.com/problems/unique-paths/
+     * A robot is located at the top-left corner of a m x n grid (marked 'Start' in the diagram below).
+     */
+    public int uniquePaths(int m, int n) {
+        int[][] c = new int[m][n];
+        c[0][0] = 1;
+        for (int i = 0; i < m; i++)
+            c[i][0] = 1;
+        for (int j = 0; j < n; j++)
+            c[0][j] = 1;
+
+        for (int i = 1; i < m; i++)
+            for (int j = 1; j < n; j++)
+                c[i][j] = c[i][j - 1] + c[i - 1][j];
+
+        return c[m - 1][n - 1];
+
+    }
+
+    public int uniquePaths2(int m, int n) {
+        if (m <= 0 || n <= 0)
+            return 0;
+        int[] res = new int[n];
+        res[0] = 1;
+        for (int i = 0; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                res[j] += res[j - 1];
+            }
+        }
+        return res[n - 1];
+    }
+
+    /**
+     * Unique Paths II -- LeetCode
+     * https://oj.leetcode.com/problems/unique-paths-ii/
+     * Follow up for "Unique Paths":
+     * Now consider if some obstacles are added to the grids. How many unique paths would there be?
+     * An obstacle and empty space is marked as 1 and 0 respectively in the grid.
+     */
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+
+        int[][] c = new int[m][n];
+
+        if (obstacleGrid[0][0] == 1)
+            return 0;
+
+        c[0][0] = 1;
+
+        for (int i = 0; i < m; i++) {
+            if (obstacleGrid[i][0] == 1)
+                break;
+            c[i][0] = 1;
+        }
+        for (int j = 0; j < n; j++) {
+            if (obstacleGrid[0][j] == 1)
+                break;
+            c[0][j] = 1;
+
+        }
+
+        for (int i = 1; i < m; i++)
+            for (int j = 1; j < n; j++) {
+                if (obstacleGrid[i][j] == 1)
+                    c[i][j] = 0;
+                else
+                    c[i][j] = c[i][j - 1] + c[i - 1][j];
+            }
+
+        return c[m - 1][n - 1];
+
+    }
+
+    public int uniquePathsWithObstacles2(int[][] obstacleGrid) {
+        if (obstacleGrid == null || obstacleGrid.length == 0 || obstacleGrid[0].length == 0)
+            return 0;
+        int[] res = new int[obstacleGrid[0].length];
+        res[0] = 1;
+        for (int i = 0; i < obstacleGrid.length; i++) {
+            for (int j = 0; j < obstacleGrid[0].length; j++) {
+                if (obstacleGrid[i][j] == 1) {
+                    res[j] = 0;
+                } else {
+                    if (j > 0)
+                        res[j] += res[j - 1];
+                }
+            }
+        }
+        return res[obstacleGrid[0].length - 1];
+    }
+
+    /**
+     * Minimum Path Sum -- LeetCode
+     * https://oj.leetcode.com/problems/minimum-path-sum/
+     * Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right which minimizes the sum of all numbers along its path.
+     * Note: You can only move either down or right at any point in time.
+     */
+    public int minPathSum(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+
+        int[][] c = new int[m][n];
+        c[0][0] = grid[0][0];
+
+        for (int i = 1; i < m; i++)
+            c[i][0] = grid[i][0] + c[i - 1][0];
+        for (int j = 1; j < n; j++)
+            c[0][j] = grid[0][j] + c[0][j - 1];
+
+        for (int i = 1; i < m; i++)
+            for (int j = 1; j < n; j++)
+                c[i][j] = grid[i][j] + Math.min(c[i][j - 1], c[i - 1][j]);
+
+        return c[m - 1][n - 1];
+
+    }
+
+    public int minPathSum2(int[][] grid) {
+        if (grid == null || grid.length == 0 || grid[0].length == 0)
+            return 0;
+        int m = grid.length, n = grid[0].length;
+        int[] dp = new int[n];
+        // Find the minimum sum of all numbers along a path to grid[i][j]
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == 0 && j == 0)   // The first cell
+                    dp[j] = grid[i][j];
+                else if (i == 0)        // Cells in the first row
+                    dp[j] = dp[j - 1] + grid[i][j];
+                else if (j == 0)        // Cells in the first column
+                    dp[j] += grid[i][j];
+                else                    // Others
+                    dp[j] = Math.min(dp[j - 1], dp[j]) + grid[i][j];
+            }
+        }
+
+        return dp[n - 1];
+    }
+
+    public int minPathSum3(int[][] grid) {
+        if (grid == null || grid.length == 0 || grid[0].length == 0)
+            return 0;
+        int[] res = new int[grid[0].length];
+        res[0] = grid[0][0];
+        for (int i = 1; i < grid[0].length; i++) {
+            res[i] = res[i - 1] + grid[0][i];
+        }
+        for (int i = 1; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (j == 0)
+                    res[j] += grid[i][j];
+                else
+                    res[j] = Math.min(res[j - 1], res[j]) + grid[i][j];
+            }
+        }
+        return res[grid[0].length - 1];
+    }
+
+    /**
+     * Word Break -- LeetCode
+     * https://oj.leetcode.com/problems/word-break/
+     * Given a string s and a dictionary of words dict, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
+     * For example, given
+     * s = "leetcode",
+     * dict = ["leet", "code"].
+     * Return true because "leetcode" can be segmented as "leet code”.
+     */
+    public static boolean wordBreak(String s, Set<String> dict) {
+        if (s == null || dict == null)
+            return false;
+        if (dict.contains(s))
+            return true;
+
+        int n = s.length();
+        boolean[] c = new boolean[n];
+
+        c[0] = dict.contains(s.substring(0, 1));
+
+        for (int i = 1; i < n; i++) {
+            if (dict.contains(s.substring(0, i + 1)))
+                c[i] = true;
+            else {
+                for (int k = 0; k < i; k++) {
+                    if (c[k] && dict.contains(s.substring(k + 1, i + 1))) {
+                        c[i] = true;
+                        break;
+                    }
+
+                }
+            }
+        }
+
+        return c[n - 1];
+
+    }
+
+    public boolean wordBreak2(String s, Set<String> dict) {
+        if (s == null || s.length() == 0)
+            return true;
+        boolean[] res = new boolean[s.length() + 1];
+        res[0] = true;
+        for (int i = 0; i < s.length(); i++) {
+            StringBuilder str = new StringBuilder(s.substring(0, i + 1));
+            for (int j = 0; j <= i; j++) {
+                if (res[j] && dict.contains(str.toString())) {
+                    res[i + 1] = true;
+                    break;
+                }
+                str.deleteCharAt(0);
+            }
+        }
+        return res[s.length()];
+    }
+
+    /**
+     * Word Break II -- LeetCode
+     * https://oj.leetcode.com/problems/word-break-ii/
+     * Given a string s and a dictionary of words dict, add spaces in s to construct a sentence where each word is a valid dictionary word.
+     * Return all such possible sentences.
+     * For example, given
+     * s = "catsanddog",
+     * dict = ["cat", "cats", "and", "sand", "dog"].
+     * A solution is ["cats and dog", "cat sand dog”].
+     */
+    public ArrayList<String> wordBreak3(String s, Set<String> dict) {
+        ArrayList<String> res = new ArrayList<String>();
+        if (s == null || s.length() == 0)
+            return res;
+        helper(s, dict, 0, "", res);
+        return res;
+    }
+
+    private void helper(String s, Set<String> dict, int start, String item, ArrayList<String> res) {
+        if (start >= s.length()) {
+            res.add(item);
+            return;
+        }
+        StringBuilder str = new StringBuilder();
+        for (int i = start; i < s.length(); i++) {
+            str.append(s.charAt(i));
+            if (dict.contains(str.toString())) {
+                String newItem = item.length() > 0 ? (item + " " + str.toString()) : str.toString();
+                helper(s, dict, i + 1, newItem, res);
+            }
+        }
+    }
+
+    
+
+
 
 }

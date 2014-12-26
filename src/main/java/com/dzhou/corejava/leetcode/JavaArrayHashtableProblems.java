@@ -180,6 +180,46 @@ public class JavaArrayHashtableProblems {
     }
 
     /**
+     * nsert Interval -- LeetCode
+     * https://oj.leetcode.com/problems/insert-interval/
+     * Given a set of non-overlapping intervals, insert a new interval into the intervals (merge if necessary).
+     * You may assume that the intervals were initially sorted according to their start times.
+     */
+    public ArrayList<Interval> insert(ArrayList<Interval> intervals, Interval newInterval) {
+        ArrayList<Interval> result = new ArrayList<Interval>();
+        // No interval in the list
+        if (intervals == null || intervals.size() == 0) {
+            result.add(newInterval);
+            return result;
+        }
+
+        boolean added = false;      // Indicate whether "newInterval" has been added
+        // Traverse the (sorted) intervals and merge intervals
+        // overlapping with "newInterval" if needed
+        for (Interval interval : intervals) {
+            if (interval.end < newInterval.start)   // Non-overlapping intervals ahead "newInterval"
+                result.add(interval);
+            else if (interval.start > newInterval.end) {    // Non-overlapping intervals behind "newInterval"
+                // If "newInterval" has not been added, add it before the current interval
+                if (!added) {
+                    result.add(newInterval);
+                    added = true;
+                }
+                result.add(interval);
+            } else {    // Overlapping intervals
+                // Merge the current interval with "newInterval", and reflect it in "newInterval"
+                newInterval.start = Math.min(newInterval.start, interval.start);
+                newInterval.end = Math.max(newInterval.end, interval.end);
+            }
+        }
+        // In case "newInterval" has not been added in the loop
+        if (!added)
+            result.add(newInterval);
+
+        return result;
+    }
+
+    /**
      * https://oj.leetcode.com/problems/spiral-matrix-ii/
      * Given an integer n, generate a square matrix filled with elements from 1 to n2 in spiral order.
      * For example,
@@ -209,6 +249,47 @@ public class JavaArrayHashtableProblems {
             res[levelNum][levelNum] = num;
         }
         return res;
+    }
+
+    /**
+     * Plus One -- LeetCode
+     * https://oj.leetcode.com/problems/plus-one/
+     * Given a non-negative number represented as an array of digits, plus one to the number.
+     * The digits are stored such that the most significant digit is at the head of the list.
+     */
+    public int[] plusOne(int[] digits) {
+        if (digits == null || digits.length == 0)
+            return digits;
+        int carry = 1;
+        for (int i = digits.length - 1; i >= 0; i--) {
+            int digit = (digits[i] + carry) % 10;
+            carry = (digits[i] + carry) / 10;
+            digits[i] = digit;
+            if (carry == 0)
+                return digits;
+        }
+        int[] res = new int[digits.length + 1];
+        res[0] = 1;
+        return res;
+    }
+
+    public int[] plusOne2(int[] digits) {
+        if (digits == null)
+            return null;
+        // Process the digits in reverse order
+        for (int i = digits.length - 1; i >= 0; i--) {
+            if (digits[i] < 9) {    // Adding 1 ends here
+                digits[i] += 1;
+                return digits;
+            } else {        // Add 1 to a higher position
+                digits[i] = 0;
+            }
+        }
+        // No return from the above; the digits are in the form of 9...9,
+        // and adding one makes it 10...0
+        int[] result = new int[digits.length + 1];
+        result[0] = 1;
+        return result;
     }
 
 }
