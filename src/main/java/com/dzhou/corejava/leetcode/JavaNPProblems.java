@@ -1,12 +1,50 @@
 package com.dzhou.corejava.leetcode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Created by davidzhou on 12/23/14.
  */
 public class JavaNPProblems {
+
+    /**
+     * Combination Sum -- LeetCode
+     * https://oj.leetcode.com/problems/combination-sum/
+     * Given a set of candidate numbers (C) and a target number (T), find all unique combinations in C where the candidate numbers sums to T.
+     * <p/>
+     * The same repeated number may be chosen from C unlimited number of times.
+     */
+    public ArrayList<ArrayList<Integer>> combinationSum(int[] candidates, int target) {
+        ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+        if (candidates == null || candidates.length == 0)
+            return res;
+        Arrays.sort(candidates);
+        helper(candidates, 0, target, new ArrayList<Integer>(), res);
+        return res;
+    }
+
+    private void helper(int[] candidates, int start, int target, ArrayList<Integer> item,
+                        ArrayList<ArrayList<Integer>> res) {
+        if (target < 0)
+            return;
+        if (target == 0) {
+            res.add(new ArrayList<Integer>(item));
+            return;
+        }
+        for (int i = start; i < candidates.length; i++) {
+            //The same number can be used unlimited times
+            if (i > 0 && candidates[i] == candidates[i - 1])
+                continue;
+            item.add(candidates[i]);
+            //start is still i
+            helper(candidates, i, target - candidates[i], item, res);
+            item.remove(item.size() - 1);
+        }
+    }
+
 
     /*
     *   Combinations -- LeetCode
@@ -25,19 +63,18 @@ public class JavaNPProblems {
             [1,4],
             ]
     */
-    public List<List<Integer>> combine(int n, int k) {
-        List<List<Integer>> res = new ArrayList<List<Integer>>();
+    public ArrayList<ArrayList<Integer>> combine(int n, int k) {
+        ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
         if (n <= 0 || n < k)
             return res;
-
-        helper(n, k, 0, new ArrayList<Integer>(), res);
+        helper(n, k, 1, new ArrayList<Integer>(), res);
         return res;
-
     }
 
-    private void helper(int n, int k, int start, List<Integer> item, List<List<Integer>> res) {
+    private void helper(int n, int k, int start, ArrayList<Integer> item, ArrayList<ArrayList<Integer>> res) {
         if (item.size() == k) {
             res.add(new ArrayList<Integer>(item));
+            return;
         }
         for (int i = start; i <= n; i++) {
             item.add(i);
@@ -78,10 +115,11 @@ public class JavaNPProblems {
         return result;
     }
 
-    public List<List<Integer>> permute1(int[] num) {
+
+    public ArrayList<ArrayList<Integer>> permute1(int[] num) {
         if (num == null)
             return null;
-        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
         if (num.length == 0)
             return result;
         recursivePermute(num, new boolean[num.length], new ArrayList<Integer>(), result);
@@ -91,7 +129,7 @@ public class JavaNPProblems {
     // If "current" is already a permutation of "num", add it to "result";
     // otherwise, append each unused number to "current", and recursively try next unused number
     private void recursivePermute(int[] num, boolean[] used, ArrayList<Integer> current,
-            List<List<Integer>> result) {
+                                  ArrayList<ArrayList<Integer>> result) {
         if (current.size() == num.length) {     // "current" is already a permutation of "num"
             result.add(new ArrayList<Integer>(current));
             return;
@@ -227,79 +265,224 @@ public class JavaNPProblems {
         return res.toString();
     }
 
-    /**
-     * Gas Station -- LeetCode
-     * https://oj.leetcode.com/problems/gas-station/
-     * There are N gas stations along a circular route, where the amount of gas at station i is gas[i].
-     * You have a car with an unlimited gas tank and it costs cost[i] of gas to travel from station i to its next station (i+1). You begin the journey with an empty tank at one of the gas stations.
-     * Return the starting gas station's index if you can travel around the circuit once, otherwise return -1.
+    /*
+    https://oj.leetcode.com/problems/subsets/
+
+    Given a set of distinct integers, S, return all possible subsets.
+
+Note:
+Elements in a subset must be in non-descending order.
+The solution set must not contain duplicate subsets.
+For example,
+If S = [1,2,3], a solution is:
+
+[
+  [3],
+  [1],
+  [2],
+  [1,2,3],
+  [1,3],
+  [2,3],
+  [1,2],
+  []
+]
+
      */
-    public int canCompleteCircuit(int[] gas, int[] cost) {
-        if (gas == null || gas.length == 0 || cost == null || cost.length == 0 || gas.length != cost.length)
-            return -1;
-        int sum = 0;
-        int total = 0;
-        int pointer = -1;
-        for (int i = 0; i < gas.length; i++) {
-            int diff = gas[i] - cost[i];
-            sum += diff;
-            total += diff;
-            if (sum < 0) {
-                sum = 0;
-                pointer = i;
+    public ArrayList<ArrayList<Integer>> subsets(int[] num) {
+        if (num == null)
+            return null;
+        Arrays.sort(num);
+        return helper(num, num.length - 1);
+    }
+
+    private ArrayList<ArrayList<Integer>> helper(int[] num, int index) {
+        if (index == -1) {
+            ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+            ArrayList<Integer> elem = new ArrayList<Integer>();
+            res.add(elem);
+            return res;
+        }
+        ArrayList<ArrayList<Integer>> res = helper(num, index - 1);
+        int size = res.size();
+        for (int i = 0; i < size; i++) {
+            ArrayList<Integer> elem = new ArrayList<Integer>(res.get(i));
+            elem.add(num[index]);
+            res.add(elem);
+        }
+        return res;
+    }
+
+    public ArrayList<ArrayList<Integer>> subsets1(int[] S) {
+        ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
+        res.add(new ArrayList<Integer>());
+        if (S == null || S.length == 0)
+            return res;
+        Arrays.sort(S);
+        for (int i = 0; i < S.length; i++) {
+            int size = res.size();
+            for (int j = 0; j < size; j++) {
+                ArrayList<Integer> item = new ArrayList<Integer>(res.get(j));
+                item.add(S[i]);
+                res.add(item);
             }
         }
-        return total >= 0 ? pointer + 1 : -1;
-    }
-
-    public ArrayList<String[]> solveQueens(int n){
-        ArrayList<String[]> res = new ArrayList<String[]>();
-        if(n <= 0)
-            return res;
-
-        int[] col = new int[n];
-        solveQueens(n, col, 0, res);
         return res;
+    }
 
+    /**
+     * Gray Code -- LeetCode
+     * https://oj.leetcode.com/problems/gray-code/
+     * The gray code is a binary numeral system where two successive values differ in only one bit.
+     * <p/>
+     * Given a non-negative integer n representing the total number of bits in the code, print the sequence of gray code. A gray code sequence must begin with 0.
+     * <p/>
+     * For example, given n = 2, return [0,1,3,2]. Its gray code sequence is:
+     * <p/>
+     * 00 - 0
+     * 01 - 1
+     * 11 - 3
+     * 10 - 2
+     */
+    public static List<Integer> grayCode(int n) {
+        List<Integer> result = new ArrayList<Integer>();
+        if (n < 0) return result;
+
+        if (n == 0) {
+            result.add(0);
+            return result;
+        } else if (n == 1) {
+            result.add(0);
+            result.add(1);
+            return result;
+        } else {
+
+            result = grayCode(n - 1);
+            Stack<Integer> stack = new Stack<Integer>();
+            for (Integer x : result)
+                stack.push(x);
+            ;
+            int mask = 1 << (n - 1);
+            while (!stack.isEmpty())
+                result.add(mask | stack.pop());
+
+            return result;
+        }
 
     }
 
-    private void solveQueens(int n, int[] col, int row, ArrayList<String[]> res){
-        if(row >= n){
-            String[] item = new String[n];
-            for(int i = 0; i < n; i++){
-                StringBuilder sb = new StringBuilder();
-                for(int j = 0; j < n; j++){
-                    if(j == col[i])
-                        sb.append("Q");
-                    else
-                        sb.append(".");
-                }
-                item[i] = sb.toString();
+    /**
+     * Restore IP Addresses -- LeetCode
+     * https://oj.leetcode.com/problems/restore-ip-addresses/
+     * Given a string containing only digits, restore it by returning all possible valid IP address combinations.
+     * <p/>
+     * For example:
+     * Given "25525511135",
+     * <p/>
+     * return ["255.255.11.135", "255.255.111.35"]. (Order does not matter)
+     */
+    public ArrayList<String> restoreIpAddresses(String s) {
+        ArrayList<String> res = new ArrayList<String>();
+        if (s == null || s.length() == 0)
+            return res;
+        helper(s, 0, 1, "", res);
+        return res;
+    }
+
+    private void helper(String s, int index, int segment, String item, ArrayList<String> res) {
+        if (index >= s.length())
+            return;
+        if (segment == 4) {
+            String str = s.substring(index);
+            if (isValid(str)) {
+                res.add(item + "." + str);
             }
-            res.add(item);
             return;
         }
-        for(int j = 0; j < n; j++){
-            col[row] = j;
-            if(isValid(col, row));
-            solveQueens(n, col, row+1, res);
+        for (int i = 1; i < 4 && (i + index <= s.length()); i++) {
+            String str = s.substring(index, index + i);
+            if (isValid(str)) {
+                if (segment == 1)
+                    helper(s, index + i, segment + 1, str, res);
+                else
+                    helper(s, index + i, segment + 1, item + "." + str, res);
+            }
         }
     }
 
-    private boolean isValid(int[] col, int row){
-        for(int i = 0; i < row; i++){
-            if(col[i] == col[row] || Math.abs(col[i] - col[row]) == (row - i))
-                return false;
-        }
-        return true;
+    private boolean isValid(String str) {
+        if (str == null || str.length() > 3)
+            return false;
+        int num = Integer.parseInt(str);
+        if (str.charAt(0) == '0' && str.length() > 1)
+            return false;
+        if (num >= 0 && num <= 255)
+            return true;
+        return false;
     }
 
 
+    /**
+     * Sum Root to Leaf Numbers -- LeetCode
+     * https://oj.leetcode.com/problems/sum-root-to-leaf-numbers/
+     * Given a binary tree containing digits from 0-9 only, each root-to-leaf path could represent a number.
+     * <p/>
+     * An example is the root-to-leaf path 1->2->3 which represents the number 123.
+     * <p/>
+     * Find the total sum of all root-to-leaf numbers.
+     */
+    public int sumNumber(TreeNode root) {
+        return helper(root, 0);
+    }
+
+    private int helper(TreeNode root, int sum) {
+        if (root == null)
+            return 0;
+        if (root.left == null && root.right == null)
+            return 10 * sum + root.val;
+
+        return helper(root.left, 10 * sum + root.val) + helper(root.right, 10 * sum + root.val);
+    }
 
 
+    /**
+     * Binary Tree Maximum Path Sum -- LeetCode
+     * https://oj.leetcode.com/problems/binary-tree-maximum-path-sum/
+     * Given a binary tree, find the maximum path sum.
+     * <p/>
+     * The path may start and end at any node in the tree.
+     */
+    public int maxPathSum(TreeNode root) {
+        if (root == null)
+            return 0;
+        ArrayList<Integer> res = new ArrayList<Integer>();
+        res.add(Integer.MIN_VALUE);
+        helper(root, res);
+        return res.get(0);
+    }
+
+    private int helper(TreeNode root, ArrayList<Integer> res) {
+        if (root == null)
+            return 0;
+        int left = helper(root.left, res);
+        int right = helper(root.right, res);
+        int cur = root.val + (left > 0 ? left : 0) + (right > 0 ? right : 0);
+        if (cur > res.get(0))
+            res.set(0, cur);
+        return root.val + Math.max(left, Math.max(right, 0));
+    }
 
 
+    /**
+     * https://oj.leetcode.com/problems/path-sum/
+     * Given a binary tree and a sum, determine if the tree has a root-to-leaf path such that adding up all the values along the path equals the given sum.
+     */
+    public boolean hasPathSum(TreeNode root, int sum) {
+        if (root == null)
+            return false;
+        if (root.left == null && root.right == null && root.val == sum)
+            return true;
+        return hasPathSum(root.left, sum - root.val) || hasPathSum(root.right, sum - root.val);
+    }
 
 }
 

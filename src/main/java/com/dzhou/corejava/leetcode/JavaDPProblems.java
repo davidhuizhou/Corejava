@@ -364,7 +364,167 @@ public class JavaDPProblems {
         }
     }
 
-    
+
+    /**
+     * Edit Distance -- LeetCode
+     * https://oj.leetcode.com/problems/edit-distance/
+     * <p/>
+     * Given two words word1 and word2, find the minimum number of steps required to convert word1 to word2. (each operation is counted as 1 step.)
+     * <p/>
+     * You have the following 3 operations permitted on a word:
+     * <p/>
+     * a) Insert a character
+     * b) Delete a character
+     * c) Replace a character
+     */
+    public static int minDistance(String word1, String word2) {
+        int len1 = word1.length();
+        int len2 = word2.length();
+
+        // len1+1, len2+1, because finally return dp[len1][len2]
+        int[][] dp = new int[len1 + 1][len2 + 1];
+
+        for (int i = 0; i <= len1; i++) {
+            dp[i][0] = i;
+        }
+
+        for (int j = 0; j <= len2; j++) {
+            dp[0][j] = j;
+        }
+
+        //iterate though, and check last char
+        for (int i = 0; i < len1; i++) {
+            char c1 = word1.charAt(i);
+            for (int j = 0; j < len2; j++) {
+                char c2 = word2.charAt(j);
+
+                //if last two chars equal
+                if (c1 == c2) {
+                    //update dp value for +1 length
+                    dp[i + 1][j + 1] = dp[i][j];
+                } else {
+                    int replace = dp[i][j] + 1;
+                    int insert = dp[i][j + 1] + 1;
+                    int delete = dp[i + 1][j] + 1;
+
+                    int min = replace > insert ? insert : replace;
+                    min = delete > min ? min : delete;
+                    dp[i + 1][j + 1] = min;
+                }
+            }
+        }
+
+        return dp[len1][len2];
+    }
+
+    public boolean isOneEditDistance(String s, String t) {
+        int m = s.length(), n = t.length();
+        if (m > n) return isOneEditDistance(t, s);
+        if (n - m > 1) return false;
+
+        int index = 0;
+        while (index < m && s.charAt(index) == t.charAt(index))
+            index++;
+
+        if (n == m) {
+
+            if (index == m)
+                return false;
+
+            index++;
+            while (index < m && s.charAt(index) == t.charAt(index))
+                index++;
+
+        } else {
+
+            if (index == m)
+                return true;
+
+            while (index < m && s.charAt(index) == t.charAt(index + 1))
+                index++;
+
+        }
+        return index == m;
+    }
+
+
+    public String longestPalindrome(String s) {
+        if (s == null || s.length() == 0)
+            return "";
+        boolean[][] palin = new boolean[s.length()][s.length()];
+        String res = "";
+        int maxLen = 0;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            for (int j = i; j < s.length(); j++) {
+                if (s.charAt(i) == s.charAt(j) && (j - i <= 2 || palin[i + 1][j - 1])) {
+                    palin[i][j] = true;
+                    if (maxLen < j - i + 1) {
+                        maxLen = j - i + 1;
+                        res = s.substring(i, j + 1);
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    public int minCut(String s) {
+        if (s == null || s.length() == 0)
+            return 0;
+        boolean[][] dict = getDict(s);
+        int[] res = new int[s.length() + 1];
+        res[0] = 0;
+        for (int i = 0; i < s.length(); i++) {
+            res[i + 1] = i + 1;
+            for (int j = 0; j <= i; j++) {
+                if (dict[j][i]) {
+                    res[i + 1] = Math.min(res[i + 1], res[j] + 1);
+                }
+            }
+        }
+        return res[s.length()] - 1;
+    }
+
+    private boolean[][] getDict(String s) {
+        boolean[][] dict = new boolean[s.length()][s.length()];
+        for (int i = s.length() - 1; i >= 0; i--) {
+            for (int j = i; j < s.length(); j++) {
+                if (s.charAt(i) == s.charAt(j) && (j - i < 2 || dict[i + 1][j - 1]))
+                    dict[i][j] = true;
+            }
+        }
+        return dict;
+    }
+
+
+    public boolean workBreak(String s, Set<String> dict) {
+        if (s == null || dict == null)
+            return false;
+        if (dict.contains(s))
+            return true;
+
+        int n = s.length();
+        boolean[] c = new boolean[n];
+
+        c[0] = dict.contains(s.substring(0, 1));
+        for (int i = 0; i < n; i++) {
+            if (dict.contains(s.substring(0, i + 1)))
+                return true;
+            else {
+                for (int k = 0; k < i; k++) {
+                    if (c[k] && dict.contains(s.substring(k + 1, i + 1))) {
+                        c[i] = true;
+                        break;
+                    }
+
+                }
+            }
+        }
+        return c[n - 1];
+    }
+
+
+
 
 
 
