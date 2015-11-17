@@ -3,6 +3,7 @@ package com.dzhou.corejava.leetcode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Created by davidzhou on 12/24/14.
@@ -292,4 +293,130 @@ public class JavaArrayHashtableProblems {
         return result;
     }
 
+    public String strStr(String haystack, String needle) {
+        if (haystack == null || needle == null)
+            return null;
+        if (haystack.length() == 0) {
+            return needle.length() == 0 ? "" : null;
+        }
+        if (needle.length() == 0)
+            return haystack;
+        if (haystack.length() < needle.length())
+            return null;
+
+        int base = 29;
+        long patternHash = 0;
+        long tempBase = 1;
+
+        for (int i = needle.length() - 1; i >= 0; i--) {
+            patternHash += (int) needle.charAt(i) * tempBase;
+            tempBase *= base;
+        }
+
+        long hayHash = 0;
+        tempBase = 1;
+        for (int i = needle.length() - 1; i >= 0; i--) {
+            hayHash += (int) haystack.charAt(i) * tempBase;
+            tempBase *= base;
+        }
+        tempBase /= base;
+
+        if (hayHash == patternHash) {
+            return haystack;
+        }
+
+        for (int i = needle.length(); i < haystack.length(); i++) {
+            hayHash =
+                    (hayHash - (int) haystack.charAt(i - needle.length()) * tempBase) * base + (int) haystack.charAt(i);
+            if (hayHash == patternHash) {
+                return haystack.substring(i - needle.length() + 1);
+            }
+        }
+        return null;
+    }
+
+    public int divide(int dividend, int divisor) {
+        if (divisor == 0)
+            return Integer.MAX_VALUE;
+        int res = 0;
+        if (dividend == Integer.MIN_VALUE) {
+            res = 1;
+            dividend += Math.abs(divisor);
+        }
+        if (divisor == Integer.MIN_VALUE)
+            return res;
+        boolean isNeg = ((dividend ^ divisor) >>> 31 == 1);
+        dividend = Math.abs(dividend);
+        divisor = Math.abs(divisor);
+
+        while (dividend > divisor) {
+            int power = 1;
+            while ((divisor << power) >= (divisor << (power - 1)) && (divisor << power) <= dividend)
+                ++power;
+
+            res += 1 << (power - 1);
+            dividend -= divisor << (power - 1);
+
+        }
+        return isNeg ? -res : res;
+
+    }
+
+    public boolean isPalindrome(int x) {
+        if (x < 0)
+            return false;
+        int power = 1;
+        while (x / power >= 10)
+            power *= 10;
+
+        while (x > 0) {
+            if (x % 10 != x / power)
+                return false;
+            x %= power;
+            x /= 10;
+            power /= 100;
+        }
+        return true;
+
+    }
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> res = new ArrayList<List<String>>();
+        if (s == null || s.length() == 0)
+            return res;
+        partition(s, 0, new ArrayList<String>(), res);
+        return res;
+    }
+
+    private void partition(String s, int start, List<String> item, List<List<String>> res) {
+        if (start >= s.length()) {
+            res.add(item);
+            return;
+        }
+        boolean[][] palin = getDict(s);
+
+        for (int i = start + 1; i < s.length(); i++) {
+            if (palin[start][i]) {
+                item.add(s.substring(start, i + 1));
+                partition(s, i + 1, new ArrayList<String>(item), res);
+                item.remove(item.size() - 1);
+            }
+        }
+
+    }
+
+    private boolean[][] getDict(String s) {
+        boolean[][] palin = new boolean[s.length()][s.length()];
+        for (int i = s.length() - 1; i >= 0; i--) {
+            for (int j = i; j < s.length(); j++) {
+                if (s.charAt(i) == s.charAt(j) && (j - i < 2 || palin[i + 1][j - 1]))
+                    palin[i][j] = true;
+            }
+        }
+        return palin;
+    }
+
+
 }
+
+

@@ -227,6 +227,78 @@ public class JavaNPProblems {
         return res.toString();
     }
 
+    /**
+     * Gas Station -- LeetCode
+     * https://oj.leetcode.com/problems/gas-station/
+     * There are N gas stations along a circular route, where the amount of gas at station i is gas[i].
+     * You have a car with an unlimited gas tank and it costs cost[i] of gas to travel from station i to its next station (i+1). You begin the journey with an empty tank at one of the gas stations.
+     * Return the starting gas station's index if you can travel around the circuit once, otherwise return -1.
+     */
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        if (gas == null || gas.length == 0 || cost == null || cost.length == 0 || gas.length != cost.length)
+            return -1;
+        int sum = 0;
+        int total = 0;
+        int pointer = -1;
+        for (int i = 0; i < gas.length; i++) {
+            int diff = gas[i] - cost[i];
+            sum += diff;
+            total += diff;
+            if (sum < 0) {
+                sum = 0;
+                pointer = i;
+            }
+        }
+        return total >= 0 ? pointer + 1 : -1;
+    }
+
+    public ArrayList<String[]> solveQueens(int n){
+        ArrayList<String[]> res = new ArrayList<String[]>();
+        if(n <= 0)
+            return res;
+
+        int[] col = new int[n];
+        solveQueens(n, col, 0, res);
+        return res;
+
+
+    }
+
+    private void solveQueens(int n, int[] col, int row, ArrayList<String[]> res){
+        if(row >= n){
+            String[] item = new String[n];
+            for(int i = 0; i < n; i++){
+                StringBuilder sb = new StringBuilder();
+                for(int j = 0; j < n; j++){
+                    if(j == col[i])
+                        sb.append("Q");
+                    else
+                        sb.append(".");
+                }
+                item[i] = sb.toString();
+            }
+            res.add(item);
+            return;
+        }
+        for(int j = 0; j < n; j++){
+            col[row] = j;
+            if(isValid(col, row));
+            solveQueens(n, col, row+1, res);
+        }
+    }
+
+    private boolean isValid(int[] col, int row){
+        for(int i = 0; i < row; i++){
+            if(col[i] == col[row] || Math.abs(col[i] - col[row]) == (row - i))
+                return false;
+        }
+        return true;
+    }
+
+
+
+
+
 
 
 }

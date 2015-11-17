@@ -4,14 +4,19 @@ package com.dzhou.corejava.leetcode;
  * Created by huizhou on 10/18/14.
  */
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UndirectedGraphNode {
-    int label;
-    List<UndirectedGraphNode> neighbors;
+    public int label;
+    public List<UndirectedGraphNode> neighbors;
 
-    UndirectedGraphNode(int x) {
+    public UndirectedGraphNode(int x) {
         label = x;
         neighbors = new ArrayList<UndirectedGraphNode>();
     }
+
+    
+
+
 }

@@ -1,5 +1,10 @@
 package com.dzhou.corejava.leetcode;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Created by davidzhou on 12/23/14.
  */
@@ -210,5 +215,143 @@ public class JavaLinkedListProblems {
         node.next = head;
         return newHead;
 
+    }
+
+    /**
+     * Copy List with Random Pointer -- LeetCode
+     * https://oj.leetcode.com/problems/copy-list-with-random-pointer/
+     * A linked list is given such that each node contains an additional random pointer which could point to any node in the list or null.
+     * Return a deep copy of the list.
+     */
+    public RandomListNode copyRandomList(RandomListNode head) {
+        if (head == null)
+            return head;
+        HashMap<RandomListNode, RandomListNode> map = new HashMap<RandomListNode, RandomListNode>();
+        RandomListNode newHead = new RandomListNode(head.label);
+        map.put(head, newHead);
+        RandomListNode pre = newHead;
+        RandomListNode node = head.next;
+        while (node != null) {
+            RandomListNode newNode = new RandomListNode(node.label);
+            map.put(node, newNode);
+            pre.next = newNode;
+            pre = newNode;
+            node = node.next;
+        }
+        node = head;
+        RandomListNode copyNode = newHead;
+        while (node != null) {
+            copyNode.random = map.get(node.random);
+            copyNode = copyNode.next;
+            node = node.next;
+        }
+        return newHead;
+    }
+
+    public RandomListNode copyRandomList1(RandomListNode head) {
+        if (head == null)
+            return head;
+        RandomListNode node = head;
+        while (node != null) {
+            RandomListNode newNode = new RandomListNode(node.label);
+            newNode.next = node.next;
+            node.next = newNode;
+            node = newNode.next;
+        }
+        node = head;
+        while (node != null) {
+            if (node.random != null)
+                node.next.random = node.random.next;
+            node = node.next.next;
+        }
+        RandomListNode newHead = head.next;
+        node = head;
+        while (node != null) {
+            RandomListNode newNode = node.next;
+            node.next = newNode.next;
+            if (newNode.next != null)
+                newNode.next = newNode.next.next;
+            node = node.next;
+        }
+        return newHead;
+    }
+
+    public static int longestValidParentheses(String s) {
+        if (s == null)
+            return 0;
+
+        int longest = 0;
+        int start = 0;
+        LinkedList<Integer> stack = new LinkedList<Integer>();
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                stack.push(i);
+            } else {
+                if (stack.isEmpty()) {
+                    start = i + 1;
+                } else {
+                    stack.pop();
+                    if (stack.isEmpty()) {
+                        longest = Math.max(longest, i - start + 1);
+                    } else {
+                        longest = Math.max(longest, i - stack.peek());
+                    }
+                }
+            }
+
+        }
+        return longest;
+    }
+
+
+
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<Integer>();
+        if (root == null)
+            return res;
+        LinkedList<TreeNode> stack = new LinkedList<TreeNode>();
+        while (root != null || !stack.isEmpty()) {
+            if (root != null) {
+                stack.push(root);
+                root = root.left;
+            } else {
+                root = stack.pop();
+                res.add(root.val);
+                root = root.right;
+
+            }
+        }
+
+        return res;
+
+    }
+
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> res = new ArrayList<Integer>();
+        TreeNode cur = root;
+        TreeNode pre = null;
+        while (cur != null) {
+            if (cur.left == null) {
+                res.add(cur.val);
+                cur = cur.right;
+
+            } else {
+                pre = cur.left;
+                while (pre.right != null && pre.right != cur)
+                    pre = pre.right;
+                if (pre.right == null) {
+                    res.add(cur.val);
+                    pre.right = cur;
+                    cur = cur.left;
+
+                } else {
+                    pre.right = null;
+                    cur = cur.right;
+                }
+
+            }
+
+        }
+        return res;
     }
 }

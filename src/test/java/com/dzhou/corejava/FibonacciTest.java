@@ -3,8 +3,8 @@ package com.dzhou.corejava;
 /**
  * Created by davidzhou on 1/5/14.
  */
-import org.junit.Assert.*;
-import org.junit.*;
+
+import org.junit.Test;
 
 import java.text.DecimalFormat;
 
@@ -29,7 +29,7 @@ public class FibonacciTest {
 
     }
 
-    private String getDurationString(int duration){
+    private String getDurationString(int duration) {
         int seconds = 0;
         int minutes = 0;
         int hours = 0;
