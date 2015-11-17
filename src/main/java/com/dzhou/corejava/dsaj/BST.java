@@ -1,7 +1,6 @@
 package com.dzhou.corejava.dsaj;
 
 import com.dzhou.corejava.algs4.Queue;
-import com.sun.tools.corba.se.idl.constExpr.Not;
 
 import java.util.NoSuchElementException;
 

@@ -1,14 +1,46 @@
 package com.dzhou.corejava.leetcode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * Created by davidzhou on 12/24/14.
  */
 public class JavaStringProblems {
+    /**
+     * Longest Substring Without Repeating Characters -- LeetCode
+     * <p/>
+     * https://oj.leetcode.com/problems/longest-substring-without-repeating-characters/
+     * Given a string, find the length of the longest substring without repeating characters. For example, the longest substring without repeating letters for "abcabcbb" is "abc", which the length is 3. For "bbbbb" the longest substring is "b", with the length of 1.
+     */
+    public int lengthOfLongestSubstring(String s) {
+        if (s == null || s.length() == 0)
+            return 0;
+        HashSet<Character> set = new HashSet<Character>();
+        int max = 0;
+        int walker = 0;
+        int runner = 0;
+        while (runner < s.length()) {
+            if (set.contains(s.charAt(runner))) {
+                //max is walker to runner - 1
+                if (max < runner - walker) {
+                    max = runner - walker;
+                }
+                while (s.charAt(walker) != s.charAt(runner)) {
+                    set.remove(s.charAt(walker));
+                    walker++;
+                }
+                walker++;
+            } else {
+                set.add(s.charAt(runner));
+            }
+            runner++;
+        }
+        //need to handle runner reaches the end
+        max = Math.max(max, runner - walker);
+        return max;
+    }
+
+
     /**
      * Longest Common Prefix -- LeetCode
      * https://oj.leetcode.com/problems/longest-common-prefix/
@@ -89,3 +121,6 @@ public class JavaStringProblems {
     }
 
 }
+
+
+

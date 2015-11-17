@@ -4,10 +4,10 @@ package com.dzhou.corejava.leetcode;
  * Created by davidzhou on 10/24/14.
  */
 public class RandomListNode {
-    int label;
-    RandomListNode next, random;
+    public int label;
+    public RandomListNode next, random;
 
-    RandomListNode(int x) {
+    public RandomListNode(int x) {
         this.label = x;
     }
 }
