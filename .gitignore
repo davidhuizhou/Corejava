@@ -10,3 +10,4 @@ gradle/
 CoreJava.iml
 gradlew
 gradlew.bat
+target/
