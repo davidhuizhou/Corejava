@@ -28,5 +28,11 @@ public final class Preconditions {
         return reference;
     }
 
+    public static void checkState(boolean expression) {
+        if (!expression) {
+            throw new IllegalStateException();
+        }
+    }
+
 
 }
