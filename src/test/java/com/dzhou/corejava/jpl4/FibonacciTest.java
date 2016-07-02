@@ -1,8 +1,10 @@
-package com.dzhou.corejava;
+package com.dzhou.corejava.jpl4;
 
 /**
  * Created by davidzhou on 1/5/14.
  */
+
+import com.dzhou.corejava.jpl4.Fibonacci;
 
 import org.junit.Test;
 
@@ -12,7 +14,7 @@ public class FibonacciTest {
 
     @Test
     public void testPrintFibonacci() {
-        Fibonacci.printFibonacci(50);
+        Fibonacci.fibonacci(50);
 
         int duration = 30;
         System.out.println(getDurationString(duration));

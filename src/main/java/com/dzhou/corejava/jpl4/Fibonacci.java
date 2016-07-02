@@ -1,4 +1,4 @@
-package com.dzhou.corejava;
+package com.dzhou.corejava.jpl4;
 
 /**
  * Created by davidzhou on 1/5/14.
@@ -6,21 +6,20 @@ package com.dzhou.corejava;
 
 public class Fibonacci {
 
-    public static void printFibonacci(int input) {
+    public static void fibonacci(int input) {
         int lo = 1;
         int hi = 1;
 
-
         System.out.println(lo);
-
-
         while (hi < input) {
-            int d;
             System.out.println(hi);
-
             hi = lo + hi;
             lo = hi - lo;
         }
+    }
+
+    public static void main(String[] args){
+        fibonacci(10);
     }
 
 

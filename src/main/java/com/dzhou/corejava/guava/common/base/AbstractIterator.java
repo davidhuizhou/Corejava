@@ -1,10 +1,9 @@
 package com.dzhou.corejava.guava.common.base;
 
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static com.dzhou.corejava.guava.common.base.Preconditions.checkState;
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Created by huizhou on 12/11/15.
@@ -13,11 +12,13 @@ abstract class AbstractIterator<T> implements Iterator<T> {
     private State state = State.NOT_READY;
 
     protected AbstractIterator() {
-
     }
 
     private enum State {
-        READY, NOT_READY, DONE, FAILED;
+        READY,
+        NOT_READY,
+        DONE,
+        FAILED,
     }
 
     private T next;
@@ -29,20 +30,19 @@ abstract class AbstractIterator<T> implements Iterator<T> {
         return null;
     }
 
-
     public final boolean hasNext() {
         checkState(state != State.FAILED);
         switch (state) {
-            case DONE:
-                return false;
             case READY:
                 return true;
+            case DONE:
+                return false;
             default:
         }
-        return tryToComputeNext();
+        return tryComputeNext();
     }
 
-    private boolean tryToComputeNext() {
+    private boolean tryComputeNext() {
         state = State.FAILED;
         next = computeNext();
         if (state != State.DONE) {
@@ -65,5 +65,4 @@ abstract class AbstractIterator<T> implements Iterator<T> {
     public final void remove() {
         throw new UnsupportedOperationException();
     }
-
 }

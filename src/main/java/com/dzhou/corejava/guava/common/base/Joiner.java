@@ -12,14 +12,6 @@ import static com.dzhou.corejava.guava.common.base.Preconditions.checkNotNull;
  */
 public class Joiner {
 
-    public static Joiner on(String seperator) {
-        return new Joiner(seperator);
-    }
-
-    public static Joiner on(char seperator) {
-        return new Joiner(String.valueOf(seperator));
-    }
-
     private final String seperator;
 
     private Joiner(String seperator) {
@@ -28,6 +20,14 @@ public class Joiner {
 
     private Joiner(Joiner prototype) {
         this.seperator = prototype.seperator;
+    }
+
+    public static Joiner on(String seperator) {
+        return new Joiner(seperator);
+    }
+
+    public static Joiner on(char seperator) {
+        return new Joiner(String.valueOf(seperator));
     }
 
     /**
@@ -75,7 +75,8 @@ public class Joiner {
         return appendable;
     }
 
-    public final <A extends Appendable> A appendTo(A appendable, Object[] parts) throws IOException {
+    public final <A extends Appendable> A appendTo(A appendable, Object[] parts) throws
+            IOException {
         return appendTo(appendable, Arrays.asList(parts));
     }
 
@@ -91,7 +92,8 @@ public class Joiner {
     public Joiner skipNulls() {
         return new Joiner(this) {
             @Override
-            public <A extends Appendable> A appendTo(A appendable, Iterator<?> parts) throws IOException {
+            public <A extends Appendable> A appendTo(A appendable, Iterator<?> parts)
+                    throws IOException {
                 checkNotNull(appendable, "appendable");
                 checkNotNull(parts, "parts");
                 while (parts.hasNext()) {
@@ -150,7 +152,8 @@ public class Joiner {
             return appendTo(new StringBuilder(), entries).toString();
         }
 
-        public StringBuilder appendTo(StringBuilder builder, Iterator<? extends Map.Entry<?, ?>> entries) {
+        public StringBuilder appendTo(StringBuilder builder, Iterator<? extends Map.Entry<?, ?>>
+                entries) {
             try {
                 appendTo((Appendable) builder, entries);
             } catch (IOException impossible) {
@@ -164,11 +167,14 @@ public class Joiner {
         }
 
 
-        public <A extends Appendable> A appendTo(A appendable, Iterable<? extends Map.Entry<?, ?>> entries) throws IOException {
+        public <A extends Appendable> A appendTo(A appendable, Iterable<? extends Map.Entry<?,
+                ?>> entries)
+                throws IOException {
             return appendTo(appendable, entries.iterator());
         }
 
-        public <A extends Appendable> A appendTo(A appendable, Iterator<? extends Map.Entry<?, ?>> parts) throws IOException {
+        public <A extends Appendable> A appendTo(A appendable, Iterator<? extends Map.Entry<?,
+                ?>> parts) throws IOException {
             checkNotNull(appendable);
             if (parts.hasNext()) {
                 Map.Entry<?, ?> entry = parts.next();

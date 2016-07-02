@@ -12,7 +12,7 @@ import java.io.Writer;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.fail;
 
 /**
@@ -68,6 +68,7 @@ public class TestJoiner {
         writer.flush();
         writer.close();
         String fromFileString = Files.toString(tempFile, Charsets.UTF_8);
+        System.out.println(tempFile.getAbsolutePath());
         assertThat(fromFileString, is("foo|bar|baz"));
     }
 

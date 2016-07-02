@@ -1,9 +1,11 @@
-package com.dzhou.corejava;
+package com.dzhou.corejava.jpl4;
 
 /**
  * Created by davidzhou on 1/5/14.
  */
 
+import com.dzhou.corejava.InputOutputWrapper;
+import com.dzhou.corejava.jpl4.Fibonacci;
 import com.dzhou.util.StringUtils;
 import org.testng.annotations.*;
 import org.testng.Assert;
@@ -14,7 +16,7 @@ import java.util.Scanner;
 public class FibonacciTestNG {
     @Test
     public void testPrintFibonacci() {
-        Fibonacci.printFibonacci(100);
+        Fibonacci.fibonacci(100);
     }
 
     @Test

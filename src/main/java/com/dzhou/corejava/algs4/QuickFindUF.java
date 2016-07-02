@@ -29,6 +29,9 @@ import com.dzhou.lib.algorithms.StdOut;
  */
 import com.dzhou.lib.algorithms.*;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+
 public class QuickFindUF {
     private int[] id;    // id[i] = component identifier of i
     private int count;   // number of components
@@ -97,6 +100,11 @@ public class QuickFindUF {
      * and print the pair to standard output.
      */
     public static void main(String[] args) {
+        try {
+            System.setIn(new FileInputStream(args[0]));
+        } catch(IOException e){
+            e.printStackTrace();
+        }
         int N = StdIn.readInt();
         QuickFindUF uf = new QuickFindUF(N);
         while (!StdIn.isEmpty()) {
