@@ -1,27 +1,24 @@
 package com.dzhou.corejava.algorithms;
 
 /**
- * Created by huizhou on 7/22/14.
+ * Created by huizhou on 7/4/16.
  */
-public class WeightedQuickUnionUF {
+public class QuickUnionUF {
   private int[] id;
-  private int[] sz;
   private int count;
 
-  public WeightedQuickUnionUF(int N) {
-    count = N;
+  public QuickUnionUF(int N) {
     id = new int[N];
-    sz = new int[N];
+    count = N;
     for (int i = 0; i < N; i++) {
       id[i] = i;
-      sz[i] = 1;
     }
-
   }
 
   public int find(int p) {
-    while (p != id[p])
+    while (p != id[p]) {
       p = id[p];
+    }
     return p;
   }
 
@@ -34,14 +31,7 @@ public class WeightedQuickUnionUF {
     int rootQ = find(q);
     if (rootP == rootQ)
       return;
-
-    if (sz[rootP] < sz[rootQ]) {
-      id[rootP] = rootQ;
-      sz[rootQ] += sz[rootP];
-    } else {
-      id[rootQ] = rootP;
-      sz[rootP] += sz[rootQ];
-    }
+    id[rootP] = rootQ;
     count--;
   }
 }
