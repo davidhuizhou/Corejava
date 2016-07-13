@@ -8,7 +8,7 @@ import static com.google.common.base.Preconditions.checkState;
 /**
  * Created by huizhou on 12/11/15.
  */
-abstract class AbstractIterator<T> implements Iterator<T> {
+public abstract class AbstractIterator<T> implements Iterator<T> {
   private State state = State.NOT_READY;
 
   protected AbstractIterator() {
