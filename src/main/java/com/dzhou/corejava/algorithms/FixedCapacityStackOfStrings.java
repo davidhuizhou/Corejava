@@ -4,7 +4,6 @@ import com.dzhou.corejava.guava.common.base.AbstractIterator;
 import com.dzhou.corejava.guava.common.base.Joiner;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /**
  * Created by huizhou on 7/10/16.
@@ -35,9 +34,6 @@ public class FixedCapacityStackOfStrings implements StackOfStrings {
 
   @Override
   public String pop() {
-    if (isEmpty()) {
-      throw new NoSuchElementException();
-    }
     return a[--N];
   }
 
@@ -48,16 +44,13 @@ public class FixedCapacityStackOfStrings implements StackOfStrings {
 
   @Override
   public Iterator<String> iterator() {
-    return new ReverseArrayIterator();
+    return new ReverseIterator();
   }
 
-
-  private class ReverseArrayIterator extends AbstractIterator<String> {
+  private class ReverseIterator extends AbstractIterator<String> {
     int i = N - 1;
 
-    protected ReverseArrayIterator() {
-    }
-
+    @Override
     protected String computeNext() {
       if (i >= 0) {
         return a[i--];

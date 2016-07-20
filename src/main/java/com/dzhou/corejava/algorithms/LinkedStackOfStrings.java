@@ -14,13 +14,13 @@ public class LinkedStackOfStrings implements StackOfStrings {
   private int N;
 
   private static class Node {
-    String item;
-    Node next;
+    private String item;
+    private Node next;
   }
 
   public LinkedStackOfStrings() {
-    N = 0;
     first = null;
+    N = 0;
   }
 
   @Override
@@ -47,10 +47,10 @@ public class LinkedStackOfStrings implements StackOfStrings {
     if (isEmpty()) {
       throw new NoSuchElementException();
     }
-    String result = first.item;
+    String item = first.item;
     first = first.next;
     N--;
-    return result;
+    return item;
   }
 
   @Override
@@ -69,19 +69,16 @@ public class LinkedStackOfStrings implements StackOfStrings {
   private class StackIterator extends AbstractIterator<String> {
     Node n = first;
 
-    protected StackIterator() {
-
-    }
-
     @Override
     protected String computeNext() {
-      if (first != null) {
-        String result = first.item;
-        first = first.next;
+      if (n != null) {
+        String result = n.item;
+        n = n.next;
         return result;
       }
       return endOfData();
     }
+
   }
 
   public static void main(String[] args) {

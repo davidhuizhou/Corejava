@@ -30,7 +30,8 @@ public abstract class AbstractIterator<T> implements Iterator<T> {
     return null;
   }
 
-  public final boolean hasNext() {
+  @Override
+  public boolean hasNext() {
     checkState(state != State.FAILED);
     switch (state) {
       case READY:
@@ -52,17 +53,22 @@ public abstract class AbstractIterator<T> implements Iterator<T> {
     return false;
   }
 
-  public final T next() {
+  @Override
+  public T next() {
     if (!hasNext()) {
       throw new NoSuchElementException();
     }
-    state = State.NOT_READY;
     T result = next;
+    state = State.NOT_READY;
     next = null;
     return result;
   }
 
-  public final void remove() {
+  @Override
+  public void remove() {
     throw new UnsupportedOperationException();
   }
+
+
 }
+
