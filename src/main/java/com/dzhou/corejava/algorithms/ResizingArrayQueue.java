@@ -6,15 +6,19 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Created by huizhou on 7/19/16.
+ * Created by huizhou on 7/23/16.
  */
-public class ResizingArrayStack<Item> implements Stack<Item> {
-  private Item[] a;
+public class ResizingArrayQueue<Item> implements Queue<Item> {
+  private Item[] q;
   private int n;
+  private int first;
+  private int last;
 
-  public ResizingArrayStack() {
-    a = (Item[]) new Object[2];
+  public ResizingArrayQueue() {
+    q = (Item[]) new Object[2];
     n = 0;
+    first = 0;
+    last = 0;
   }
 
   @Override
@@ -29,33 +33,44 @@ public class ResizingArrayStack<Item> implements Stack<Item> {
 
   private void resize(int capacity) {
     assert capacity >= n;
-    Item[] temp = (Item[]) new Object[2 * capacity];
+    Item[] temp = (Item[]) new Object[capacity];
     for (int i = 0; i < n; i++) {
-      temp[i] = a[i];
+      temp[i] = q[(first + i) % q.length];
     }
-    a = temp;
+    first = 0;
+    last = n;
+    q = temp;
   }
 
   @Override
-  public void push(Item item) {
-    if (n == a.length) {
-      resize(2 * a.length);
+  public void enqueue(Item item) {
+    if (n == q.length) {
+      resize(2 * q.length);
     }
-    a[n++] = item;
+    q[last++] = item;
+    if (last == q.length) {
+      last = 0;
+    }
+    n++;
   }
 
   @Override
-  public Item pop() {
+  public Item dequeue() {
     if (isEmpty()) {
       throw new NoSuchElementException();
     }
-    Item item = a[n - 1];
-    a[n - 1] = null;
+    Item item = q[first];
+    q[first] = null;
+    first++;
+    if (first == q.length) {
+      first = 0;
+    }
     n--;
-    if (n > 0 && n == a.length / 4) {
-      resize(a.length / 2);
+    if (n > 0 && n == q.length / 4) {
+      resize(q.length / 2);
     }
     return item;
+
   }
 
   @Override
@@ -63,7 +78,7 @@ public class ResizingArrayStack<Item> implements Stack<Item> {
     if (isEmpty()) {
       throw new NoSuchElementException();
     }
-    return a[n - 1];
+    return q[first];
   }
 
   @Override
@@ -81,7 +96,9 @@ public class ResizingArrayStack<Item> implements Stack<Item> {
     @Override
     protected Item computeNext() {
       if (i < n) {
-        return a[i++];
+        Item item = q[(first + i) % q.length];
+        i++;
+        return item;
       }
       return endOfData();
     }
