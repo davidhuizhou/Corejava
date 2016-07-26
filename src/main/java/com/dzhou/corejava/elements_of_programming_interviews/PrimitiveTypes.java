@@ -72,11 +72,33 @@ public class PrimitiveTypes {
 
   }
 
+  public static long reverseBits2(long x) {
+    int i = 0;
+    int j = 15;
+    while (i < j) {
+      x = swapBits(x, i++, j--);
+    }
+    return x;
+
+  }
+
+  public static long reverseBits3(long x) {
+    final int kWordSize = 16;
+    final int kBitMask = 0xFFFF;
+    return preComputedReverse[(int) x & kBitMask] << (3 * kWordSize) |
+        preComputedReverse[(int) (x >>> kWordSize) & kBitMask] << (2 * kWordSize) |
+        preComputedReverse[(int) (x >>> 2 * kWordSize) & kBitMask] << kWordSize |
+        preComputedReverse[(int) (x >>> 3 * kWordSize)];
+
+  }
+
   public static int[] preComputedParity = new int[(int) (Math.pow(2, 16))];
+  public static long[] preComputedReverse = new long[(int) (Math.pow(2, 16))];
 
   static {
     for (int i = 0; i < (int) Math.pow(2, 16); ++i) {
       preComputedParity[i] = parity2(i);
+      preComputedReverse[i] = reverseBits2(i);
     }
   }
 
