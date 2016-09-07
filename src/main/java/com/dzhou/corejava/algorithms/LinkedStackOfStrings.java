@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 /**
  * Created by huizhou on 7/10/16.
  */
-public class LinkedStackOfStrings implements StackOfStrings {
+public class LinkedStackOfStrings implements Stack<String> {
   private Node first;
   private int N;
 
@@ -34,7 +34,7 @@ public class LinkedStackOfStrings implements StackOfStrings {
   }
 
   @Override
-  public void push(String item) {
+  public void push(final String item) {
     Node oldFirst = first;
     first = new Node();
     first.item = item;
@@ -63,26 +63,30 @@ public class LinkedStackOfStrings implements StackOfStrings {
 
   @Override
   public Iterator<String> iterator() {
-    return new StackIterator();
+    return new StackIterator(first);
   }
 
   private class StackIterator extends AbstractIterator<String> {
-    Node n = first;
+    Node n;
+
+    public StackIterator(Node first) {
+      n = first;
+    }
 
     @Override
     protected String computeNext() {
       if (n != null) {
-        String result = n.item;
+        String item = n.item;
         n = n.next;
-        return result;
+        return item;
       }
       return endOfData();
     }
-
   }
 
+
   public static void main(String[] args) {
-    StackOfStrings stack = new LinkedStackOfStrings();
+    Stack<String> stack = new LinkedStackOfStrings();
     stack.push("a");
     stack.push("b");
     stack.pop();
