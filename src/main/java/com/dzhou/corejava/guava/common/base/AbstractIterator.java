@@ -10,7 +10,7 @@ import static com.google.common.base.Preconditions.checkState;
 /**
  * Created by huizhou on 12/11/15.
  */
-abstract class AbstractIterator<T> implements Iterator<T> {
+public abstract class AbstractIterator<T> implements Iterator<T> {
   private State state = State.NOT_READY;
 
   protected AbstractIterator() {
@@ -62,6 +62,7 @@ abstract class AbstractIterator<T> implements Iterator<T> {
       throw new NoSuchElementException();
     }
     T result = next;
+    state = State.NOT_READY;
     next = null;
     state = State.NOT_READY;
     return result;
@@ -71,5 +72,7 @@ abstract class AbstractIterator<T> implements Iterator<T> {
   public void remove() {
     throw new UnsupportedOperationException();
   }
+
+
 }
 
