@@ -1,5 +1,7 @@
 package com.dzhou.corejava.guava.common.base;
 
+import com.google.common.util.concurrent.Service;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -12,6 +14,7 @@ abstract class AbstractIterator<T> implements Iterator<T> {
   private State state = State.NOT_READY;
 
   protected AbstractIterator() {
+
   }
 
   private enum State {
@@ -30,7 +33,8 @@ abstract class AbstractIterator<T> implements Iterator<T> {
     return null;
   }
 
-  public final boolean hasNext() {
+  @Override
+  public boolean hasNext() {
     checkState(state != State.FAILED);
     switch (state) {
       case READY:
@@ -52,17 +56,20 @@ abstract class AbstractIterator<T> implements Iterator<T> {
     return false;
   }
 
-  public final T next() {
+  @Override
+  public T next() {
     if (!hasNext()) {
       throw new NoSuchElementException();
     }
-    state = State.NOT_READY;
     T result = next;
     next = null;
+    state = State.NOT_READY;
     return result;
   }
 
-  public final void remove() {
+  @Override
+  public void remove() {
     throw new UnsupportedOperationException();
   }
 }
+

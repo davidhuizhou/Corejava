@@ -1,9 +1,13 @@
 package com.dzhou.corejava.guava.common.base;
 
-
 import com.google.common.base.CharMatcher;
 
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by huizhou on 12/11/15.
@@ -20,13 +24,9 @@ public final class Splitter {
 
   private Splitter(Strategy strategy, boolean omitEmptyStrings, CharMatcher trimmer, int limit) {
     this.strategy = strategy;
-    this.trimmer = trimmer;
     this.omitEmptyStrings = omitEmptyStrings;
+    this.trimmer = trimmer;
     this.limit = limit;
-  }
-
-  private interface Strategy {
-    Iterator<String> iterator(Splitter splitter, CharSequence toSplit);
   }
 
   public static Splitter on(char separator) {
@@ -34,6 +34,8 @@ public final class Splitter {
   }
 
   public static Splitter on(final CharMatcher separatorMatcher) {
+    checkNotNull(separatorMatcher);
+
     return new Splitter(
         new Strategy() {
           @Override
@@ -50,10 +52,84 @@ public final class Splitter {
               }
             };
           }
-        });
+        }
+    );
+  }
+
+  public static Splitter on(final String separator) {
+    checkArgument(separator.length() != 0, "The separator may not be empty.");
+    if (separator.length() == 1) {
+      return on(separator.charAt(0));
+    }
+
+    return new Splitter(
+        new Strategy() {
+          @Override
+          public SplittingIterator iterator(Splitter splitter, CharSequence toSplit) {
+            return new SplittingIterator(splitter, toSplit) {
+              @Override
+              protected int separatorStart(int start) {
+                int separatorLength = separator.length();
+
+                positions:
+                for (int p = start, last = toSplit.length() - separatorLength; p <= last; p++) {
+                  for (int i = p; i < separatorLength; i++) {
+                    if (toSplit.charAt(i + p) != separator.charAt(i)) {
+                      continue positions;
+                    }
+                  }
+                  return p;
+                }
+                return -1;
+              }
+
+              @Override
+              protected int separatorEnd(int separatorPosition) {
+                return separatorPosition + separator.length();
+              }
+            };
+          }
+        }
+    );
+  }
+
+  public static Splitter on(final Pattern separatorPattern) {
+    checkNotNull(separatorPattern);
+    checkArgument(
+        !separatorPattern.matcher("").matches(),
+        "The pattern may not match the empty string: %s",
+        separatorPattern);
+
+    return new Splitter(
+        new Strategy() {
+          @Override
+          public SplittingIterator iterator(Splitter splitter, CharSequence toSplit) {
+            return new SplittingIterator(splitter, toSplit) {
+              final Matcher matcher = separatorPattern.matcher(toSplit);
+
+              @Override
+              public int separatorStart(int start) {
+                return matcher.find(start) ? matcher.start() : -1;
+              }
+
+              @Override
+              public int separatorEnd(int separatorPosition) {
+                return matcher.end();
+              }
+            };
+          }
+        }
+    );
+
+  }
+
+  public static Splitter onPattern(String separatorPattern) {
+    return on(Pattern.compile(separatorPattern));
   }
 
   public Iterable<String> split(final CharSequence sequence) {
+    checkNotNull(sequence);
+
     return new Iterable<String>() {
       @Override
       public Iterator<String> iterator() {
@@ -67,11 +143,29 @@ public final class Splitter {
             .append("]")
             .toString();
       }
+
     };
   }
 
-  private Iterator<String> splittingIterator(final CharSequence sequence) {
+  public Splitter trimResults() {
+    return trimResults(CharMatcher.whitespace());
+  }
+
+  public Splitter trimResults(CharMatcher trimmer) {
+    checkNotNull(trimmer);
+    return new Splitter(strategy, omitEmptyStrings, trimmer, limit);
+  }
+
+  public Splitter omitEmptyStrings() {
+    return new Splitter(strategy, true, trimmer, limit);
+  }
+
+  private Iterator<String> splittingIterator(CharSequence sequence) {
     return strategy.iterator(this, sequence);
+  }
+
+  private interface Strategy {
+    Iterator<String> iterator(Splitter splitter, CharSequence toSplit);
   }
 
   private abstract static class SplittingIterator extends AbstractIterator<String> {
@@ -83,14 +177,14 @@ public final class Splitter {
 
     abstract int separatorEnd(int separatorPosition);
 
-    int offset = 0;
+    int offset;
     int limit;
 
     protected SplittingIterator(Splitter splitter, CharSequence toSplit) {
-      this.toSplit = toSplit;
       this.trimmer = splitter.trimmer;
       this.omitEmptyStrings = splitter.omitEmptyStrings;
       this.limit = splitter.limit;
+      this.toSplit = toSplit;
     }
 
     @Override
@@ -107,6 +201,7 @@ public final class Splitter {
           end = separatorPosition;
           offset = separatorEnd(separatorPosition);
         }
+
         if (offset == nextStart) {
           offset++;
           if (offset >= toSplit.length()) {
@@ -114,19 +209,22 @@ public final class Splitter {
           }
           continue;
         }
+
         while (start < end && trimmer.matches(toSplit.charAt(start))) {
           start++;
         }
+
         while (end > start && trimmer.matches(toSplit.charAt(end - 1))) {
           end--;
         }
+
         if (omitEmptyStrings && start == end) {
           nextStart = offset;
           continue;
         }
+
         if (limit == 1) {
           end = toSplit.length();
-          offset = -1;
           while (end > start && trimmer.matches(toSplit.charAt(end - 1))) {
             end--;
           }
@@ -137,6 +235,7 @@ public final class Splitter {
       }
       return endOfData();
     }
-
   }
+
+
 }
