@@ -7,14 +7,14 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Created by huizhou on 7/10/16.
+ * Created by huizhou on 9/10/16.
  */
-public class FixedCapacityStackOfStrings implements Stack<String> {
-  private String[] a;
+public class FixedCapacityStack<Item> implements Stack<Item> {
+  private Item[] a;
   private int N;
 
-  public FixedCapacityStackOfStrings(final int capacity) {
-    a = new String[capacity];
+  public FixedCapacityStack(int capacity) {
+    a = (Item[]) new Object[capacity];
     N = 0;
   }
 
@@ -29,24 +29,23 @@ public class FixedCapacityStackOfStrings implements Stack<String> {
   }
 
   @Override
-  public void push(final String item) {
+  public void push(Item item) {
     a[N++] = item;
   }
 
   @Override
-  public String pop() {
+  public Item pop() {
     if (isEmpty()) {
       throw new NoSuchElementException();
     }
-
-    String item = a[N - 1];
+    Item item = a[N - 1];
     a[N - 1] = null;
     N--;
     return item;
   }
 
   @Override
-  public String peek() {
+  public Item peek() {
     if (isEmpty()) {
       throw new NoSuchElementException();
     }
@@ -54,31 +53,29 @@ public class FixedCapacityStackOfStrings implements Stack<String> {
   }
 
   @Override
-  public Iterator<String> iterator() {
-    return new ReverseIterator(this.N);
+  public Iterator<Item> iterator() {
+    return new ReverseArrayIterator(N);
   }
 
+  public class ReverseArrayIterator extends AbstractIterator<Item> {
+    private int i;
 
-  private class ReverseIterator extends AbstractIterator<String> {
-    int last;
-
-    protected ReverseIterator(int n) {
-      this.last = n - 1;
+    public ReverseArrayIterator(int n) {
+      i = n - 1;
     }
 
     @Override
-    protected String computeNext() {
-      if (last >= 0) {
-        return a[last--];
+    public Item computeNext() {
+      if (i >= 0) {
+        return a[i--];
       }
       return endOfData();
     }
 
   }
 
-
   public static void main(String[] args) {
-    Stack<String> stack = new FixedCapacityStackOfStrings(10);
+    Stack<String> stack = new FixedCapacityStack(10);
     stack.push("a");
     stack.push("b");
     stack.pop();

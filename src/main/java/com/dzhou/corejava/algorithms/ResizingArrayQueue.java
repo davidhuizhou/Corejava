@@ -1,6 +1,7 @@
 package com.dzhou.corejava.algorithms;
 
 import com.dzhou.corejava.guava.common.base.AbstractIterator;
+import com.dzhou.corejava.guava.common.base.Joiner;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -31,17 +32,6 @@ public class ResizingArrayQueue<Item> implements Queue<Item> {
     return n;
   }
 
-  private void resize(int capacity) {
-    assert capacity >= n;
-    Item[] temp = (Item[]) new Object[capacity];
-    for (int i = 0; i < n; i++) {
-      temp[i] = q[(first + i) % q.length];
-    }
-    first = 0;
-    last = n;
-    q = temp;
-  }
-
   @Override
   public void enqueue(Item item) {
     if (n == q.length) {
@@ -60,17 +50,15 @@ public class ResizingArrayQueue<Item> implements Queue<Item> {
       throw new NoSuchElementException();
     }
     Item item = q[first];
-    q[first] = null;
-    first++;
+    q[first++] = null;
+    n--;
     if (first == q.length) {
       first = 0;
     }
-    n--;
     if (n > 0 && n == q.length / 4) {
       resize(q.length / 2);
     }
     return item;
-
   }
 
   @Override
@@ -81,27 +69,60 @@ public class ResizingArrayQueue<Item> implements Queue<Item> {
     return q[first];
   }
 
+  private void resize(int capacity) {
+    assert capacity >= n;
+
+    Item[] temp = (Item[]) new Object[capacity];
+    for (int i = 0; i < n; i++) {
+      temp[i] = q[(first + i) % q.length];
+    }
+    first = 0;
+    last = n;
+    q = temp;
+
+  }
+
   @Override
-  public Iterator iterator() {
+  public Iterator<Item> iterator() {
     return new ArrayIterator();
   }
 
   private class ArrayIterator extends AbstractIterator<Item> {
-    int i = 0;
+    private int i = 0;
 
-    protected ArrayIterator() {
+    public ArrayIterator() {
 
     }
 
     @Override
-    protected Item computeNext() {
+    public Item computeNext() {
       if (i < n) {
-        Item item = q[(first + i) % q.length];
-        i++;
-        return item;
+        return q[(first + i++) % q.length];
+
       }
       return endOfData();
     }
+  }
+
+  public static void main(String[] args) {
+    Queue<String> queue = new ResizingArrayQueue<String>();
+    queue.enqueue("a");
+    System.out.println(Joiner.on(",").join(queue));
+    queue.enqueue("b");
+    System.out.println(Joiner.on(",").join(queue));
+    queue.dequeue();
+    System.out.println(Joiner.on(",").join(queue));
+    queue.enqueue("c");
+    System.out.println(Joiner.on(",").join(queue));
+    queue.enqueue("d");
+    System.out.println(Joiner.on(",").join(queue));
+    queue.peek();
+    System.out.println(Joiner.on(",").join(queue));
+    queue.dequeue();
+    System.out.println(Joiner.on(",").join(queue));
+    queue.enqueue("e");
+    System.out.println(Joiner.on(",").join(queue));
+
   }
 
 }
