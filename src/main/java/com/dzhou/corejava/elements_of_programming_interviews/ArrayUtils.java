@@ -6,6 +6,11 @@ import com.google.common.base.Joiner;
  * Created by huizhou on 7/10/16.
  */
 public class ArrayUtils {
+
+  /**
+   * Problem 6.0, input is an array of integers, reodeer its entries so that the
+   * even entries appear first.
+   */
   public static void evenOdd(Integer[] A) {
     int nextEven = 0;
     int nextOdd = A.length - 1;
@@ -18,15 +23,24 @@ public class ArrayUtils {
     }
   }
 
+  /**
+   * Problem 6.0, input is an array of integers, reodeer its entries so that the
+   * even entries appear first.
+   */
   public static void evenOddOne(Integer[] A) {
-    int even = 0;
+    int nextEven = 0;
     for (int i = 0; i < A.length; i++) {
       if (A[i] % 2 == 0) {
-        swap(A, i, even++);
+        swap(A, i, nextEven++);
       }
     }
   }
 
+  /**
+   * Probelm 6.1 three-way partioning resembling the Dutch national flag.
+   * First pass move all the elements less than the pivot to the begining.
+   * Second pass move the larger elements to the end.
+   */
   public static void dutchFlagPartitionOne(Integer[] A, int index) {
     int pivot = A[index];
     int small = 0;
@@ -45,6 +59,9 @@ public class ArrayUtils {
 
   }
 
+  /**
+   * Probelm 6.1 three-way partioning resembling the Dutch national flag.
+   */
   public static void dutchFlagPartition(Integer[] A, int index) {
     int pivot = A[index];
 
@@ -76,6 +93,10 @@ public class ArrayUtils {
     A[j] = temp;
   }
 
+  /**
+   * Problem 6.2 input an array of digits encoding the decimal number D and updates the array to
+   * represent the number D + 1.
+   */
   public static Integer[] plusOne(Integer[] A) {
     ++A[A.length - 1];
     for (int i = A.length - 1; i > 0 && A[i] == 10; --i) {
@@ -83,6 +104,7 @@ public class ArrayUtils {
       ++A[i - 1];
     }
     if (A[0] == 10) {
+      // Need additional digit as the most significant digit(i.e., A[0]) has a carry-out.
       Integer[] B = new Integer[A.length + 1];
       B[0] = 1;
       for (int i = 1; i < B.length; i++) {
@@ -94,6 +116,10 @@ public class ArrayUtils {
 
   }
 
+  /**
+   * Problem 6.3 multiply two arbitrary-precision integers.
+   * The number of digits required for the product is at most n + m for n and m digit operands.
+   */
   public static Integer[] multiple(Integer[] a, Integer[] b) {
     int sign = a[0] < 0 ^ b[0] < 0 ? -1 : 1;
     a[0] = Math.abs(a[0]);
@@ -119,6 +145,11 @@ public class ArrayUtils {
 
   }
 
+  /**
+   * Problem 6.4 an array of n integers, where A[i] denotes the maximum you can advance from
+   * index i, and returns whether is it possible to advance to the last index starting from
+   * the beginning of the array.
+   */
   public static boolean canReachEnd(int[] a) {
     int furthestReachSoFar = 0;
     int lastIndex = a.length - 1;
@@ -127,7 +158,6 @@ public class ArrayUtils {
     }
     return furthestReachSoFar >= lastIndex;
   }
-
 
 
   public static void main(String[] args) {
@@ -172,7 +202,6 @@ public class ArrayUtils {
 
     int[] s1 = new int[]{3, 3, 1, 0, 2, 0, 1};
     System.out.println(canReachEnd(s1));
-
 
 
   }
