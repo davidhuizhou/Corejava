@@ -3,12 +3,34 @@ package com.dzhou.corejava.leetcode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by davidzhou on 12/24/14.
  */
 public class JavaArrayHashtableProblems {
+
+    public int[] twoSum(int[] nums, int target) {
+        int[] res = new int[2];
+
+        if (nums == null || nums.length < 2) {
+            return null;
+        }
+
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        for (int i = 0; i < nums.length; i++) {
+            if (map.containsKey(target - nums[i])) {
+                res[0] = map.get(target - nums[i]);
+                res[1] = i;
+                break;
+            } else {
+                map.put(nums[i], i);
+            }
+        }
+        return res;
+
+    }
 
     /**
      * Trapping Rain Water -- LeetCode
