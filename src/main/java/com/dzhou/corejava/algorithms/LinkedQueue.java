@@ -1,6 +1,7 @@
 package com.dzhou.corejava.algorithms;
 
 import com.dzhou.corejava.guava.common.base.AbstractIterator;
+import com.dzhou.corejava.guava.common.base.Joiner;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -21,7 +22,7 @@ public class LinkedQueue<Item> implements Queue<Item> {
 
   private static class Node<Item> {
     Item item;
-    Node next;
+    Node<Item> next;
   }
 
   @Override
@@ -37,7 +38,7 @@ public class LinkedQueue<Item> implements Queue<Item> {
   @Override
   public void enqueue(Item item) {
     Node oldLast = last;
-    Node last = new Node();
+    last = new Node<Item>();
     last.item = item;
     last.next = null;
     if (isEmpty()) {
@@ -91,5 +92,26 @@ public class LinkedQueue<Item> implements Queue<Item> {
       }
       return endOfData();
     }
+  }
+
+  public static void main(String[] args) {
+    Queue<String> queue = new LinkedQueue<String>();
+    queue.enqueue("a");
+    System.out.println(Joiner.on(",").join(queue));
+    queue.enqueue("b");
+    System.out.println(Joiner.on(",").join(queue));
+    queue.dequeue();
+    System.out.println(Joiner.on(",").join(queue));
+    queue.enqueue("c");
+    System.out.println(Joiner.on(",").join(queue));
+    queue.enqueue("d");
+    System.out.println(Joiner.on(",").join(queue));
+    queue.peek();
+    System.out.println(Joiner.on(",").join(queue));
+    queue.dequeue();
+    System.out.println(Joiner.on(",").join(queue));
+    queue.enqueue("e");
+    System.out.println(Joiner.on(",").join(queue));
+
   }
 }

@@ -1,5 +1,8 @@
 package com.dzhou.corejava.algorithms;
 
+import com.dzhou.corejava.guava.common.base.AbstractIterator;
+import com.dzhou.corejava.guava.common.base.Joiner;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -13,6 +16,7 @@ public class LinkedStack<Item> implements Stack<Item> {
   private static class Node<Item> {
     private Item item;
     private Node<Item> next;
+
   }
 
   public LinkedStack() {
@@ -32,7 +36,7 @@ public class LinkedStack<Item> implements Stack<Item> {
 
   @Override
   public void push(Item item) {
-    Node oldFirst = first;
+    Node<Item> oldFirst = first;
     first = new Node<Item>();
     first.item = item;
     first.next = oldFirst;
@@ -59,35 +63,47 @@ public class LinkedStack<Item> implements Stack<Item> {
   }
 
   @Override
-  public Iterator<Item> iterator(){
-    return new ListIterator<Item>(first);
+  public Iterator<Item> iterator() {
+    return new ListIterator(first);
   }
 
-  private class ListIterator<Item> implements Iterator<Item> {
-    private Node<Item> current;
 
-    public ListIterator(Node<Item> first) {
-      current = first;
+  private class ListIterator extends AbstractIterator<Item> {
+    private Node<Item> node;
+
+    public ListIterator(Node first) {
+      node = first;
     }
 
     @Override
-    public boolean hasNext() {
-      return current != null;
-    }
-
-    @Override
-    public Item next() {
-      if (!hasNext()) {
-        throw new NoSuchElementException();
+    public Item computeNext() {
+      if (node != null) {
+        Item item = node.item;
+        node = node.next;
+        return item;
       }
-      Item item = current.item;
-      current = current.next;
-      return item;
+      return endOfData();
     }
+  }
 
-    @Override
-    public void remove() {
-      throw new UnsupportedOperationException();
-    }
+  public static void main(String[] args) {
+    Stack<String> stack = new LinkedStack<String>();
+    stack.push("a");
+    System.out.println(Joiner.on(",").join(stack));
+    stack.push("b");
+    System.out.println(Joiner.on(",").join(stack));
+    stack.pop();
+    System.out.println(Joiner.on(",").join(stack));
+    stack.push("c");
+    System.out.println(Joiner.on(",").join(stack));
+    stack.push("d");
+    System.out.println(Joiner.on(",").join(stack));
+    stack.peek();
+    System.out.println(Joiner.on(",").join(stack));
+    stack.pop();
+    System.out.println(Joiner.on(",").join(stack));
+    stack.push("e");
+    System.out.println(Joiner.on(",").join(stack));
+
   }
 }
