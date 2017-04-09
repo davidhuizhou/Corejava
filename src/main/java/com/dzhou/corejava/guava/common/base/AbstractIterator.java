@@ -9,6 +9,7 @@ public abstract class AbstractIterator<T> implements Iterator<T> {
   private State state = State.NOT_READY;
 
   protected AbstractIterator() {
+
   }
 
   private enum State {
@@ -20,15 +21,15 @@ public abstract class AbstractIterator<T> implements Iterator<T> {
 
   private T next;
 
+  protected abstract T computeNext();
+
   protected final T endOfData() {
     state = State.DONE;
     return null;
   }
 
-  protected abstract T computeNext();
-
   @Override
-  public boolean hasNext() {
+  public final boolean hasNext() {
     checkState(state != State.FAILED);
     switch (state) {
       case READY:
@@ -37,10 +38,10 @@ public abstract class AbstractIterator<T> implements Iterator<T> {
         return false;
       default:
     }
-    return tryComputeNext();
+    return tryToComputeNext();
   }
 
-  private boolean tryComputeNext() {
+  private boolean tryToComputeNext() {
     state = State.FAILED;
     next = computeNext();
     if (state != State.DONE) {
@@ -51,19 +52,14 @@ public abstract class AbstractIterator<T> implements Iterator<T> {
   }
 
   @Override
-  public T next() {
+  public final T next() {
     if (!hasNext()) {
       throw new NoSuchElementException();
     }
+    state = State.NOT_READY;
     T result = next;
     next = null;
-    state = State.NOT_READY;
     return result;
-  }
-
-  @Override
-  public void remove() {
-    throw new UnsupportedOperationException();
   }
 
 }

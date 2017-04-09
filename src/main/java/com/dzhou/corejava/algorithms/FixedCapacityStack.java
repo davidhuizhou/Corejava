@@ -1,6 +1,6 @@
 package com.dzhou.corejava.algorithms;
 
-import com.dzhou.corejava.guava.common.base.AbstractIterator;
+import  com.dzhou.corejava.guava.common.base.AbstractIterator;
 import com.dzhou.corejava.guava.common.base.Joiner;
 
 import java.util.Iterator;
