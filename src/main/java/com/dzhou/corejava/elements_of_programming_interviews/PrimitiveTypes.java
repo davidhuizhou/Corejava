@@ -7,10 +7,10 @@ public class PrimitiveTypes {
 
   public static int countBits(long x) {
     int numBits = 0;
-    int bitmask = 0x0001; // or int bitmask = 1;
+    int bitMask = 0x0001;
     while (x != 0) {
-      numBits += x & bitmask;
-      x >>>= 1;           // have to use >>>, otherwise for negative number, infinit loop.
+      numBits += x & bitMask;
+      x >>>= 1;
     }
     return numBits;
   }
@@ -55,7 +55,7 @@ public class PrimitiveTypes {
 
   public static long swapBits(long x, int i, int j) {
     // Extract the i-th and j-th bits, and see if they differ
-    if (((x >>> i) & 1) != ((x >>> j) & 1)) {
+    if (((x >>> i) & 1) != ((x >>> j) & j)) {
       long bitMask = (1L << i) | (1L << j);
       x ^= bitMask;
     }

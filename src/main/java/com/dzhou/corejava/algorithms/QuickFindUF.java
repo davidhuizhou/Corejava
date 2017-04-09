@@ -8,56 +8,43 @@ public class QuickFindUF {
   private int count;
 
   /**
-   * Initializes an empty union-find data structure with N isolated components 0 through N-1.
-   *
-   * @param N the number of objects
-   * @trhwos java.lang.IllegalArgumentsException if N < 0
+   * Initializes an empty union-find data structure with {@code n} sites {@code 0} through {@code n
+   * - 1}.
    */
-  public QuickFindUF(int N) {
-    count = N;
-    id = new int[N];
-    for (int i = 0; i < N; i++) {
+  public QuickFindUF(int n) {
+    count = n;
+    id = new int[n];
+    for (int i = 0; i < n; i++) {
       id[i] = i;
     }
   }
 
-  /**
-   * Returns the number of components;
-   *
-   * @return the number of components (between 1 and N)
-   */
   public int count() {
     return count;
   }
 
-  /**
-   * Returns the component identifier for the component containing site <tt>p</tt>.
-   *
-   * @param p the integer representing one site
-   * @return the component identifier for the component containing site <tt>p</tt>
-   * @throws java.lang.IndexOutOfBoundsException unless 0 <= p < N
-   */
   public int find(int p) {
     return id[p];
   }
 
-  /**
-   * Are the two sites <tt>p</tt> and <tt>q</tt> in the same component?
-   *
-   * @param p the integer representing one site
-   * @param q the integer representing the other site
-   */
   public boolean connected(int p, int q) {
     return id[p] == id[q];
   }
 
+  /**
+   * Merges the component containing site {@code p} with the component containing site {@code q}.
+   */
   public void union(int p, int q) {
-    if (connected(p, q))
+    int pId = id[p];
+    int qId = id[q];
+
+    if (pId == qId) {
       return;
-    int pid = id[p];
+    }
+
     for (int i = 0; i < id.length; i++) {
-      if (id[i] == pid) {
-        id[i] = id[q];
+      if (id[i] == pId) {
+        id[i] = qId;
       }
     }
     count--;

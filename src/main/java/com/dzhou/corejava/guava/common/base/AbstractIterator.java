@@ -1,15 +1,10 @@
 package com.dzhou.corejava.guava.common.base;
 
-import com.google.common.util.concurrent.Service;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import static com.google.common.base.Preconditions.checkState;
 
-/**
- * Created by huizhou on 12/11/15.
- */
 public abstract class AbstractIterator<T> implements Iterator<T> {
   private State state = State.NOT_READY;
 
@@ -34,7 +29,7 @@ public abstract class AbstractIterator<T> implements Iterator<T> {
   }
 
   @Override
-  public boolean hasNext() {
+  public final boolean hasNext() {
     checkState(state != State.FAILED);
     switch (state) {
       case READY:
@@ -43,10 +38,10 @@ public abstract class AbstractIterator<T> implements Iterator<T> {
         return false;
       default:
     }
-    return tryComputeNext();
+    return tryToComputeNext();
   }
 
-  private boolean tryComputeNext() {
+  private boolean tryToComputeNext() {
     state = State.FAILED;
     next = computeNext();
     if (state != State.DONE) {
@@ -57,22 +52,15 @@ public abstract class AbstractIterator<T> implements Iterator<T> {
   }
 
   @Override
-  public T next() {
+  public final T next() {
     if (!hasNext()) {
       throw new NoSuchElementException();
     }
+    state = State.NOT_READY;
     T result = next;
-    state = State.NOT_READY;
     next = null;
-    state = State.NOT_READY;
     return result;
   }
-
-  @Override
-  public void remove() {
-    throw new UnsupportedOperationException();
-  }
-
 
 }
 

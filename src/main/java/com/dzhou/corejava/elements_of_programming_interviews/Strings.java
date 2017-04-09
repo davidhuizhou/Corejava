@@ -2,8 +2,10 @@ package com.dzhou.corejava.elements_of_programming_interviews;
 
 import com.google.common.base.Joiner;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -47,22 +49,23 @@ public class Strings {
       isNegative = true;
     }
     StringBuilder sb = new StringBuilder();
-    while (x > 0) {
-      sb.append(x % 10);
+    do {
+      sb.append((char) ('0' + Math.abs(x % 10)));
       x /= 10;
-    }
+    } while (x != 0);
 
     if (isNegative) {
       sb.append("-");
     }
-    return reverse(sb.toString());
+    sb.reverse();
+    return sb.toString();
   }
 
   public static int stringToInt(String s) {
     boolean isNegative = s.charAt(0) == '-';
     int result = 0;
     for (int i = isNegative ? 1 : 0; i < s.length(); i++) {
-      int digit = s.charAt(i) - '0';
+      final int digit = s.charAt(i) - '0';
       result = result * 10 + digit;
     }
     return isNegative ? -result : result;
@@ -72,18 +75,24 @@ public class Strings {
    * Problem 7.2 Base conversion.
    */
   public static String convertBase(String s, int b1, int b2) {
-    boolean isNegative = s.charAt(0) == '-';
-    int x = 0;
-    for (int i = isNegative ? 1 : 0; i < s.length(); i++) {
-      x *= b1;
-      x += Character.isDigit(s.charAt(i)) ? s.charAt(i) - '0' : s.charAt(i) - 'A' + 10;
+    boolean isNegative = s.startsWith("-");
+    int numAsInt = 0;
+    for (int i = (isNegative ? 1 : 0); i < s.length(); i++) {
+      numAsInt *= b1;
+      numAsInt += Character.isDigit(s.charAt(i))
+          ? s.charAt(i) - '0'
+          : s.charAt(i) - 'A' + 10;
     }
-    return (isNegative ? "-" : "") + (x == 0 ? "0" : constructFromBase(x, b2));
+    return (isNegative ? "-" : "")
+        + (numAsInt == 0 ? "0" : constructFromBase(numAsInt, b2));
   }
 
-  private static String constructFromBase(int x, int base) {
-    return x == 0 ? "" : constructFromBase(x / base, base) + (char) (x % base >= 10 ? 'A' + x % base
-      - 10 : '0' + x % base);
+  private static String constructFromBase(int numAsInt, int base) {
+    return numAsInt == 0
+        ? ""
+        : constructFromBase(numAsInt / base, base)
+        + (char) (numAsInt % base >= 10 ? 'A' + numAsInt % base - 10
+        : '0' + numAsInt % base);
   }
 
   /**
@@ -166,61 +175,72 @@ public class Strings {
    * First rever s and reversing the individual words.
    */
   public static String reverseWords(final String s) {
-    // Reverse the whole string first.
-    String newS = reverse(s);
+    char[] array = s.toCharArray();
+    reverseWords(array);
+    return new String(array);
+  }
 
-    int i = 0;
-    while (i < newS.length()) {
-      // Find the end of the word starts at i
-      int j = i + 1;
-      while (j < newS.length() && !Character.isSpaceChar(newS.charAt(j))) {
-        j++;
+
+  public static void reverseWords(char[] input) {
+    // Reverse the whole string first
+    reverse(input, 0, input.length);
+
+    int start = 0, end;
+    while ((end = find(input, ' ', start)) != -1) {
+      // Reverse each work in the string
+      reverse(input, start, end);
+      start = end + 1;
+    }
+    // Reverse the last word
+    reverse(input, start, input.length);
+  }
+
+  public static void reverse(char[] array, int start, int stopIndex) {
+    if (start >= stopIndex) {
+      return;
+    }
+    int last = stopIndex - 1;
+    for (int i = start; i <= start + (last - start) / 2; i++) {
+      char tmp = array[i];
+      array[i] = array[last - i + start];
+      array[last - i + start] = tmp;
+    }
+  }
+
+  public static int find(char[] array, char c, int start) {
+    for (int i = start; i < array.length; i++) {
+      if (array[i] == c) {
+        return i;
       }
-      reverse(newS, i, j);
-      i = j + 1;
     }
-    return newS;
+    return -1;
   }
-
-
-  /**
-   * Reverse the subString(i, j) in s.
-   */
-  public static String reverse(String s, int i, int j) {
-    if (i < 0 || i >= s.length()) {
-      return s;
-    }
-    if (j < 0 || j > s.length()) {
-      return s;
-    }
-    return s.substring(0, i) + reverse(s.substring(i, j)) + s.substring(j);
-  }
-
 
   /**
    * Problem 7.7 Compute all mnemonics for a phone number.
    */
-  private static String[] kMapping = new String[]{"0", "1", "ABC", "DEF", "GHI", "JKL", "MNO",
-    "PQRS", "TUV", "WXYZ"};
+  private static final String[] MAPPING = new String[]{"0", "1", "ABC", "DEF", "GHI", "JKL", "MNO",
+      "PQRS", "TUV", "WXYZ"};
 
-  public static Set<String> phoneMnemonic(final String phoneNumber) {
-    String partialMnemonic = "";
-    Set<String> mnemonic = new HashSet<String>();
-    phoneMnemonicHelper(phoneNumber, 0, partialMnemonic, mnemonic);
-    return mnemonic;
+  public static List<String> phoneMnemonic(final String phoneNumber) {
+    char[] partialMnemonic = new char[phoneNumber.length()];
+    List<String> mnemonics = new ArrayList<String>();
+    phoneMnemonicHelper(phoneNumber, 0, partialMnemonic, mnemonics);
+    return mnemonics;
   }
 
-  private static void phoneMnemonicHelper(final String phoneNumber, int digit, String
-    partialMnemonic, Set<String> mnemonics) {
+  private static void phoneMnemonicHelper(final String phoneNumber, int digit, char[]
+      partialMnemonic, List<String> mnemonics) {
 
     if (digit == phoneNumber.length()) {
       // All digits are processed, so add partialMnemonic to mnemonics.
       // We add a copy since subsequent calls modify partialMnemonic.
-      mnemonics.add(partialMnemonic);
+      mnemonics.add(new String(partialMnemonic));
 
     } else {
-      for (char c : kMapping[phoneNumber.charAt(digit) - '0'].toCharArray()) {
-        phoneMnemonicHelper(phoneNumber, digit + 1, partialMnemonic + c, mnemonics);
+      for (char c : MAPPING[phoneNumber.charAt(digit) - '0'].toCharArray()) {
+        partialMnemonic[digit] = c;
+        phoneMnemonicHelper(phoneNumber, digit + 1, partialMnemonic, mnemonics);
       }
     }
 
@@ -336,14 +356,9 @@ public class Strings {
     System.out.println(isPalindrome("Able was I, ere I saw Elba!"));
     System.out.println(isPalindrome("Ray a Ray"));
 
-    System.out.println(reverse("abcdefg", 0, 1));
-    System.out.println(reverse("abcdefg", 0, 2));
-    System.out.println(reverse("abcdefg", 0, 3));
-    System.out.println(reverse("abcdefg", 3, 5));
-    System.out.println(reverse("abcdefg", 2, 7));
     System.out.println(reverseWords("ram is costly"));
 
-    Set<String> mnemonic = phoneMnemonic("2276696");
+    List<String> mnemonic = phoneMnemonic("2276696");
     System.out.println(Joiner.on(",").join(mnemonic));
 
     System.out.println(lookAndSay(8));

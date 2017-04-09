@@ -4,20 +4,24 @@ package com.dzhou.corejava.algorithms;
  * Created by huizhou on 7/4/16.
  */
 public class QuickUnionUF {
-  private int[] id;
+  private int[] parent;
   private int count;
 
-  public QuickUnionUF(int N) {
-    id = new int[N];
-    count = N;
-    for (int i = 0; i < N; i++) {
-      id[i] = i;
+  public QuickUnionUF(int n) {
+    count = n;
+    parent = new int[n];
+    for (int i = 0; i < n; i++) {
+      parent[i] = i;
     }
   }
 
+  public int count() {
+    return count;
+  }
+
   public int find(int p) {
-    while (p != id[p]) {
-      p = id[p];
+    while (p != parent[p]) {
+      p = parent[p];
     }
     return p;
   }
@@ -31,7 +35,7 @@ public class QuickUnionUF {
     int rootQ = find(q);
     if (rootP == rootQ)
       return;
-    id[rootP] = rootQ;
+    parent[rootP] = rootQ;
     count--;
   }
 }
