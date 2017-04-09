@@ -5,9 +5,6 @@ import java.util.NoSuchElementException;
 
 import static com.google.common.base.Preconditions.checkState;
 
-/**
- * Created by huizhou on 12/11/15.
- */
 public abstract class AbstractIterator<T> implements Iterator<T> {
   private State state = State.NOT_READY;
 
@@ -23,12 +20,12 @@ public abstract class AbstractIterator<T> implements Iterator<T> {
 
   private T next;
 
-  protected abstract T computeNext();
-
   protected final T endOfData() {
     state = State.DONE;
     return null;
   }
+
+  protected abstract T computeNext();
 
   @Override
   public boolean hasNext() {
@@ -59,8 +56,8 @@ public abstract class AbstractIterator<T> implements Iterator<T> {
       throw new NoSuchElementException();
     }
     T result = next;
-    state = State.NOT_READY;
     next = null;
+    state = State.NOT_READY;
     return result;
   }
 
@@ -68,7 +65,6 @@ public abstract class AbstractIterator<T> implements Iterator<T> {
   public void remove() {
     throw new UnsupportedOperationException();
   }
-
 
 }
 

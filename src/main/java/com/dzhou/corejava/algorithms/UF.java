@@ -1,33 +1,31 @@
 package com.dzhou.corejava.algorithms;
 
 /**
- * Created by huizhou on 7/4/16.
+ * Created by huizhou on 10/22/16.
  */
-public class QuickUnionUF {
+public class UF {
   private int[] parent;
+  private byte[] rank;
   private int count;
 
-  public QuickUnionUF(int n) {
+  public UF(int n) {
+    if (n < 0)
+      throw new IllegalArgumentException();
     count = n;
     parent = new int[n];
+    rank = new byte[n];
     for (int i = 0; i < n; i++) {
       parent[i] = i;
+      rank[i] = 0;
     }
   }
 
   public int find(int p) {
-    validate(p);
     while (p != parent[p]) {
+      parent[p] = parent[parent[p]];
       p = parent[p];
     }
     return p;
-  }
-
-  private void validate(int p) {
-    int n = parent.length;
-    if (p < 0 | p >= n) {
-      throw new IndexOutOfBoundsException("index " + p + " is not between 0 and " + (n - 1));
-    }
   }
 
   public boolean connected(int p, int q) {
@@ -40,7 +38,15 @@ public class QuickUnionUF {
     if (rootP == rootQ) {
       return;
     }
-    parent[p] = rootQ;
+    if (rank[rootP] < rank[rootQ]) {
+      parent[rootP] = rootQ;
+    } else if (rank[rootP] > rank[rootQ]) {
+      parent[rootQ] = rootP;
+    } else {
+      parent[rootQ] = rootP;
+      rank[rootP]++;
+    }
     count--;
   }
 }
+

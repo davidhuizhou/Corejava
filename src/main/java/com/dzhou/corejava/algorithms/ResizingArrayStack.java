@@ -1,6 +1,5 @@
 package com.dzhou.corejava.algorithms;
 
-import com.dzhou.corejava.guava.common.base.AbstractIterator;
 import com.dzhou.corejava.guava.common.base.Joiner;
 
 import java.util.Iterator;
@@ -18,17 +17,23 @@ public class ResizingArrayStack<Item> implements Stack<Item> {
     n = 0;
   }
 
-  @Override
   public boolean isEmpty() {
     return n == 0;
   }
 
-  @Override
   public int size() {
     return n;
   }
 
-  @Override
+  private void resize(int capacity) {
+    assert capacity >= n;
+    Item[] temp = (Item[]) new Object[capacity];
+    for (int i = 0; i < n; i++) {
+      temp[i] = a[i];
+    }
+    a = temp;
+  }
+
   public void push(Item item) {
     if (n == a.length) {
       resize(2 * a.length);
@@ -36,7 +41,6 @@ public class ResizingArrayStack<Item> implements Stack<Item> {
     a[n++] = item;
   }
 
-  @Override
   public Item pop() {
     if (isEmpty()) {
       throw new NoSuchElementException();
@@ -48,10 +52,8 @@ public class ResizingArrayStack<Item> implements Stack<Item> {
       resize(a.length / 2);
     }
     return item;
-
   }
 
-  @Override
   public Item peek() {
     if (isEmpty()) {
       throw new NoSuchElementException();
@@ -59,34 +61,30 @@ public class ResizingArrayStack<Item> implements Stack<Item> {
     return a[n - 1];
   }
 
-  private void resize(int capacity) {
-    assert capacity >= n;
-
-    Item[] temp = (Item[]) new Object[capacity];
-    for (int i = 0; i < n; i++) {
-      temp[i] = a[i];
-    }
-    a = temp;
-  }
-
-  @Override
   public Iterator<Item> iterator() {
-    return new ReverseArrayIterator(n);
+    return new ReverseArrayIterator();
   }
 
-  private class ReverseArrayIterator extends AbstractIterator<Item> {
+  private class ReverseArrayIterator implements Iterator<Item> {
     private int i;
 
-    public ReverseArrayIterator(int n) {
+    public ReverseArrayIterator() {
       i = n - 1;
     }
 
-    @Override
-    public Item computeNext() {
-      if (i >= 0) {
-        return a[i--];
+    public boolean hasNext() {
+      return i >= 0;
+    }
+
+    public Item next() {
+      if (!hasNext()) {
+        throw new NoSuchElementException();
       }
-      return endOfData();
+      return a[i--];
+    }
+
+    public void remove() {
+      throw new UnsupportedOperationException();
     }
   }
 
