@@ -1,6 +1,6 @@
 package com.dzhou.corejava.elements_of_programming_interviews;
 
-import org.apache.commons.lang3.StringUtils;
+//import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by huizhou on 7/5/16.
@@ -17,26 +17,26 @@ public class PrimitiveTypes {
   }
 
   public static void testBitWiseOperations(){
-    System.out.println(StringUtils.leftPad(Integer.toBinaryString(8), 32, '0'));
-    System.out.println(StringUtils.leftPad(Integer.toBinaryString(8 >> 1), 32, '0'));
-
-    System.out.println(StringUtils.leftPad(Integer.toBinaryString(-8), 32, '0'));
-    System.out.println(StringUtils.leftPad(Integer.toBinaryString(-8 >> 1), 32, '0'));
-    System.out.println(StringUtils.leftPad(Integer.toBinaryString(-8 >>> 1), 32, '0'));
-    System.out.println(StringUtils.leftPad(Integer.toBinaryString(-8 >>> 2), 32, '0'));
-
-    System.out.println(StringUtils.leftPad(Integer.toBinaryString(1 << 10), 32, '0'));
-    System.out.println(StringUtils.leftPad(Integer.toBinaryString(~0), 32, '0'));
-
-    System.out.println(StringUtils.leftPad(Integer.toBinaryString(15), 32, '0'));
-    System.out.println(StringUtils.leftPad(Integer.toBinaryString(16), 32, '0'));
-    System.out.println(StringUtils.leftPad(Integer.toBinaryString(15 ^ 16), 32, '0'));
-
-    System.out.println(StringUtils.leftPad(Integer.toBinaryString(123), 32, '0'));
-    System.out.println(StringUtils.leftPad(Integer.toBinaryString(122), 32, '0'));
-    System.out.println(StringUtils.leftPad(Integer.toBinaryString(123 & 122), 32, '0'));
-    System.out.println(StringUtils.leftPad(Integer.toBinaryString(~122), 32, '0'));
-    System.out.println(StringUtils.leftPad(Integer.toBinaryString(123 & ~122), 32, '0'));
+//    System.out.println(StringUtils.leftPad(Integer.toBinaryString(8), 32, '0'));
+//    System.out.println(StringUtils.leftPad(Integer.toBinaryString(8 >> 1), 32, '0'));
+//
+//    System.out.println(StringUtils.leftPad(Integer.toBinaryString(-8), 32, '0'));
+//    System.out.println(StringUtils.leftPad(Integer.toBinaryString(-8 >> 1), 32, '0'));
+//    System.out.println(StringUtils.leftPad(Integer.toBinaryString(-8 >>> 1), 32, '0'));
+//    System.out.println(StringUtils.leftPad(Integer.toBinaryString(-8 >>> 2), 32, '0'));
+//
+//    System.out.println(StringUtils.leftPad(Integer.toBinaryString(1 << 10), 32, '0'));
+//    System.out.println(StringUtils.leftPad(Integer.toBinaryString(~0), 32, '0'));
+//
+//    System.out.println(StringUtils.leftPad(Integer.toBinaryString(15), 32, '0'));
+//    System.out.println(StringUtils.leftPad(Integer.toBinaryString(16), 32, '0'));
+//    System.out.println(StringUtils.leftPad(Integer.toBinaryString(15 ^ 16), 32, '0'));
+//
+//    System.out.println(StringUtils.leftPad(Integer.toBinaryString(123), 32, '0'));
+//    System.out.println(StringUtils.leftPad(Integer.toBinaryString(122), 32, '0'));
+//    System.out.println(StringUtils.leftPad(Integer.toBinaryString(123 & 122), 32, '0'));
+//    System.out.println(StringUtils.leftPad(Integer.toBinaryString(~122), 32, '0'));
+//    System.out.println(StringUtils.leftPad(Integer.toBinaryString(123 & ~122), 32, '0'));
 
   }
 

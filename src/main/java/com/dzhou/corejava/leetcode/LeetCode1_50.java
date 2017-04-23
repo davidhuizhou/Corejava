@@ -20,7 +20,7 @@ public class LeetCode1_50 {
    *
    * Because nums[0] + nums[1] = 2 + 7 = 9, return [0, 1].
    */
-  public int[] twoSum(int[] nums, int target) {
+  public static int[] twoSum(int[] nums, int target) {
     Map<Integer, Integer> map = new HashMap<Integer, Integer>();
     for (int i = 0; i < nums.length; i++) {
       int compliment = target - nums[i];
@@ -212,6 +212,29 @@ public class LeetCode1_50 {
     return longest;
   }
 
+  /**
+   * Problem 9 - Palindrome number
+   */
+  public static boolean isPalindrome(int x){
+    if(x < 0){
+      return false;
+    }
+    int divider = 1;
+    while(divider * 10 <= x){
+      divider *= 10;
+    }
+    while(x >= 10){
+      if(x / divider != x % 10){
+        return false;
+      } else {
+        x %= divider;
+        x /= 10;
+        divider /= 100;
+      }
+    }
+    return true;
+  }
+
 
   public static void main(String[] args) {
     LeetCode1_50 leetCode = new LeetCode1_50();
@@ -239,6 +262,19 @@ public class LeetCode1_50 {
     System.out.println(longestPalindrome2("aba"));
     System.out.println(longestPalindrome2("abac"));
     System.out.println(longestPalindrome2("abaabcdc"));
+
+    System.out.println(isPalindrome(-5));
+    System.out.println(isPalindrome(0));
+    System.out.println(isPalindrome(1));
+    System.out.println(isPalindrome(9));
+    System.out.println(isPalindrome(10));
+    System.out.println(isPalindrome(11));
+    System.out.println(isPalindrome(99));
+    System.out.println(isPalindrome(100));
+    System.out.println(isPalindrome(111));
+    System.out.println(isPalindrome(121));
+    System.out.println(isPalindrome(1212));
+
   }
 
 }

@@ -30,39 +30,39 @@ public class TestOne {
     }
   }
 
-  @Test
-  public void testQuickFindUF() {
-    int n = 10;
-    QuickFindUF uf = new QuickFindUF(n);
-    System.out.println(uf.count() + " components");
-    uf.union(0, 2);
-    System.out.println(uf.count() + " components");
-    uf.union(1, 5);
-    System.out.println(uf.count() + " components");
-    uf.union(4, 8);
-    System.out.println(uf.count() + " components");
-    uf.union(6, 9);
-    System.out.println(uf.count() + " components");
-    uf.union(2, 5);
-    System.out.println(uf.count() + " components");
-    assertEquals(5, uf.count());
-  }
-
-  @Test
-  public void testQuickUnionUF() {
-    int n = 10;
-    QuickUnionUF uf = new QuickUnionUF(n);
-    System.out.println(uf.count() + " components");
-    uf.union(0, 2);
-    System.out.println(uf.count() + " components");
-    uf.union(1, 5);
-    System.out.println(uf.count() + " components");
-    uf.union(4, 8);
-    System.out.println(uf.count() + " components");
-    uf.union(6, 9);
-    System.out.println(uf.count() + " components");
-    uf.union(2, 5);
-    System.out.println(uf.count() + " components");
-    assertEquals(5, uf.count());
-  }
+//  @Test
+//  public void testQuickFindUF() {
+//    int n = 10;
+//    QuickFindUF uf = new QuickFindUF(n);
+//    System.out.println(uf.count() + " components");
+//    uf.union(0, 2);
+//    System.out.println(uf.count() + " components");
+//    uf.union(1, 5);
+//    System.out.println(uf.count() + " components");
+//    uf.union(4, 8);
+//    System.out.println(uf.count() + " components");
+//    uf.union(6, 9);
+//    System.out.println(uf.count() + " components");
+//    uf.union(2, 5);
+//    System.out.println(uf.count() + " components");
+//    assertEquals(5, uf.count());
+//  }
+//
+//  @Test
+//  public void testQuickUnionUF() {
+//    int n = 10;
+//    QuickUnionUF uf = new QuickUnionUF(n);
+//    System.out.println(uf.count() + " components");
+//    uf.union(0, 2);
+//    System.out.println(uf.count() + " components");
+//    uf.union(1, 5);
+//    System.out.println(uf.count() + " components");
+//    uf.union(4, 8);
+//    System.out.println(uf.count() + " components");
+//    uf.union(6, 9);
+//    System.out.println(uf.count() + " components");
+//    uf.union(2, 5);
+//    System.out.println(uf.count() + " components");
+//    assertEquals(5, uf.count());
+//  }
 }
