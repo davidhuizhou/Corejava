@@ -1,7 +1,6 @@
 package com.dzhou.corejava.elements_of_programming_interviews;
 
 import com.google.common.base.Joiner;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,9 +13,81 @@ import java.util.Random;
  */
 public class ArrayUtils {
 
+  private static String reverse(String s) {
+    char[] a = s.toCharArray();
+    for (int i = 0, j = a.length - 1; i < j; i++, j--) {
+      swap(a, i, j);
+    }
+    return String.valueOf(a);
+  }
+
+  private static void swap(char[] a, int i, int j) {
+    char temp = a[i];
+    a[i] = a[j];
+    a[j] = temp;
+  }
+
   /**
-   * Problem 6.0, input is an array of integers, reodeer its entries so that the
-   * even entries appear first.
+   * LeetCode - Add Binary
+   * 
+   * Given two binary strings, return their sum (also a binary string).
+   * 
+   * For example, a = "11" b = "1" Return "100".
+   * 
+   */
+  public static String addBinary(String a, String b) {
+    StringBuilder result = new StringBuilder();
+    int carry = 0;
+    int i = a.length() - 1, j = b.length() - 1;
+    while (i >= 0 || j >= 0) {
+      carry += (i >= 0) ? a.charAt(i) - '0' : 0;
+      carry += (j >= 0) ? b.charAt(j) - '0' : 0;
+      result.append((char) ('0' + carry % 2));
+      carry = carry / 2;
+
+      i--;
+      j--;
+    }
+
+    if (carry > 0) {
+      result.append((char) ('0' + carry));
+    }
+    return reverse(result.toString());
+
+  }
+
+  /**
+   * Minimum size subarray sum
+   */
+  public static int minSubArrayLen(int s, int[] nums) {
+    int N = nums.length, i = 0, j = 0;
+    int sum = 0;
+    int minLen = Integer.MAX_VALUE;
+
+    while (i < N && j < N) {
+      System.out.println("i=" + i + ",j=" + j + ",minLen=" + minLen);
+
+      while (sum < s && j < N) {
+        sum += nums[j++];
+      }
+
+      while (sum >= s && i < j) {
+        minLen = Math.min(minLen, j - i);
+        sum -= nums[i++];
+      }
+    }
+
+    return minLen <= N ? minLen : 0;
+  }
+  
+  
+
+
+
+
+  /**
+   * Problem 6.0, input is an array of integers, reodeer its entries so that the even entries appear
+   * first.
    */
   public static void evenOdd(Integer[] A) {
     int nextEven = 0;
@@ -31,8 +102,8 @@ public class ArrayUtils {
   }
 
   /**
-   * Problem 6.0, input is an array of integers, reodeer its entries so that the
-   * even entries appear first.
+   * Problem 6.0, input is an array of integers, reodeer its entries so that the even entries appear
+   * first.
    */
   public static void evenOddOne(Integer[] A) {
     int nextEven = 0;
@@ -44,9 +115,8 @@ public class ArrayUtils {
   }
 
   /**
-   * Probelm 6.1 three-way partioning resembling the Dutch national flag.
-   * First pass move all the elements less than the pivot to the begining.
-   * Second pass move the larger elements to the end.
+   * Probelm 6.1 three-way partioning resembling the Dutch national flag. First pass move all the
+   * elements less than the pivot to the begining. Second pass move the larger elements to the end.
    */
   public static void dutchFlagPartitionOne(Integer[] A, int index) {
     // Set the pivot to compare to.
@@ -78,11 +148,9 @@ public class ArrayUtils {
     int pivot = A[index];
 
     /**
-     * Keep the following invariants during partition:
-     * elements less then pivot group: A[0, small - 1]
-     * elements equal to pivot group: A[small, equal - 1]
-     * elements unclassified group: A[equal, large - 1]
-     * elements greater then pivot: A[large, A.length - 1]
+     * Keep the following invariants during partition: elements less then pivot group: A[0, small -
+     * 1] elements equal to pivot group: A[small, equal - 1] elements unclassified group: A[equal,
+     * large - 1] elements greater then pivot: A[large, A.length - 1]
      */
     int small = 0;
     int equal = 0;
@@ -143,8 +211,8 @@ public class ArrayUtils {
 
 
   /**
-   * Problem 6.3 multiply two arbitrary-precision integers.
-   * The number of digits required for the product is at most n + m for n and m digit operands.
+   * Problem 6.3 multiply two arbitrary-precision integers. The number of digits required for the
+   * product is at most n + m for n and m digit operands.
    */
   public static Integer[] multiple(Integer[] a, Integer[] b) {
     int sign = a[0] < 0 ^ b[0] < 0 ? -1 : 1;
@@ -173,8 +241,8 @@ public class ArrayUtils {
     num1.set(0, Math.abs(num1.get(0)));
     num2.set(0, Math.abs(num2.get(0)));
 
-    List<Integer> result = new ArrayList<Integer>(Collections.nCopies(num1.size() + num2.size(),
-      0));
+    List<Integer> result =
+        new ArrayList<Integer>(Collections.nCopies(num1.size() + num2.size(), 0));
 
     for (int i = num1.size() - 1; i >= 0; --i) {
       for (int j = num2.size() - 1; j >= 0; --j) {
@@ -197,9 +265,9 @@ public class ArrayUtils {
 
 
   /**
-   * Problem 6.4 an array of n integers, where A[i] denotes the maximum you can advance from
-   * index i, and returns whether is it possible to advance to the last index starting from
-   * the beginning of the array.
+   * Problem 6.4 an array of n integers, where A[i] denotes the maximum you can advance from index
+   * i, and returns whether is it possible to advance to the last index starting from the beginning
+   * of the array.
    */
   public static boolean canReachEnd(int[] a) {
     int furthestReachSoFar = 0;
@@ -258,7 +326,7 @@ public class ArrayUtils {
     List<Double> firstBuySellProfits = new ArrayList<Double>();
     double minPriceSoFar = Double.MAX_VALUE;
 
-    // Forware phase.  For each day, we record maximum profit if we
+    // Forware phase. For each day, we record maximum profit if we
     // sell on that day.
     for (int i = 0; i < prices.size(); ++i) {
       minPriceSoFar = Math.min(minPriceSoFar, prices.get(i));
@@ -266,13 +334,13 @@ public class ArrayUtils {
       firstBuySellProfits.add(maxTotalProfit);
     }
 
-    // Backared phase.  For each day, find the maximium profit if we make
+    // Backared phase. For each day, find the maximium profit if we make
     // the second buy on that day.
     double maxPriceSoFar = Double.MIN_VALUE;
     for (int i = prices.size() - 1; i > 0; --i) {
       maxPriceSoFar = Math.max(maxPriceSoFar, prices.get(i));
-      maxTotalProfit = Math.max(maxTotalProfit, maxPriceSoFar - prices.get(i) +
-        firstBuySellProfits.get(i - 1));
+      maxTotalProfit =
+          Math.max(maxTotalProfit, maxPriceSoFar - prices.get(i) + firstBuySellProfits.get(i - 1));
     }
     return maxTotalProfit;
 
@@ -283,8 +351,8 @@ public class ArrayUtils {
    */
   public static List<Integer> generatePrimes(int n) {
     List<Integer> primes = new ArrayList<Integer>();
-    // isPrime.get(p) represents if p is prime or not.  Initially, set each
-    // to true, excepting 0 and 1.  Then use sieving to eleminate nonprimes.
+    // isPrime.get(p) represents if p is prime or not. Initially, set each
+    // to true, excepting 0 and 1. Then use sieving to eleminate nonprimes.
     List<Boolean> isPrime = new ArrayList<>(Collections.nCopies(n + 1, true));
     isPrime.set(0, false);
     isPrime.set(1, false);
@@ -313,7 +381,7 @@ public class ArrayUtils {
       // perm is the last permutation
       return Collections.emptyList();
     }
-    // Swap the smllest entry after index k that is greater than perm(k).  We
+    // Swap the smllest entry after index k that is greater than perm(k). We
     // exploit the fact that perm.subList(k + 1, per.size()) is decreasing so
     // if we search in reverse order, the first entry that is greater than
     // perm(k) is the smallest such entry.
@@ -344,7 +412,7 @@ public class ArrayUtils {
   /**
    * Problem 6.12 Sample online data.
    */
-  // Assumption:  there are at least k elements in the stream.
+  // Assumption: there are at least k elements in the stream.
   public static List<Integer> onlineRandomSample(Iterator<Integer> sequence, int k) {
     List<Integer> runningSample = new ArrayList<Integer>(k);
     // Stores the first k elements.
@@ -358,7 +426,7 @@ public class ArrayUtils {
     while (sequence.hasNext()) {
       Integer x = sequence.next();
       ++numSeenSoFar;
-      //Generate a random num in [0, numSeenSoFar], and if this num is in
+      // Generate a random num in [0, numSeenSoFar], and if this num is in
       // [0, k - 1], we replace that element from the sample with x.
       final int idxToReplace = randIdxGen.nextInt(numSeenSoFar);
       if (idxToReplace < k) {
@@ -369,14 +437,14 @@ public class ArrayUtils {
   }
 
 
-  private static boolean hasDuplicate(List<List<Integer>> partialAssignment, int startRow, int
-    endRow, int startCol, int endCol) {
-    List<Boolean> isPresent = new ArrayList<>(Collections.nCopies(partialAssignment.size() + 1,
-      false));
+  private static boolean hasDuplicate(List<List<Integer>> partialAssignment, int startRow,
+      int endRow, int startCol, int endCol) {
+    List<Boolean> isPresent =
+        new ArrayList<>(Collections.nCopies(partialAssignment.size() + 1, false));
     for (int i = startRow; i < endRow; ++i) {
       for (int j = startCol; j < endCol; ++j) {
-        if (partialAssignment.get(i).get(j) != 0 && isPresent.get(partialAssignment.get(i).get(j)
-        )) {
+        if (partialAssignment.get(i).get(j) != 0
+            && isPresent.get(partialAssignment.get(i).get(j))) {
           return true;
         }
         isPresent.set(partialAssignment.get(i).get(j), true);
@@ -392,8 +460,9 @@ public class ArrayUtils {
       List<Integer> currRow = new ArrayList<>();
       for (int j = 0; j <= i; ++j) {
         // Set this entry to the sum of the two above adject entries if they exists
-        currRow.add((0 < j && j < i) ? pascalTriangle.get(i - 1).get(j - 1) + pascalTriangle.get(i -
-          1).get(j) : 1);
+        currRow.add((0 < j && j < i)
+            ? pascalTriangle.get(i - 1).get(j - 1) + pascalTriangle.get(i - 1).get(j)
+            : 1);
       }
       pascalTriangle.add(currRow);
     }
@@ -402,61 +471,66 @@ public class ArrayUtils {
 
   public static void main(String[] args) {
 
-    Integer[] a = new Integer[]{1, 2, 4, 5, 6, 7, 7, 8, 10};
-    evenOdd(a);
-    System.out.println(Joiner.on(",").join(a));
+    // Integer[] a = new Integer[] {1, 2, 4, 5, 6, 7, 7, 8, 10};
+    // evenOdd(a);
+    // System.out.println(Joiner.on(",").join(a));
+    //
+    // Integer[] a1 = new Integer[] {1, 2, 4, 5, 6, 7, 7, 8, 10};
+    // evenOddOne(a1);
+    // System.out.println(Joiner.on(",").join(a1));
+    //
+    // Integer[] b = new Integer[] {2, 5, 4, 3, 6, 6, 7, 8, 6, 9, 6, 10};
+    // dutchFlagPartition(b, 5);
+    // System.out.println(Joiner.on(",").join(b));
+    //
+    // Integer[] b1 = new Integer[] {2, 5, 4, 3, 6, 6, 7, 8, 6, 9, 6, 10};
+    // dutchFlagPartitionOne(b1, 5);
+    // System.out.println(Joiner.on(",").join(b1));
+    //
+    // Integer[] c = new Integer[] {1, 8, 8};
+    // System.out.println(Joiner.on(",").join(plusOne(c)));
+    //
+    // Integer[] d = new Integer[] {1, 8, 9};
+    // System.out.println(Joiner.on(",").join(plusOne(d)));
+    //
+    // Integer[] e = new Integer[] {9, 9, 9};
+    // System.out.println(Joiner.on(",").join(plusOne(e)));
+    //
+    // Integer[] m1 = new Integer[] {1, 0, 0};
+    // Integer[] m2 = new Integer[] {-1, 1};
+    // System.out.println(Joiner.on(",").join(multiple(m2, m1)));
+    // System.out.println(100 * 11);
+    //
+    // Integer[] m3 = new Integer[] {8, 3, 5};
+    // Integer[] m4 = new Integer[] {-6, 1};
+    // System.out.println(Joiner.on(",").join(multiple(m3, m4)));
+    // System.out.println(835 * 61);
+    //
+    // int[] s = new int[] {3, 2, 0, 0, 2, 0, 1};
+    // System.out.println(canReachEnd(s));
+    //
+    // int[] s1 = new int[] {3, 3, 1, 0, 2, 0, 1};
+    // System.out.println(canReachEnd(s1));
+    //
+    // Integer[] A = new Integer[] {2, 3, 5, 5, 7, 11, 11, 11, 13};
+    // System.out.println(deleteDuplicates(Arrays.asList(A)));
+    //
+    // Double[] prices = new Double[] {310.0, 315.0, 275.0, 295.0, 260.0, 270.0, 290.0, 255.0,
+    // 250.0};
+    // System.out.println(computeMaxProfit(Arrays.asList(prices)));
+    //
+    // prices = new Double[] {12.0, 11.0, 13.0, 9.0, 12.0, 8.0, 14.0, 13.0, 15.0};
+    // System.out.println(buyAndSellStockTwice(Arrays.asList(prices)));
+    //
+    // System.out.println(generatePrimes(10));
+    //
+    // List<Integer> perm = Arrays.asList(new Integer[] {6, 2, 3, 5, 4, 1, 0});
+    // System.out.println(perm);
+    // System.out.println(nextPermutation(perm));
 
-    Integer[] a1 = new Integer[]{1, 2, 4, 5, 6, 7, 7, 8, 10};
-    evenOddOne(a1);
-    System.out.println(Joiner.on(",").join(a1));
+    System.out.println("addBinary=" + addBinary("11", "1"));
 
-    Integer[] b = new Integer[]{2, 5, 4, 3, 6, 6, 7, 8, 6, 9, 6, 10};
-    dutchFlagPartition(b, 5);
-    System.out.println(Joiner.on(",").join(b));
-
-    Integer[] b1 = new Integer[]{2, 5, 4, 3, 6, 6, 7, 8, 6, 9, 6, 10};
-    dutchFlagPartitionOne(b1, 5);
-    System.out.println(Joiner.on(",").join(b1));
-
-    Integer[] c = new Integer[]{1, 8, 8};
-    System.out.println(Joiner.on(",").join(plusOne(c)));
-
-    Integer[] d = new Integer[]{1, 8, 9};
-    System.out.println(Joiner.on(",").join(plusOne(d)));
-
-    Integer[] e = new Integer[]{9, 9, 9};
-    System.out.println(Joiner.on(",").join(plusOne(e)));
-
-    Integer[] m1 = new Integer[]{1, 0, 0};
-    Integer[] m2 = new Integer[]{-1, 1};
-    System.out.println(Joiner.on(",").join(multiple(m2, m1)));
-    System.out.println(100 * 11);
-
-    Integer[] m3 = new Integer[]{8, 3, 5};
-    Integer[] m4 = new Integer[]{-6, 1};
-    System.out.println(Joiner.on(",").join(multiple(m3, m4)));
-    System.out.println(835 * 61);
-
-    int[] s = new int[]{3, 2, 0, 0, 2, 0, 1};
-    System.out.println(canReachEnd(s));
-
-    int[] s1 = new int[]{3, 3, 1, 0, 2, 0, 1};
-    System.out.println(canReachEnd(s1));
-
-    Integer[] A = new Integer[]{2, 3, 5, 5, 7, 11, 11, 11, 13};
-    System.out.println(deleteDuplicates(Arrays.asList(A)));
-
-    Double[] prices = new Double[]{310.0, 315.0, 275.0, 295.0, 260.0, 270.0, 290.0, 255.0, 250.0};
-    System.out.println(computeMaxProfit(Arrays.asList(prices)));
-
-    prices = new Double[]{12.0, 11.0, 13.0, 9.0, 12.0, 8.0, 14.0, 13.0, 15.0};
-    System.out.println(buyAndSellStockTwice(Arrays.asList(prices)));
-
-    System.out.println(generatePrimes(10));
-
-    List<Integer> perm = Arrays.asList(new Integer[]{6, 2, 3, 5, 4, 1, 0});
-    System.out.println(perm);
-    System.out.println(nextPermutation(perm));
+    System.out.println("minSubArrayLen=" + minSubArrayLen(7, new int[] {2, 3, 1, 2, 4, 3}));
 
 
   }

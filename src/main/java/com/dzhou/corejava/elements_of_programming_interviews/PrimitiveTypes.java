@@ -261,6 +261,9 @@ public class PrimitiveTypes {
       return false;
     }
     for (int i = 0; i < (numDigits / 2); ++i) {
+      if (x / msdMask != x % 10) {
+        return false;
+      }
       x %= msdMask; // Remove the most significant digit of x.
       x /= 10;      // Remove the least significant digit of x.
       msdMask /= 100;

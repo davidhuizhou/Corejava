@@ -215,24 +215,30 @@ public class LeetCode1_50 {
   /**
    * Problem 9 - Palindrome number
    */
-  public static boolean isPalindrome(int x){
-    if(x < 0){
+  public static boolean isPalindrome(int x) {
+    if (x < 0) {
       return false;
     }
-    int divider = 1;
-    while(divider * 10 <= x){
-      divider *= 10;
+    if (x < 10) {
+      return true;
     }
-    while(x >= 10){
-      if(x / divider != x % 10){
+
+    int div = 10;
+    while (x / div >= 10) {
+      div *= 10;
+    }
+    
+    while (div >= 10) {
+      int left = x / div;
+      int right = x % 10;
+      if (left != right) {
         return false;
-      } else {
-        x %= divider;
-        x /= 10;
-        divider /= 100;
       }
+      x = (x % div) / 10;
+      div /= 100;
     }
     return true;
+
   }
 
 
@@ -262,18 +268,21 @@ public class LeetCode1_50 {
     System.out.println(longestPalindrome2("aba"));
     System.out.println(longestPalindrome2("abac"));
     System.out.println(longestPalindrome2("abaabcdc"));
+//
+//    System.out.println(isPalindrome(-5));
+//    System.out.println(isPalindrome(0));
+//    System.out.println(isPalindrome(1));
+//    System.out.println(isPalindrome(9));
+//    System.out.println(isPalindrome(10));
+//    System.out.println(isPalindrome(11));
+//    System.out.println(isPalindrome(99));
+//    System.out.println(isPalindrome(100));
+//    System.out.println(isPalindrome(111));
+//    System.out.println(isPalindrome(121));
+//    System.out.println(Integer.MAX_VALUE);
+//    System.out.println(isPalindrome(1874994781));
 
-    System.out.println(isPalindrome(-5));
-    System.out.println(isPalindrome(0));
-    System.out.println(isPalindrome(1));
-    System.out.println(isPalindrome(9));
-    System.out.println(isPalindrome(10));
-    System.out.println(isPalindrome(11));
-    System.out.println(isPalindrome(99));
-    System.out.println(isPalindrome(100));
-    System.out.println(isPalindrome(111));
-    System.out.println(isPalindrome(121));
-    System.out.println(isPalindrome(1212));
+    System.out.println(isPalindrome(1000021));
 
   }
 
