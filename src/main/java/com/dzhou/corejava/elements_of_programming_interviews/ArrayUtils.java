@@ -174,7 +174,7 @@ public class ArrayUtils {
     num2.set(0, Math.abs(num2.get(0)));
 
     List<Integer> result = new ArrayList<Integer>(Collections.nCopies(num1.size() + num2.size(),
-      0));
+        0));
 
     for (int i = num1.size() - 1; i >= 0; --i) {
       for (int j = num2.size() - 1; j >= 0; --j) {
@@ -272,7 +272,7 @@ public class ArrayUtils {
     for (int i = prices.size() - 1; i > 0; --i) {
       maxPriceSoFar = Math.max(maxPriceSoFar, prices.get(i));
       maxTotalProfit = Math.max(maxTotalProfit, maxPriceSoFar - prices.get(i) +
-        firstBuySellProfits.get(i - 1));
+          firstBuySellProfits.get(i - 1));
     }
     return maxTotalProfit;
 
@@ -370,9 +370,9 @@ public class ArrayUtils {
 
 
   private static boolean hasDuplicate(List<List<Integer>> partialAssignment, int startRow, int
-    endRow, int startCol, int endCol) {
+      endRow, int startCol, int endCol) {
     List<Boolean> isPresent = new ArrayList<>(Collections.nCopies(partialAssignment.size() + 1,
-      false));
+        false));
     for (int i = startRow; i < endRow; ++i) {
       for (int j = startCol; j < endCol; ++j) {
         if (partialAssignment.get(i).get(j) != 0 && isPresent.get(partialAssignment.get(i).get(j)
@@ -393,7 +393,7 @@ public class ArrayUtils {
       for (int j = 0; j <= i; ++j) {
         // Set this entry to the sum of the two above adject entries if they exists
         currRow.add((0 < j && j < i) ? pascalTriangle.get(i - 1).get(j - 1) + pascalTriangle.get(i -
-          1).get(j) : 1);
+            1).get(j) : 1);
       }
       pascalTriangle.add(currRow);
     }
@@ -413,10 +413,40 @@ public class ArrayUtils {
     Integer[] b = new Integer[]{2, 5, 4, 3, 6, 6, 7, 8, 6, 9, 6, 10};
     dutchFlagPartition(b, 5);
     System.out.println(Joiner.on(",").join(b));
+    assert (b[0] < 6);
+    assert (b[1] < 6);
+    assert (b[2] < 6);
+    assert (b[3] < 6);
+
+    assert (b[4] == 6);
+    assert (b[5] == 6);
+    assert (b[6] == 6);
+    assert (b[7] == 6);
+
+    assert (b[8] > 6);
+    assert (b[9] > 6);
+    assert (b[10] > 6);
+    assert (b[11] > 6);
+
 
     Integer[] b1 = new Integer[]{2, 5, 4, 3, 6, 6, 7, 8, 6, 9, 6, 10};
     dutchFlagPartitionOne(b1, 5);
     System.out.println(Joiner.on(",").join(b1));
+
+    assert (b1[0] < 6);
+    assert (b1[1] < 6);
+    assert (b1[2] < 6);
+    assert (b1[3] < 6);
+
+    assert (b1[4] == 6);
+    assert (b1[5] == 6);
+    assert (b1[6] == 6);
+    assert (b1[7] == 6);
+
+    assert (b1[8] > 6);
+    assert (b1[9] > 6);
+    assert (b1[10] > 6);
+    assert (b1[11] > 6);
 
     Integer[] c = new Integer[]{1, 8, 8};
     System.out.println(Joiner.on(",").join(plusOne(c)));

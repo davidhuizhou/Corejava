@@ -39,9 +39,9 @@ public class TestJoiner {
 
   @Test
   public void testJoinStringsUseForNull() {
-    String[] values = new String[]{"foo", null, "bar"};
-    String returned = Joiner.on("#").useForNull("missing").join(values);
-    assertThat(returned, is("foo#missing#bar"));
+//    String[] values = new String[]{"foo", null, "bar"};
+//    String returned = Joiner.on("#").useForNull("missing").join(values);
+//    assertThat(returned, is("foo#missing#bar"));
   }
 //
 //  @Test(expected = NullPointerException.class)

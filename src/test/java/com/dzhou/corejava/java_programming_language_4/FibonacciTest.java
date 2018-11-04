@@ -1,10 +1,8 @@
-package com.dzhou.corejava.jpl4;
+package com.dzhou.corejava.java_programming_language_4;
 
 /**
  * Created by davidzhou on 1/5/14.
  */
-
-import com.dzhou.corejava.jpl4.Fibonacci;
 
 import org.junit.Test;
 
