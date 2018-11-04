@@ -108,7 +108,7 @@ public class PrimitiveTypes {
   public static long reverseBits3(long x) {
     final int keyWordSize = 16;
     final int kBitMask = 0xFFFF;
-    return preComputedParity[(int) x & kBitMask] << (3 * keyWordSize) |
+    return preComputedReverse[(int) x & kBitMask] << (3 * keyWordSize) |
       preComputedReverse[(int) (x >>> keyWordSize) & kBitMask] << (2 * keyWordSize) |
       preComputedReverse[(int) (x >>> (2 * keyWordSize) & kBitMask)] << keyWordSize |
       preComputedReverse[(int) x >>> (3 * keyWordSize)];

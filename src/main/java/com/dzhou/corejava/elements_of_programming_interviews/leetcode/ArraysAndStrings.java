@@ -265,8 +265,7 @@ public class ArraysAndStrings {
   /**
    * Find the Duplicate Number -
    * https://leetcode.com/explore/interview/card/amazon/76/array-and-strings/496/
-   * 
-   * @param args
+   *
    */
   public int findDuplicate(int[] nums) {
     int low = 1, high = nums.length - 1;
@@ -292,7 +291,8 @@ public class ArraysAndStrings {
   public static void main(String[] args) {
     // System.out.println(firstUniqChar("leetcode"));
     // System.out.println(firstUniqChar("loveleetcode"));
-    // System.out.println(maxSubArrayLen(new int[] {1, -1, 5, -2, 3}, 3));
+    System.out.println(maxSubArrayLen(new int[]{1, -1, 5, -2, 3}, 3));
+    System.out.println(maxSubArrayLen(new int[]{1, -1, 5, -2, 3}, 2));
     // char[] c = "the sky is blue".toCharArray();
     // reverseWords(c);
     // System.out.println(c);
@@ -311,37 +311,37 @@ public class ArraysAndStrings {
     // for (int num = 0; num < 1000000; num++) {
     // System.out.println(num + "=" + numberToWords(num));
     // }
-
-    for (int n : productExceptSelf(new int[] {1, 2, 3, 4})) {
-      System.out.print(n + " ");
-      
-    }
-
-    System.out.println("");
-    
-    for (int n : productExceptSelf(new int[] {1, 2})) {
-      System.out.print(n + " ");
-    }
-
-    System.out.println("");
-    
-    for (int n : productExceptSelf(new int[] {0, 1})) {
-      System.out.print(n + " ");
-    }
-
-    System.out.println("");
-    
-    for (int n : productExceptSelf(new int[] {1, 0})) {
-      System.out.print(n + " ");
-    }
-
-    System.out.println("");
-    
-    for (int n : productExceptSelf(new int[] {0, 0})) {
-      System.out.print(n + " ");
-    }
-
-    System.out.println("");
+//
+//    for (int n : productExceptSelf(new int[] {1, 2, 3, 4})) {
+//      System.out.print(n + " ");
+//
+//    }
+//
+//    System.out.println("");
+//
+//    for (int n : productExceptSelf(new int[] {1, 2})) {
+//      System.out.print(n + " ");
+//    }
+//
+//    System.out.println("");
+//
+//    for (int n : productExceptSelf(new int[] {0, 1})) {
+//      System.out.print(n + " ");
+//    }
+//
+//    System.out.println("");
+//
+//    for (int n : productExceptSelf(new int[] {1, 0})) {
+//      System.out.print(n + " ");
+//    }
+//
+//    System.out.println("");
+//
+//    for (int n : productExceptSelf(new int[] {0, 0})) {
+//      System.out.print(n + " ");
+//    }
+//
+//    System.out.println("");
     
   }
 

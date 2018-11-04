@@ -1,4 +1,6 @@
-package com.dzhou.corejava.algs4; /*************************************************************************
+package com.dzhou.corejava.algs4;
+
+/*************************************************************************
  *  Compilation:  javac com.dzhou.corejava.algs4.ResizingArrayQueue.java
  *  Execution:    java com.dzhou.corejava.algs4.ResizingArrayQueue < input.txt
  *  Data files:   http://algs4.cs.princeton.edu/13stacks/tobe.txt  

@@ -100,6 +100,22 @@ public class LeetCode1_50 {
     return ans;
   }
 
+  public int lengthOfLongestSubstring3(String s) {
+    int maxLength = 0;
+    int start = 0;
+    Map<Character, Integer> map = new HashMap<>();
+    for (int i = 0; i < s.length(); i++) {
+      char c = s.charAt(i);
+      if (map.containsKey(c)) {
+        start = Math.max(map.get(c) + 1, start);
+      }
+      maxLength = Math.max(maxLength, i - start + 1);
+      map.put(c, i);
+    }
+    return maxLength;
+
+  }
+
 
   /**
    * There are two sorted arrays nums1 and nums2 of size m and n respectively.
@@ -245,29 +261,32 @@ public class LeetCode1_50 {
   public static void main(String[] args) {
     LeetCode1_50 leetCode = new LeetCode1_50();
 
+    String s = "abba";
+    System.out.println(leetCode.lengthOfLongestSubstring3(s));
+
     int[] A = new int[]{1, 3};
     int[] B = new int[]{2};
 
-    System.out.println(leetCode.findMedianSortedArrays(A, B));
+//    System.out.println(leetCode.findMedianSortedArrays(A, B));
 
 
-    System.out.println(longestPalindrome("a"));
-    System.out.println(longestPalindrome("ab"));
-    System.out.println(longestPalindrome("aba"));
-    System.out.println(longestPalindrome("abac"));
-    System.out.println(longestPalindrome("abaabcdc"));
-
-    System.out.println(longestPalindrome1("a"));
-    System.out.println(longestPalindrome1("ab"));
-    System.out.println(longestPalindrome1("aba"));
-    System.out.println(longestPalindrome1("abac"));
-    System.out.println(longestPalindrome1("abaabcdc"));
-
-    System.out.println(longestPalindrome2("a"));
-    System.out.println(longestPalindrome2("ab"));
-    System.out.println(longestPalindrome2("aba"));
-    System.out.println(longestPalindrome2("abac"));
-    System.out.println(longestPalindrome2("abaabcdc"));
+//    System.out.println(longestPalindrome("a"));
+//    System.out.println(longestPalindrome("ab"));
+//    System.out.println(longestPalindrome("aba"));
+//    System.out.println(longestPalindrome("abac"));
+//    System.out.println(longestPalindrome("abaabcdc"));
+//
+//    System.out.println(longestPalindrome1("a"));
+//    System.out.println(longestPalindrome1("ab"));
+//    System.out.println(longestPalindrome1("aba"));
+//    System.out.println(longestPalindrome1("abac"));
+//    System.out.println(longestPalindrome1("abaabcdc"));
+//
+//    System.out.println(longestPalindrome2("a"));
+//    System.out.println(longestPalindrome2("ab"));
+//    System.out.println(longestPalindrome2("aba"));
+//    System.out.println(longestPalindrome2("abac"));
+//    System.out.println(longestPalindrome2("abaabcdc"));
 //
 //    System.out.println(isPalindrome(-5));
 //    System.out.println(isPalindrome(0));
