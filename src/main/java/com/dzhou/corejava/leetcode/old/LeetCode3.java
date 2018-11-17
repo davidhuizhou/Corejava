@@ -1,9 +1,6 @@
 package com.dzhou.corejava.leetcode.old;
 
-import com.dzhou.corejava.leetcode.ListNode;
-
-import java.util.HashSet;
-import java.util.LinkedList;
+import com.dzhou.corejava.leetcode.backup.ListNode;
 
 /**
  * Created by huizhou on 11/2/14.

@@ -1,7 +1,7 @@
 package com.dzhou.corejava.leetcode.old;
 
-import com.dzhou.corejava.leetcode.TreeNode;
-import com.dzhou.corejava.leetcode.UndirectedGraphNode;
+import com.dzhou.corejava.leetcode.backup.TreeNode;
+import com.dzhou.corejava.leetcode.backup.UndirectedGraphNode;
 
 import java.util.*;
 

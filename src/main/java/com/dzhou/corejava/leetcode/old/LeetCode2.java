@@ -4,10 +4,10 @@ package com.dzhou.corejava.leetcode.old;
  * Created by huizhou on 10/18/14.
  */
 
-import com.dzhou.corejava.leetcode.ListNode;
-import com.dzhou.corejava.leetcode.Point;
-import com.dzhou.corejava.leetcode.RandomListNode;
-import com.dzhou.corejava.leetcode.TreeNode;
+import com.dzhou.corejava.leetcode.backup.ListNode;
+import com.dzhou.corejava.leetcode.backup.Point;
+import com.dzhou.corejava.leetcode.backup.RandomListNode;
+import com.dzhou.corejava.leetcode.backup.TreeNode;
 
 import java.util.*;
 
