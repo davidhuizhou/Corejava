@@ -1,5 +1,10 @@
 package com.dzhou.corejava.java_programming_language_4;
 
+/**
+ * https://www.baeldung.com/java-try-with-resources
+ *
+ * OCP Java SE 8 Programmer II Exam Guide - Chapter 3.
+ */
 public class TryWithResources {
   public static void main(String[] args) throws Exception {
 
