@@ -1,4 +1,4 @@
-package com.dzhou.corejava.java_programming_language_4;
+package com.dzhou.java_language;
 
 /**
  * https://www.baeldung.com/java-try-with-resources
